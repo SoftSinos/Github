@@ -1,0 +1,70 @@
+inherited FrmTipoPagamentoRelatorio: TFrmTipoPagamentoRelatorio
+  Caption = 'FrmTipoPagamentoRelatorio'
+  ClientHeight = 243
+  ExplicitHeight = 272
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited StbPrincipal: TStatusBar
+    Top = 221
+    ExplicitTop = 221
+  end
+  inherited PnlPrincipal: TPanel
+    inherited BtnAjuda: TcxButton
+      OnClick = BtnAjudaClick
+    end
+    inherited BtnLimpar: TcxButton
+      OnClick = BtnLimparClick
+    end
+    inherited BtnGerar: TcxButton
+      OnClick = BtnGerarClick
+    end
+  end
+  inherited PnlCampos: TPanel
+    Height = 156
+    ExplicitHeight = 156
+    inherited PrbPesquisa: TProgressBar
+      Top = 135
+      ExplicitTop = 135
+    end
+    inherited GroupBox1: TGroupBox
+      Height = 125
+      ExplicitHeight = 125
+      object LblPagamento: TLabel [4]
+        Left = 33
+        Top = 83
+        Width = 58
+        Height = 13
+        Alignment = taRightJustify
+        BiDiMode = bdLeftToRight
+        Caption = 'Pagamento:'
+        ParentBiDiMode = False
+      end
+      object Label4: TLabel [5]
+        Left = 25
+        Top = 102
+        Width = 66
+        Height = 13
+        Alignment = taRightJustify
+        BiDiMode = bdLeftToRight
+        Caption = '* Ordena'#231#227'o:'
+        ParentBiDiMode = False
+      end
+      inherited CbbIdRelatorio: TcxComboBox
+        OnClick = CbbIdRelatorioClick
+      end
+      object CbbIdCarregar: TcxComboBox
+        Left = 92
+        Top = 79
+        TabOrder = 4
+        Width = 343
+      end
+      object CbbIdRelatorioOrdem: TcxComboBox
+        Left = 92
+        Top = 99
+        Properties.CharCase = ecUpperCase
+        TabOrder = 5
+        Width = 343
+      end
+    end
+  end
+end
