@@ -1,0 +1,109 @@
+unit fRelatorio;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, cxControls, cxContainer, cxEdit,
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, Vcl.StdCtrls, Vcl.ComCtrls, cxButtons, Vcl.ExtCtrls, dxCore, cxDateUtils, cxCalendar;
+
+type
+  TFrmRelatorio = class(TFrmOperacao)
+    PrbPesquisa     : TProgressBar;
+    GroupBox1       : TGroupBox;
+    Label3          : TLabel;
+    CbbRelatorio    : TcxComboBox;
+    Label2          : TLabel;
+    CbbIdEmpresa    : TcxComboBox;
+    Label13         : TLabel;
+    DtpDtInicio: TcxDateEdit;
+    DtpDtFinal: TcxDateEdit;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnGerarClick(Sender: TObject);
+    procedure BtnLocalClick(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmRelatorio: TFrmRelatorio;
+
+implementation
+
+{$R *.dfm}
+
+uses dPrincipal, uEmpresa;
+
+procedure TFrmRelatorio.BtnAjudaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAjudaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmRelatorio.BtnGerarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnGerarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmRelatorio.BtnLocalClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnGravadoClick';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited
+end;
+
+procedure TFrmRelatorio.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmRelatorio.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmRelatorio.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmRelatorio';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.NmTabela   := 'Aplicacao';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+  CbbRelatorio.SetFocus;
+end;
+
+end.

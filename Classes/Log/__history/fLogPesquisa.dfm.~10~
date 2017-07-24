@@ -1,0 +1,251 @@
+inherited FrmLogPesquisa: TFrmLogPesquisa
+  Caption = 'Pesquisar Log Sistema'
+  ClientWidth = 672
+  ExplicitWidth = 678
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 666
+    ExplicitWidth = 666
+    inherited GroupBox1: TGroupBox
+      Width = 658
+      ExplicitWidth = 658
+      object Label13: TLabel [0]
+        Left = 11
+        Top = 8
+        Width = 50
+        Height = 13
+        Caption = '* Inicial:'
+      end
+      inherited Label2: TLabel
+        Left = 323
+        Top = 8
+        ExplicitLeft = 323
+        ExplicitTop = 8
+      end
+      object Label3: TLabel [2]
+        Left = 179
+        Top = 8
+        Width = 42
+        Height = 13
+        Caption = '* Final:'
+      end
+      inherited EdtPesquisa: TEdit
+        Left = 407
+        Width = 246
+        TabOrder = 2
+        ExplicitLeft = 407
+        ExplicitWidth = 246
+      end
+      object DtpDtInicial: TcxDateEdit
+        Left = 62
+        Top = 4
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        TabOrder = 0
+        Width = 92
+      end
+      object DtpDtFinal: TcxDateEdit
+        Left = 222
+        Top = 4
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        TabOrder = 1
+        Width = 92
+      end
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 666
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdEmpresa'
+        Title.Alignment = taCenter
+        Title.Caption = 'Emp'
+        Width = 38
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmUsuario'
+        Title.Alignment = taCenter
+        Title.Caption = 'Usu'#225'rio'
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'NrCpf'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cpf'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'DtCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cadastro'
+        Width = 133
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Ip'
+        Title.Alignment = taCenter
+        Title.Caption = 'Maquina'
+        Width = 209
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmModulo'
+        Title.Alignment = taCenter
+        Title.Caption = 'M'#243'dulo'
+        Width = 76
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmOperacao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Opera'#231#227'o'
+        Width = 69
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmTabela'
+        Title.Alignment = taCenter
+        Title.Caption = 'Tabela'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmClasse'
+        Title.Alignment = taCenter
+        Title.Caption = 'Classe'
+        Width = 170
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmMetodo'
+        Title.Alignment = taCenter
+        Title.Caption = 'M'#233'todo'
+        Width = 170
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmVersao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Vers'#227'o'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmMensagem'
+        Title.Alignment = taCenter
+        Title.Caption = 'Mensagem'
+        Width = 250
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk1'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk2'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk3'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk4'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk5'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk6'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk7'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk8'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'Pk9'
+        Title.Alignment = taCenter
+        Width = 80
+        Visible = True
+      end>
+  end
+  inherited Panel2: TPanel
+    Width = 666
+    ExplicitWidth = 666
+    inherited GroupBox2: TGroupBox
+      Width = 658
+      ExplicitWidth = 658
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 666
+    ExplicitWidth = 666
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 666
+    ExplicitWidth = 666
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 672
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitWidth = 672
+  end
+end

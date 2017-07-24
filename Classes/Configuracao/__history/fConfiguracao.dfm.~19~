@@ -1,0 +1,90 @@
+inherited FrmConfiguracao: TFrmConfiguracao
+  Caption = 'Cadastrar Configura'#231#227'o'
+  ClientHeight = 190
+  ClientWidth = 787
+  ExplicitWidth = 793
+  ExplicitHeight = 219
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited PnlPrincipal: TPanel
+    Width = 781
+    ExplicitWidth = 781
+  end
+  inherited PnlCampos: TPanel
+    Width = 781
+    Height = 103
+    ExplicitWidth = 781
+    ExplicitHeight = 109
+    object Label2: TLabel [0]
+      Left = 32
+      Top = 44
+      Width = 66
+      Height = 13
+      Caption = '* Empresa:'
+    end
+    object Label7: TLabel [1]
+      Left = 26
+      Top = 64
+      Width = 72
+      Height = 13
+      Caption = '* Descri'#231#227'o:'
+    end
+    object Label14: TLabel [2]
+      Left = 54
+      Top = 86
+      Width = 44
+      Height = 13
+      Caption = '* Sigla:'
+    end
+    object Label4: TLabel [3]
+      Left = 178
+      Top = 86
+      Width = 45
+      Height = 13
+      Caption = '* Valor:'
+    end
+    inherited GrbIdentificador: TGroupBox
+      Width = 773
+      ExplicitWidth = 773
+    end
+    object EdtNmValor: TcxTextEdit
+      Left = 224
+      Top = 82
+      TabOrder = 2
+      Width = 408
+    end
+    object EdtNmSigla: TcxTextEdit
+      Left = 101
+      Top = 82
+      TabOrder = 3
+      Width = 53
+    end
+    object EdtNmConfiguracao: TcxTextEdit
+      Left = 101
+      Top = 61
+      TabOrder = 4
+      Width = 531
+    end
+    object CbbIdEmpresa: TcxComboBox
+      Left = 101
+      Top = 39
+      TabOrder = 5
+      Width = 531
+    end
+  end
+  inherited StbPrincipal: TStatusBar
+    Top = 168
+    Width = 781
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitTop = 171
+    ExplicitWidth = 787
+  end
+end

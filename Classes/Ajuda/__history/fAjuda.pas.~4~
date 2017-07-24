@@ -1,0 +1,141 @@
+unit fAjuda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.Grids, Vcl.ValEdit, Data.DB, Datasnap.DBClient, Vcl.DBGrids;
+
+type
+  TFrmAjuda = class(TForm)
+    Panel2            : TPanel;
+    GroupBox1         : TGroupBox;
+    EdtPesquisa       : TEdit;
+    DbgPesquisa       : TDBGrid;
+    PrbPesquisa       : TProgressBar;
+    Panel3            : TPanel;
+    GroupBox2         : TGroupBox;
+    Label1            : TLabel;
+    LbtTotalRegistros : TLabel;
+    CdsPesquisa       : TClientDataSet;
+    DtsPesquisa       : TDataSource;
+    PnlPrincipal      : TPanel;
+    BtnLimpar         : TSpeedButton;
+    BtnFechar         : TSpeedButton;
+    BtnPesquisar      : TSpeedButton;
+    StbPrincipal: TStatusBar;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+    procedure BtnLimparClick(Sender: TObject);
+    procedure BtnPesquisarClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure InicializarTela;
+  public
+    { Public declarations }
+    gNmTelaChamada : String;
+    procedure Pesquisar(AConsulta: String; ANmTela: String);
+  end;
+
+var
+  FrmAjuda : TFrmAjuda;
+
+implementation
+
+{$R *.dfm}
+
+uses uAjuda, fProcessando, dPrincipal;
+
+var
+  unAjuda: TAjuda;
+
+procedure TFrmAjuda.BtnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmAjuda.BtnLimparClick(Sender: TObject);
+begin
+  if CdsPesquisa.FieldCount > 0 then
+  begin
+    CdsPesquisa.EmptyDataSet;
+  end;
+  LbtTotalRegistros.Caption := '0';
+  EdtPesquisa.Clear;
+  PrbPesquisa.Position      := 0;
+end;
+
+procedure TFrmAjuda.BtnPesquisarClick(Sender: TObject);
+begin
+  LbtTotalRegistros.Caption := IntToStr(CdsPesquisa.RecordCount);
+  Application.ProcessMessages;
+end;
+
+procedure TFrmAjuda.EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    LbtTotalRegistros.Caption := IntToStr(CdsPesquisa.RecordCount);
+    Application.ProcessMessages;
+  end;
+end;
+
+procedure TFrmAjuda.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TFrmAjuda.FormCreate(Sender: TObject);
+var
+  I      : Integer;
+begin
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TEdit then
+    begin
+      (Components[I] as TEdit).CharCase := ecUpperCase;
+    end;
+  end;
+end;
+
+procedure TFrmAjuda.FormShow(Sender: TObject);
+begin
+  EdtPesquisa.SetFocus;
+  InicializarTela;
+  Pesquisar('', gNmTelaChamada);
+end;
+
+procedure TFrmAjuda.InicializarTela;
+begin
+  LbtTotalRegistros.Caption := '0';
+end;
+
+procedure TFrmAjuda.Pesquisar(AConsulta, ANmTela: String);
+var
+  I: Integer;
+  lConsulta: Integer;
+begin
+  PrbPesquisa.Position := 0;
+  lConsulta := 0;
+  try
+    for I := 1 to 100 do
+    begin
+      Sleep(15);
+      PrbPesquisa.Position := PrbPesquisa.Position + 1;
+      if lConsulta = 0 then
+      begin
+        lConsulta := 1;
+        unAjuda := TAjuda.Create(DtmPrincipal.Conexao);
+        unAjuda.CarregaDbGrid(DtmPrincipal.Conexao, 0, EdtPesquisa.Text, ANmTela, CdsPesquisa);
+      end;
+    end;
+  finally
+    unAjuda.Free;
+  end;
+  inherited;
+end;
+
+end.

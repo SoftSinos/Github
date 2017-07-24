@@ -1,0 +1,101 @@
+inherited FrmCidadePesquisa: TFrmCidadePesquisa
+  Caption = 'Pesquisar Cidade'
+  ClientWidth = 758
+  ExplicitWidth = 764
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 752
+    ExplicitWidth = 752
+    inherited GroupBox1: TGroupBox
+      Width = 744
+      ExplicitWidth = 744
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 752
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdCidade'
+        Title.Alignment = taCenter
+        Title.Caption = 'Identificador'
+        Width = -1
+        Visible = False
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'DtCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cadastro'
+        Width = 130
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'SnSituacao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Situa'#231#227'o'
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmCidade'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cidade'
+        Width = 300
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'NrIbge'
+        Title.Alignment = taCenter
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'NmSiglaUf'
+        Title.Alignment = taCenter
+        Title.Caption = 'Uf'
+        Width = 40
+        Visible = True
+      end>
+  end
+  inherited Panel2: TPanel
+    Width = 752
+    ExplicitWidth = 752
+    inherited GroupBox2: TGroupBox
+      Width = 744
+      ExplicitWidth = 744
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 752
+    ExplicitWidth = 752
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 752
+    ExplicitWidth = 752
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 758
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitWidth = 758
+  end
+end

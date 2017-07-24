@@ -1,0 +1,347 @@
+unit uPais;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TPais = class
+  private
+    FIdPais: Integer;
+    FIdUsuario: Integer;
+    FDtCadastro: TDateTime;
+    FSnSituacao: Integer;
+    FNmPais: String;
+    FNmSigla: String;
+    FNrIbge: String;
+    procedure Inicializar;
+  public
+    property IdPais: Integer read FIdPais write FIdPais;
+    property IdUsuario: Integer read FIdUsuario write FIdUsuario;
+    property DtCadastro: TDateTime read FDtCadastro write FDtCadastro;
+    property SnSituacao: Integer read FSnSituacao write FSnSituacao;
+    property NmPais: String read FNmPais write FNmPais;
+    property NmSigla: String read FNmSigla write FNmSigla;
+    property NrIbge: String read FNrIbge write FNrIbge;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdPais: Integer; AConsulta: String; Data: TClientDataSet);
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TPais.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdPais: Integer; AConsulta: String; Data: TClientDataSet);
+var
+  qryPais : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryPais := TFDQuery.Create(nil);
+  try
+    qryPais.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdPais', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 15, False);
+      Data.FieldDefs.Add('NmPais', ftString, 10, False);
+      Data.FieldDefs.Add('NmSigla', ftString, 10, False);
+      Data.FieldDefs.Add('NrIbge', ftString, 10, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryPais.Params.Clear;
+      qryPais.SQL.Clear;
+      qryPais.SQL.Add('Select');
+      qryPais.SQL.Add('  *');
+      qryPais.SQL.Add('From VW_GridPais');
+      qryPais.SQL.Add('Where 1 = 1');
+
+      if ISnSituacao = 1 then
+      begin
+         qryPais.SQL.Add('  And SnSituacao = 1');
+      end
+      else
+      if ISnSituacao = 0 then
+      begin
+         qryPais.SQL.Add('  And SnSituacao = 0');
+      end;
+
+      if AIdPais > 0 then
+      begin
+         qryPais.SQL.Add('  And IdPais = :IdPais');
+
+         qryPais.ParamByName('IdPais').AsInteger := AIdPais;
+      end;
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryPais.SQL.Add (lCondicao);
+          qryPais.SQL.Add ('Order By');
+          qryPais.SQL.Add ('  IdPais');
+
+          qryPais.Open;
+          qryPais.First;
+        end;
+      end else begin
+        qryPais.SQL.Add (lCondicao);
+        qryPais.SQL.Add ('Order By');
+        qryPais.SQL.Add ('  IdPais');
+
+        lFinalizaLoop := 1;
+        qryPais.Open;
+        qryPais.First;
+      end;
+
+      while not qryPais.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdPais').AsInteger = qryPais.FieldByName('IdPais').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdPais').AsInteger := qryPais.FieldByName('IdPais').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger := qryPais.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime := qryPais.FieldByName('DtCadastro').AsDateTime;
+          if qryPais.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString  := 'Ativo';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString  := 'Inativo';
+          end;
+          Data.FieldByName('NmPais').AsString := qryPais.FieldByName('NmPais').AsString;
+          Data.FieldByName('NmSigla').AsString := qryPais.FieldByName('NmSigla').AsString;
+          Data.FieldByName('NrIbge').AsString := qryPais.FieldByName('NrIbge').AsString;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryPais.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryPais.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TPais.Create;
+begin
+  Inicializar;
+end;
+
+procedure TPais.Inicializar;
+begin
+  IdPais := 0;
+  IdUsuario := 0;
+  DtCadastro := 0;
+  SnSituacao := 0;
+  NmPais := '';
+  NmSigla := '';
+  NrIbge := '';
+end;
+
+function TPais.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryPais: TFDQuery;
+begin
+  qryPais:= TFDQuery.Create(Nil);
+  try
+    qryPais.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdPais) then
+    begin
+      qryPais.SQL.Add('Insert Into Pais(');
+      qryPais.SQL.Add('  IdUsuario,');
+      qryPais.SQL.Add('  DtCadastro,');
+      qryPais.SQL.Add('  SnSituacao,');
+      qryPais.SQL.Add('  NmPais,');
+      qryPais.SQL.Add('  NmSigla,');
+      qryPais.SQL.Add('  NrIbge)');
+      qryPais.SQL.Add('Values (');
+      qryPais.SQL.Add('  :IdUsuario,');
+      qryPais.SQL.Add('  :DtCadastro,');
+      qryPais.SQL.Add('  :SnSituacao,');
+      qryPais.SQL.Add('  :NmPais,');
+      qryPais.SQL.Add('  :NmSigla,');
+      qryPais.SQL.Add('  :NrIbge)');
+    end else begin
+      qryPais.SQL.Add('Update Pais Set ');
+      qryPais.SQL.Add('  IdUsuario = :IdUsuario,');
+      qryPais.SQL.Add('  DtCadastro = :DtCadastro,');
+      qryPais.SQL.Add('  SnSituacao = :SnSituacao,');
+      qryPais.SQL.Add('  NmPais = :NmPais,');
+      qryPais.SQL.Add('  NmSigla = :NmSigla,');
+      qryPais.SQL.Add('  NrIbge = :NrIbge ');
+      qryPais.SQL.Add('Where IdPais = :IdPais');
+
+      qryPais.ParamByName('IdPais').AsInteger := IdPais;
+
+    end;
+    qryPais.ParamByName('IdUsuario').AsInteger := IdUsuario;
+    qryPais.ParamByName('DtCadastro').AsDateTime := DtCadastro;
+    qryPais.ParamByName('SnSituacao').AsInteger := SnSituacao;
+    qryPais.ParamByName('NmPais').AsString := NmPais;
+    qryPais.ParamByName('NmSigla').AsString := NmSigla;
+    qryPais.ParamByName('NrIbge').AsString := NrIbge;
+   try
+      qryPais.ExecSQL;
+      qryPais.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryPais)
+  end;
+end;
+
+class function TPais.Inativar(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+var
+  qryPais: TFDQuery;
+begin
+  qryPais:= TFDQuery.Create(Nil);
+  try
+    qryPais.Connection := ASQLConnection;
+    qryPais.SQL.Add('Update Pais Set ');
+    qryPais.SQL.Add('  SnSituacao = 0 ');
+    qryPais.SQL.Add('Where 1 = 1');
+    qryPais.SQL.Add('  And IdPais = ' + IntToStr(AIdPais));
+   try
+      qryPais.ExecSQL;
+      qryPais.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryPais)
+  end;
+end;
+
+class function TPais.Existe(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+var
+  qryPais: TFDQuery;
+begin
+  Result := False;
+  qryPais:= TFDQuery.Create(Nil);
+  try
+    qryPais.Connection := ASQLConnection;
+    qryPais.SQL.Add('Select IdPais From Pais');
+    qryPais.SQL.Add('Where 1 = 1');
+    qryPais.SQL.Add('  And IdPais = ' + IntToStr(AIdPais));
+    qryPais.Open;
+    if qryPais.Fields[0].Value > 0 then
+      Result := True;
+    qryPais.Close;
+  finally
+    FreeAndNil(qryPais)
+  end;
+end;
+
+class function TPais.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryPais: TFDQuery;
+begin
+  Result := 0;
+  qryPais:= TFDQuery.Create(Nil);
+  try
+    qryPais.Connection := ASQLConnection;
+    qryPais.SQL.Add('Select Max(IdPais) As IdPais From Pais');
+    qryPais.Open;
+
+    if qryPais.FieldByName('IdPais').AsInteger > 0 then
+      Result := qryPais.FieldByName('IdPais').AsInteger;
+    qryPais.Close;
+  finally
+    FreeAndNil(qryPais)
+  end;
+end;
+
+function TPais.Buscar(ASQLConnection: TFDConnection; AIdPais: Integer): Boolean;
+var
+  qryPais: TFDQuery;
+begin
+  Result := False;
+  qryPais:= TFDQuery.Create(Nil);
+  try
+    qryPais.Connection := ASQLConnection;
+    qryPais.SQL.Add('Select * From VW_GridPais');
+    qryPais.SQL.Add('Where IdPais = :IdPais');
+
+    qryPais.ParamByName('IdPais').AsString := IntToStr(AIdPais);
+
+    qryPais.Open;
+    if not qryPais.IsEmpty then
+    begin
+      Result := True;
+      IdPais := qryPais.FieldByName('IdPais').AsInteger;
+      IdUsuario := qryPais.FieldByName('IdUsuario').AsInteger;
+      DtCadastro := qryPais.FieldByName('DtCadastro').AsDateTime;
+      if qryPais.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao := 1
+      end else begin
+        SnSituacao := 0
+      end;
+      NmPais := qryPais.FieldByName('NmPais').AsString;
+      NmSigla := qryPais.FieldByName('NmSigla').AsString;
+      NrIbge := qryPais.FieldByName('NrIbge').AsString;
+    end;
+    qryPais.Close;
+  finally
+    FreeAndNil(qryPais)
+  end;
+end;
+
+end.
+

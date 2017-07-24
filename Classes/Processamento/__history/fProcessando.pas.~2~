@@ -1,0 +1,43 @@
+unit fProcessando;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls,
+    Vcl.Imaging.GIFImg, IdBaseComponent, IdThreadComponent;
+
+type
+  TFrmProcessando = class(TForm)
+    PnlImgGif: TPanel;
+    PnlProcessando: TPanel;
+    ImgGif: TImage;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmProcessando: TFrmProcessando;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TFrmProcessando.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TFrmProcessando.FormCreate(Sender: TObject);
+var
+  Region : hrgn;
+begin
+  Region := CreateRoundRectRgn(0, 0, Width, Height, 40, 40);
+  SetWindowrgn(Handle, Region, True);
+end;
+
+end.

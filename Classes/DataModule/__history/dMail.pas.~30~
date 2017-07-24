@@ -1,0 +1,92 @@
+unit dMail;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, ACBrBase, ACBrMail;
+
+type
+  TDtmEmail = class(TDataModule)
+    InACBrMail: TACBrMail;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure GerarEmail(EMailPara: String; NomePara: String; Assunto: String; Texto: String; Anexo: Boolean);
+  end;
+
+var
+  DtmEmail: TDtmEmail;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+uses dArquivos;
+
+{$R *.dfm}
+
+
+procedure TDtmEmail.GerarEmail(EMailPara: String; NomePara: String; Assunto: String; Texto: String; Anexo: Boolean);
+var
+  NmCaminho : String;
+  NmArquivo : String;
+begin
+  try
+    { Quando necessário utilizar.
+
+    InACBrMail.AddCC('clauber.junio@brsistemas.inf.br'); // opcional
+    InACBrMail.AddReplyTo('clauber.junio@gmail.com'); // opcional
+    InACBrMail.AddBCC('brsistemas@brsistemas.inf.br'); // opcional
+    InACBrMail.IsHTML := True; // define que a mensagem é html
+     mensagem principal do e-mail. pode ser html ou texto puro
+    InACBrMail.Body.Text :=
+    '<html>'+#13+#10+
+    '<head>'+#13+#10+#13+#10+
+    '  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">'+#13+#10+
+    '</head>'+#13+#10+
+    '<body text="#000000" bgcolor="#FFFFFF">'+#13+#10+
+    '<h1>Texto em HTML.</h1><br>'+#13+#10+
+    '</body>'+#13+#10+
+    '</html>'+#13+#10;
+
+    }
+
+    InACBrMail.From       := 'log@brsistemas.inf.br';
+    InACBrMail.FromName   := 'Positive Ponto REP';
+    InACBrMail.Host       := 'smtp.brsistemas.inf.br';
+    InACBrMail.Username   := 'log@brsistemas.inf.br';
+    InACBrMail.Password   := '12qwaszx';
+    InACBrMail.Port       := '587';
+    InACBrMail.AddAddress(EMailPara, NomePara);
+    InACBrMail.Subject    := Assunto;
+    InACBrMail.IsHTML     := False;
+
+    if Anexo then
+    begin
+      DtmArquivos.CdsArquivos.First;
+      while not DtmArquivos.CdsArquivos.Eof do
+      begin
+        DtmArquivos.CdsArquivos.RecordCount;
+        NmCaminho := DtmArquivos.CdsArquivos.FieldByName('NmCaminho').AsString;
+        NmArquivo  := DtmArquivos.CdsArquivos.FieldByName('NmArquivo').AsString;
+
+        InACBrMail.AddAttachment(NmCaminho + NmArquivo, NmArquivo);
+
+        DtmArquivos.CdsArquivos.Next;
+      end;
+    end;
+
+    InACBrMail.AltBody.Text := Texto;
+
+    try
+      InACBrMail.Send;
+    Except
+      //Passar por aqui caso tenha erro no metodo SEND, o usuario não deve saber deste envio.
+    end;
+  finally
+
+  end;
+end;
+
+end.

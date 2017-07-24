@@ -1,0 +1,81 @@
+unit fAtivaSistema;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Buttons, Vcl.ExtCtrls, cxTextEdit, cxLabel, dxGDIPlusClasses, dxSkinsCore, dxSkinsDefaultPainters;
+
+type
+  TFrmAtivacaoSistema = class(TForm)
+    cxLabel4      : TcxLabel;
+    PnlPrincipal  : TPanel;
+    BtnSalvar     : TSpeedButton;
+    BtnFechar     : TSpeedButton;
+    cxLabel1      : TcxLabel;
+    EdtNrAtivacao : TcxTextEdit;
+    Image1        : TImage;
+    procedure BtnFecharClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure BtnSalvarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmAtivacaoSistema: TFrmAtivacaoSistema;
+
+implementation
+
+{$R *.dfm}
+
+uses dPrincipal, uFuncao, uMensagem, fProcessando, uProcedure, uConfiguracao;
+
+var
+  unConfiguracao : TConfiguracao;
+
+procedure TFrmAtivacaoSistema.BtnFecharClick(Sender: TObject);
+begin
+  if MsgConfirmacao(uMensagem.DesejaFinalizarOSistema) then
+  begin
+    FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+  end;
+end;
+
+procedure TFrmAtivacaoSistema.BtnSalvarClick(Sender: TObject);
+begin
+  try
+    if ((Copy(EdtNrAtivacao.Text, 1, 5)) = '29305') And (Length(EdtNrAtivacao.Text) = 10) then
+    begin
+      //TEMPO DE DURACAO CONTRA SENHA "SAFERY OPEN"
+      unConfiguracao.Buscar(DtmPrincipal.IdEmpresaLogada, 'TDCS');
+      unConfiguracao.NmValor := EdtNrAtivacao.Text;
+      if unConfiguracao.Salvar then
+      begin
+        MsgInformacao(uMensagem.ORegistroFoiSalvoComSucesso);
+        MsgAtencao(uMensagem.OSistemaSeraFinalizado);
+        FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+      end;
+    end
+    else begin
+      MsgAtencao(uMensagem.ASenhaNaoConfere);
+    end;
+  finally
+    unConfiguracao.Free;
+  end;
+end;
+
+procedure TFrmAtivacaoSistema.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TFrmAtivacaoSistema.FormCreate(Sender: TObject);
+begin
+  unConfiguracao := TConfiguracao.Create;
+end;
+
+end.
