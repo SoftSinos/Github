@@ -1,0 +1,392 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{678C89C8-A49D-49AE-8821-1B68D6CE5D1C}</ProjectGuid>
+        <ProjectVersion>15.4</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <MainSource>SginERP.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <VerInfo_Locale>1046</VerInfo_Locale>
+        <VCL_Custom_Styles>Amakrits|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Amakrits.vsf;&quot;Amethyst Kamri|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\AmethystKamri.vsf&quot;;&quot;Aqua Graphite|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\AquaGraphite.vsf&quot;;&quot;Aqua Light Slate|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\AquaLightSlate.vsf&quot;;Auric|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Auric.vsf;Carbon|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Carbon.vsf;&quot;Charcoal Dark Slate|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\CharcoalDarkSlate.vsf&quot;;&quot;Cobalt XEMedia|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\CobaltXEMedia.vsf&quot;;&quot;Cyan Dusk|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\CyanDusk.vsf&quot;;&quot;Cyan Night|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\CyanNight.vsf&quot;;Diamond|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Diamond.vsf;&quot;Emerald Light Slate|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\EmeraldLightSlate.vsf&quot;;Glossy|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Glossy.vsf;&quot;Golden Graphite|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\GoldenGraphite.vsf&quot;;&quot;Iceberg Classico|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\IcebergClassico.vsf&quot;;Jet|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Jet.vsf;&quot;Lavender Classico|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\LavenderClassico.vsf&quot;;Light|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Light.vsf;Luna|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Luna.vsf;&quot;Metropolis UI Black|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\MetropolisUIBlack.vsf&quot;;&quot;Metropolis UI Blue|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\MetropolisUIBlue.vsf&quot;;&quot;Metropolis UI Dark|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\MetropolisUIDark.vsf&quot;;&quot;Metropolis UI Green|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\MetropolisUIGreen.vsf&quot;;Obsidian|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Obsidian.vsf;&quot;Ruby Graphite|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\RubyGraphite.vsf&quot;;&quot;Sapphire Kamri|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\SapphireKamri.vsf&quot;;Silver|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Silver.vsf;&quot;Slate Classico|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\SlateClassico.vsf&quot;;&quot;Smokey Quartz Kamri|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\SmokeyQuartzKamri.vsf&quot;;Sterling|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\Sterling.vsf;TabletDark|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\TabletDark.vsf;&quot;Turquoise Gray|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\14.0\Styles\TurquoiseGray.vsf&quot;</VCL_Custom_Styles>
+        <SanitizedProjectName>SginERP</SanitizedProjectName>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_E>false</DCC_E>
+        <DCC_N>false</DCC_N>
+        <DCC_S>false</DCC_S>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_Keys>CompanyName=SoftSinos Sistema da Informação;FileDescription=⁞ ⁞ ⁞ SginERP - Software de Gestão Integrada ⁞ ⁞ ⁞;FileVersion=3.0.0.0;InternalName=Build 3.0.0.0;LegalCopyright=© Copyright 2017 - 2017;LegalTrademarks=;OriginalFilename=;ProductName=SginERP;ProductVersion=3.0.0.0;Comments=CJ DE MELLO GALVÃO - INFORMÁTICA ME</VerInfo_Keys>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <DCC_BplOutput>D:\SoftSinos\Desenvolvimento\Erp\Versao\3.0.6.0</DCC_BplOutput>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UsePackage>frxe20;acntDelphiXE6_R;JvBDE;JvGlobus;JvMM;ACBr_BoletoFR;JvManagedThreads;FireDACSqliteDriver;FireDACDSDriver;cxPageControlRS20;DBXSqliteDriver;zkemkeeper;FireDACPgDriver;fmx;TWebCam;ACBr_Diversos;IndySystem;AlphaDBDelphiXE6;TeeDB;tethering;ACBr_NFeDanfeFR;JvDlgs;JvCrypt;inetdbbde;vclib;DBXInterBaseDriver;DataSnapClient;DataSnapServer;DataSnapCommon;ACBr_synapse;JvNet;DataSnapProviderClient;JvDotNetCtrls;DBXSybaseASEDriver;DbxCommonDriver;vclimg;dbxcds;ACBr_Comum;DatasnapConnectorsFreePascal;MetropolisUILiveTile;ACBr_NFSeDanfseFR;JvXPCtrls;Solidworks;vcldb;vcldsnap;fmxFireDAC;DBXDb2Driver;DBXOracleDriver;CustomIPTransport;JvCore;ACBr_Serial;vclribbon;dcldxSkinsCoreRS20;dsnap;IndyIPServer;DTWain;fmxase;vcl;IndyCore;ACBr_DFeComum;DBXMSSQLDriver;IndyIPCommon;CloudService;FmxTeeUI;FireDACIBDriver;CodeSiteExpressPkg;ACBr_Boleto;DataSnapFireDAC;FireDACDBXDriver;JvAppFrm;soapserver;JvDB;JvRuntimeDesign;ACBr_CTeDacteFR;inetdbxpress;frxTee20;ACBr_NFSe;dsnapxml;ACBr_Ponto;FireDACInfxDriver;FireDACDb2Driver;JclDeveloperTools;JvDocking;adortl;frxDB20;JvWizards;ACBr_TCP;FireDACASADriver;JvHMI;bindcompfmx;frx20;JvBands;vcldbx;dxSkinscxPCPainterRS20;FireDACODBCDriver;RESTBackendComponents;rtl;dbrtl;DbxClientDriver;FireDACCommon;bindcomp;inetdb;JvPluginSystem;dxDockingRS20;ACBr_NFe;Tee;JclContainers;DBXOdbcDriver;ACBr_CTe;JvCmp;vclFireDAC;JvSystem;xmlrtl;DataSnapNativeClient;svnui;ibxpress;JvControls;JvTimeFramework;IndyProtocols;DBXMySQLDriver;FireDACCommonDriver;bindcompdbx;bindengine;vclactnband;soaprtl;FMXTee;TeeUI;bindcompvcl;dxGDIPlusRS20;JvStdCtrls;Jcl;vclie;JvCustom;JvJans;ACBr_OpenSSL;JvPageComps;FireDACADSDriver;vcltouch;ACBr_TEFD;JvPrintPreview;cxEditorsRS20;Falar;VclSmp;FireDACMSSQLDriver;FireDAC;DBXInformixDriver;Intraweb;VCLRESTComponents;dxSkinsCoreRS20;DataSnapConnectors;DataSnapServerMidas;dsnapcon;DBXFirebirdDriver;ACBr_TXTComum;inet;cxLibraryRS20;fmxobj;cxDataRS20;JclVcl;JvPascalInterpreter;FireDACMySQLDriver;soapmidas;vclx;Solid1;fs20;svn;DBXSybaseASADriver;dxCoreRS20;FireDACOracleDriver;fmxdae;RESTComponents;Solid;bdertl;dxThemeRS20;FireDACMSAccDriver;dbexpress;DataSnapIndy10ServerTransport;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_UsePackage>acntDelphiXE6_R;FireDACSqliteDriver;FireDACDSDriver;cxPageControlRS20;DBXSqliteDriver;FireDACPgDriver;fmx;IndySystem;TeeDB;tethering;vclib;DBXInterBaseDriver;DataSnapClient;DataSnapServer;DataSnapCommon;DataSnapProviderClient;DBXSybaseASEDriver;DbxCommonDriver;vclimg;dbxcds;DatasnapConnectorsFreePascal;MetropolisUILiveTile;vcldb;vcldsnap;fmxFireDAC;DBXDb2Driver;DBXOracleDriver;CustomIPTransport;vclribbon;dsnap;IndyIPServer;fmxase;vcl;IndyCore;DBXMSSQLDriver;IndyIPCommon;CloudService;FmxTeeUI;FireDACIBDriver;DataSnapFireDAC;FireDACDBXDriver;soapserver;inetdbxpress;dsnapxml;FireDACInfxDriver;FireDACDb2Driver;adortl;FireDACASADriver;bindcompfmx;dxSkinscxPCPainterRS20;FireDACODBCDriver;RESTBackendComponents;rtl;dbrtl;DbxClientDriver;FireDACCommon;bindcomp;inetdb;dxDockingRS20;Tee;DBXOdbcDriver;vclFireDAC;xmlrtl;DataSnapNativeClient;ibxpress;IndyProtocols;DBXMySQLDriver;FireDACCommonDriver;bindcompdbx;bindengine;vclactnband;soaprtl;FMXTee;TeeUI;bindcompvcl;dxGDIPlusRS20;vclie;FireDACADSDriver;vcltouch;cxEditorsRS20;VclSmp;FireDACMSSQLDriver;FireDAC;DBXInformixDriver;Intraweb;VCLRESTComponents;dxSkinsCoreRS20;DataSnapConnectors;DataSnapServerMidas;dsnapcon;DBXFirebirdDriver;inet;cxLibraryRS20;fmxobj;cxDataRS20;FireDACMySQLDriver;soapmidas;vclx;DBXSybaseASADriver;dxCoreRS20;FireDACOracleDriver;fmxdae;RESTComponents;dxThemeRS20;FireDACMSAccDriver;dbexpress;DataSnapIndy10ServerTransport;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+        <DCC_RemoteDebug>true</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_Release>6</VerInfo_Release>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>..\..\..\Imagem\Icone\Icone.ico</Icon_MainIcon>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Keys>CompanyName=SoftSinos Sistema da Informação;FileDescription=⁞ ⁞ ⁞ SginERP - Software de Gestão Integrada ⁞ ⁞ ⁞;FileVersion=3.0.6.420;InternalName=Build 3.0.0.0;LegalCopyright=© Copyright 2017 - 2017;LegalTrademarks=;OriginalFilename=;ProductName=SginERP;ProductVersion=3.0.0.0;Comments=CJ DE MELLO GALVÃO - INFORMÁTICA ME</VerInfo_Keys>
+        <VerInfo_Build>420</VerInfo_Build>
+        <DCC_BplOutput>D:\SoftSinos\Desenvolvimento\Erp\Versao\3.0.6.0</DCC_BplOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_DcuOutput>D:\Temp\Dcu\ERP</DCC_DcuOutput>
+        <DCC_RemoteDebug>false</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Build>420</VerInfo_Build>
+        <VerInfo_Release>6</VerInfo_Release>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=SoftSinos Sistema da Informação;FileDescription=⁞ ⁞ ⁞ SginERP - Software de Gestão Integrada ⁞ ⁞ ⁞;FileVersion=3.0.6.420;InternalName=Build 3.0.0.0;LegalCopyright=© Copyright 2017 - 2017;LegalTrademarks=;OriginalFilename=;ProductName=SginERP;ProductVersion=3.0.0.0;Comments=CJ DE MELLO GALVÃO - INFORMÁTICA ME</VerInfo_Keys>
+        <Icon_MainIcon>..\..\..\Imagem\Icone\Icone.ico</Icon_MainIcon>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <DCC_BplOutput>D:\SoftSinos\Desenvolvimento\Erp\Versao\3.0.6.0</DCC_BplOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_DcuOutput>D:\Temp\Dcu\ERP</DCC_DcuOutput>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="fPrincipal.pas">
+            <Form>FrmPrincipal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Ajuda\uAjuda.pas"/>
+        <DCCReference Include="..\..\Classes\Biometria\HamsterDX\NBioAPI_Type.pas"/>
+        <DCCReference Include="..\..\Classes\CarregaDados\uCarregaDados.pas"/>
+        <DCCReference Include="..\..\Classes\Configuracao\fConfiguracao.pas">
+            <Form>FrmConfiguracao</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Configuracao\uConfiguracao.pas"/>
+        <DCCReference Include="..\..\Classes\CriacaoRelatorios\fCriacaoRelatorios.pas">
+            <Form>FrmCriacaoRelatorios</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\CriaPastas\uCriaPastas.pas"/>
+        <DCCReference Include="..\..\Classes\DataModule\dArquivos.pas">
+            <Form>DtmArquivos</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\DataModule\dMail.pas">
+            <Form>DtmEmail</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\DataModule\dPrincipal.pas">
+            <Form>DtmPrincipal</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\DataModule\dRelatorios.pas">
+            <Form>DtmRelatorios</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Funcao\uFuncao.pas"/>
+        <DCCReference Include="..\..\Classes\Imagem\GIFImage.pas"/>
+        <DCCReference Include="..\..\Classes\Log\fLogPesquisa.pas"/>
+        <DCCReference Include="..\..\Classes\Log\uLog.pas"/>
+        <DCCReference Include="..\..\Classes\Login\fLogin.pas">
+            <Form>FrmLogin</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Mensagem\uMensagem.pas"/>
+        <DCCReference Include="..\..\Classes\Procedure\uProcedure.pas"/>
+        <DCCReference Include="..\..\Classes\Processamento\fProcessando.pas">
+            <Form>FrmProcessando</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Splash\fSplash.pas">
+            <Form>FrmSplash</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Usuario\uUsuario.pas"/>
+        <DCCReference Include="..\..\Classes\Usuario\fUsuario.pas">
+            <Form>FrmUsuario</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Usuario\fUsuarioPesquisa.pas">
+            <Form>FrmUsuarioPesquisa</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\WebCam\fWebCam.pas">
+            <Form>FrmWebCam</Form>
+        </DCCReference>
+        <DCCReference Include="fEmpresa.pas">
+            <Form>FrmEmpresa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fEmpresaPesquisa.pas">
+            <Form>FrmEmpresaPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Calendario\fCalendario.pas">
+            <Form>FrmCalendario</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Calendario\fCalendarioPesquisa.pas">
+            <Form>FrmCalendarioPesquisa</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Calendario\uCalendario.pas"/>
+        <DCCReference Include="..\..\Classes\Configuracao\fConfiguracaoPesquisa.pas">
+            <Form>FrmConfiguracaoPesquisa</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Versao\uVersao.pas"/>
+        <DCCReference Include="..\..\Classes\SoftHouse\uSoftHouse.pas"/>
+        <DCCReference Include="..\..\Classes\MeioMagnetico\uMeioMagnetico.pas"/>
+        <DCCReference Include="..\..\Classes\Geografia\uCep.pas"/>
+        <DCCReference Include="..\..\Classes\Geografia\uCidade.pas"/>
+        <DCCReference Include="..\..\Classes\Geografia\uPais.pas"/>
+        <DCCReference Include="..\..\Classes\Geografia\uRegiao.pas"/>
+        <DCCReference Include="..\..\Classes\AtivaSistema\uAtivacao.pas"/>
+        <DCCReference Include="fTipoPessoaPesquisa.pas">
+            <Form>FrmTipoPessoaPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fTipoPessoa.pas">
+            <Form>FrmTipoPessoa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Geografia\fCep.pas">
+            <Form>FrmCep</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Geografia\fCepPesquisa.pas">
+            <Form>FrmCepPesquisa</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Geografia\fCidade.pas">
+            <Form>FrmCidade</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Geografia\fCidadePesquisa.pas">
+            <Form>FrmCidadePesquisa</Form>
+        </DCCReference>
+        <DCCReference Include="fPessoaPesquisa.pas">
+            <Form>FrmPessoaPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fPessoa.pas">
+            <Form>FrmPessoa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uEmpresa.pas"/>
+        <DCCReference Include="uPessoa.pas"/>
+        <DCCReference Include="uTipoPessoa.pas"/>
+        <DCCReference Include="uTipoServico.pas"/>
+        <DCCReference Include="fTipoServico.pas">
+            <Form>FrmTipoServico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fTipoServicoPesquisa.pas">
+            <Form>FrmTipoServicoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fServico.pas">
+            <Form>FrmServico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fServicoPesquisa.pas">
+            <Form>FrmServicoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uServico.pas"/>
+        <DCCReference Include="uGrupoProduto.pas"/>
+        <DCCReference Include="uMarca.pas"/>
+        <DCCReference Include="fMarca.pas">
+            <Form>FrmMarca</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fMarcaPesquisa.pas">
+            <Form>FrmMarcaPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fProduto.pas">
+            <Form>FrmProduto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fProdutoPesquisa.pas">
+            <Form>FrmProdutoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uProduto.pas"/>
+        <DCCReference Include="uTipoPagamento.pas"/>
+        <DCCReference Include="fTipoPagamento.pas">
+            <Form>FrmTipoPagamento</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fTipoPagamentoPesquisa.pas">
+            <Form>FrmTipoPagamentoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fNotaConsumoStarter.pas">
+            <Form>FrmNotaConsumoStarter</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fNotaPesquisa.pas">
+            <Form>FrmNotaPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uNota.pas"/>
+        <DCCReference Include="uNotaItem.pas"/>
+        <DCCReference Include="uNotaPagamento.pas"/>
+        <DCCReference Include="uAgenda.pas"/>
+        <DCCReference Include="..\..\Classes\AtivaSistema\fAtivacaoSistema.pas">
+            <Form>FrmAtivacaoSistema</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\AtivaSistema\uLicenca.pas"/>
+        <DCCReference Include="fGrupoServico.pas">
+            <Form>FrmGrupoServico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fGrupoServicoPesquisa.pas">
+            <Form>FrmGrupoServicoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uGrupoServico.pas"/>
+        <DCCReference Include="..\..\Classes\Sobre\fSobre.pas">
+            <Form>FrmSobre</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Ajuda\fAjuda.pas">
+            <Form>FrmAjuda</Form>
+        </DCCReference>
+        <DCCReference Include="fGrupoProduto.pas">
+            <Form>FrmGrupoProduto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fGrupoProdutoPesquisa.pas">
+            <Form>FrmGrupoProdutoPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\AtivaSistema\fContraSenha.pas">
+            <Form>FrmContraSenha</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\CopiaSeguranca\fCopiaSeguranca.pas">
+            <Form>FrmCopiaSeguranca</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Informacao\fInformacoes.pas">
+            <Form>FrmInformacoes</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Relatorio\fRelatorio.pas">
+            <Form>FrmRelatorio</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Base\fOperacao.pas">
+            <Form>FrmOperacao</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Base\fCadastro.pas">
+            <Form>FrmCadastro</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\Base\fPesquisa.pas">
+            <Form>FrmPesquisa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Classes\ExecutaScriptSQL\fExecutaScriptSQL.pas">
+            <Form>FrmExecutaScriptSQL</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fAgendaStarter.pas">
+            <Form>FrmAgendaStarter</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fAbrirAgendaGeral.pas">
+            <Form>FrmAbrirAgendaGeral</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fPainelDiario.pas">
+            <Form>FrmPainelDiario</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">SginERP.dpr</Source>
+                </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt200.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k200.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp200.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
+            </Delphi.Personality>
+            <Deployment/>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>
