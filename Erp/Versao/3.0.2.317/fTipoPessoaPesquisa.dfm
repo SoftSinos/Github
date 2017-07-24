@@ -1,0 +1,84 @@
+inherited FrmTipoPessoaPesquisa: TFrmTipoPessoaPesquisa
+  Caption = 'Pesquisar Tipo de Pessoa'
+  ClientWidth = 703
+  ExplicitWidth = 709
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 697
+    ExplicitWidth = 697
+    inherited GroupBox1: TGroupBox
+      Width = 689
+      ExplicitWidth = 689
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 697
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdTpPessoa'
+        Title.Alignment = taCenter
+        Title.Caption = 'Identificador'
+        Visible = False
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'DtCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cadastro'
+        Width = 130
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'SnSituacao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Situa'#231#227'o'
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmTpPessoa'
+        Title.Alignment = taCenter
+        Title.Caption = 'Tipo de Pessoa'
+        Width = 354
+        Visible = True
+      end>
+  end
+  inherited Panel2: TPanel
+    Width = 697
+    ExplicitWidth = 697
+    inherited GroupBox2: TGroupBox
+      Width = 689
+      ExplicitWidth = 689
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 697
+    ExplicitWidth = 697
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 697
+    ExplicitWidth = 697
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 697
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitWidth = 697
+  end
+end
