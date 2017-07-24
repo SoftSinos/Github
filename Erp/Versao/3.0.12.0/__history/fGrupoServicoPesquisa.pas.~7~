@@ -1,0 +1,331 @@
+unit fGrupoServicoPesquisa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fPesquisa, Data.DB, Datasnap.DBClient, Vcl.ComCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit, Vcl.Menus, cxButtons;
+
+type
+  TFrmGrupoServicoPesquisa = class(TFrmPesquisa)
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnIncluirClick(Sender: TObject);
+    procedure BtnAlterarClick(Sender: TObject);
+    procedure BtnPesquisarClick(Sender: TObject);
+    procedure BtnImprimirClick(Sender: TObject);
+    procedure BtnLimparClick(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+    procedure EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+    procedure DbgPesquisaDblClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure Pesquisar(AConsulta: String);
+    procedure ControleBotao;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmGrupoServicoPesquisa: TFrmGrupoServicoPesquisa;
+
+implementation
+
+{$R *.dfm}
+uses dPrincipal, uFuncao, fProcessando, uMensagem, uGrupoServico, fGrupoServico, dRelatorios, uEmpresa, fAjuda;
+
+var
+  unGrupoServico  : TGrupoServico;
+  unEmpresa       : TEmpresa;
+  dnRelatorios    : TDtmRelatorios;
+
+procedure TFrmGrupoServicoPesquisa.BtnAjudaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAjudaClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmAjuda := TFrmAjuda.Create(Application);
+    FrmAjuda.Caption        := 'Ajuda Sobre à Tela de ' +  Caption;
+    FrmAjuda.gNmTelaChamada := Name;
+    FrmAjuda.ShowModal;
+  finally
+    FrmAjuda.Free;
+  end;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnAlterarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAlterarClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  if (CdsPesquisa.FieldCount > 0) then
+  begin
+    if CdsPesquisa.RecordCount > 0 then
+    begin
+      try
+        FrmGrupoServico := TFrmGrupoServico.Create(Application);
+
+        FrmGrupoServico.PnlCampos.Enabled          := True;
+        FrmGrupoServico.EdtIdRegistro.Text         := CdsPesquisa.FieldByName('IdGrupoServico').AsString;
+        FrmGrupoServico.EdtNmUsuario.Text          := CdsPesquisa.FieldByName('NmUsuarioCadastro').AsString;
+        FrmGrupoServico.DtpDtCadastro.Date         := CdsPesquisa.FieldByName('DtCadastro').AsDateTime;
+        if CdsPesquisa.FieldByName('SnSituacao').AsString = 'ATIVO' then
+        begin
+          FrmGrupoServico.ChkSnSituacao.Checked    := True;
+          FrmGrupoServico.ChkSnSituacao.Caption    := 'Cadastro Ativo';
+        end
+        else
+        begin
+          FrmGrupoServico.ChkSnSituacao.Checked    := False;
+          FrmGrupoServico.ChkSnSituacao.Caption    := 'Cadastro Inativo';
+        end;
+        FrmGrupoServico.EdtNmGrupoServico.Text     := CdsPesquisa.FieldByName('NmGrupoServico').AsString;
+
+        ControleBotao;
+        FrmGrupoServico.ShowModal;
+      finally
+        FrmGrupoServico.Free;
+      end;
+    end
+    else
+    begin
+      MsgAtencao(uMensagem.NaoExistemDadosParaSeremAlterados);
+    end;
+  end
+  else
+  begin
+    MsgAtencao(uMensagem.NaoExistemDadosParaSeremAlterados);
+  end;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnFecharClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnFecharClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnImprimirClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnImprimirClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    dnRelatorios := TDtmRelatorios.Create(Self);
+    unEmpresa    := TEmpresa.Create;
+    unEmpresa.CarregaDbGrid(DtmPrincipal.Conexao, 2, DtmPrincipal.IdEmpresaLogada, '', dnRelatorios.CDSRelEmpresa);
+
+    if not DtmPrincipal.UsuarioAdministrador then
+    begin
+      unGrupoServico.CarregaDbGrid(DtmPrincipal.Conexao, 2, 0, EdtPesquisa.Text, dnRelatorios.CDSRelPesquisa);
+    end
+    else
+    begin
+      unGrupoServico.CarregaDbGrid(DtmPrincipal.Conexao, 2, DtmPrincipal.IdEmpresaLogada, EdtPesquisa.Text, dnRelatorios.CDSRelPesquisa);
+    end;
+
+    FrmProcessando.Destroy;
+
+    dnRelatorios.frxPDFExport.ShowDialog := True;
+    dnRelatorios.frxReport.LoadFromFile(DtmPrincipal.NmCaminhoExecutavel +  'Relatorio\RelPesqImpGrupoServico.fr3');
+    dnRelatorios.frxReport.ShowReport();
+  finally
+    dnRelatorios.Destroy;
+  end;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnIncluirClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnIncluirClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  try
+    FrmGrupoServico := TFrmGrupoServico.Create(Application);
+    ControleBotao;
+    FrmGrupoServico.ShowModal;
+  finally
+    FrmGrupoServico.Free;
+  end;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnLimparClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnLimparClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.BtnPesquisarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnPesquisarClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  Pesquisar(EdtPesquisa.Text);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.ControleBotao;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'ControleBotao';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  FrmGrupoServico.BtnIncluir.Enabled   := False;
+  FrmGrupoServico.BtnSalvar.Enabled    := False;
+  FrmGrupoServico.BtnCancelar.Enabled  := False;
+  FrmGrupoServico.BtnFechar.Enabled    := True;
+
+  if Trim(FrmGrupoServico.EdtIdRegistro.Text) <> '' then
+  begin
+    FrmGrupoServico.BtnIncluir.Enabled := True;
+    FrmGrupoServico.BtnAnterior.Enabled:= True;
+    FrmGrupoServico.BtnProximo.Enabled := True;
+  end
+  else
+  begin
+    FrmGrupoServico.BtnSalvar.Enabled  := True;
+    FrmGrupoServico.BtnCancelar.Enabled:= True;
+  end;
+end;
+
+procedure TFrmGrupoServicoPesquisa.DbgPesquisaDblClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'DbgPesquisaDblClick';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  BtnAlterarClick(Sender);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    DtmPrincipal.unLog.NmOperacao := 'Entrou';
+    DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+    DtmPrincipal.unLog.NmMetodo   := 'EdtPesquisaKeyPress';
+    DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+    DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+    BtnPesquisarClick(Sender);
+  end;
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmGrupoServicoPesquisa.Pesquisar(AConsulta: String);
+var
+  I: Integer;
+  lConsulta: Integer;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmGrupoServicoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'Pesquisar';
+  DtmPrincipal.unLog.NmTabela   := 'GrupoServico';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  PrbPesquisa.Position := 0;
+  lConsulta := 0;
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    for I := 1 to 100 do
+    begin
+      Sleep(15);
+      PrbPesquisa.Position := PrbPesquisa.Position + 1;
+      if lConsulta = 0 then
+      begin
+        lConsulta       := 1;
+        unGrupoServico  := TGrupoServico.Create;
+
+        unGrupoServico.CarregaDbGrid(DtmPrincipal.Conexao, 2, 0, EdtPesquisa.Text, CdsPesquisa);
+      end;
+    end;
+  finally
+    unGrupoServico.Free;
+    FrmProcessando.Destroy;
+  end;
+
+  inherited;
+end;
+
+end.

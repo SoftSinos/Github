@@ -1,0 +1,24 @@
+unit fExecutaSQL;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls;
+
+type
+  TFrmExecutarSQL = class(TFrmOperacao)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmExecutarSQL: TFrmExecutarSQL;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,170 @@
+unit fCadastro;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.ImgList, Data.DBXMsSQL, Data.FMTBcd, Vcl.ComCtrls, Datasnap.DBClient, Data.DB, Datasnap.Provider, Data.SqlExpr, Vcl.Mask, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, dxSkinsCore, dxSkinsDefaultPainters;
+
+type
+  TFrmCadastro = class(TForm)
+    PnlPrincipal    : TPanel;
+    PnlCampos       : TPanel;
+    BtnIncluir      : TSpeedButton;
+    BtnSalvar       : TSpeedButton;
+    BtnCancelar     : TSpeedButton;
+    BtnFechar       : TSpeedButton;
+    BtnAjuda        : TSpeedButton;
+    BtnAnterior     : TSpeedButton;
+    BtnProximo      : TSpeedButton;
+    CdsCopula: TClientDataSet;
+    CdsRetorno: TClientDataSet;
+    StbPrincipal: TStatusBar;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label9: TLabel;
+    EdtIdRegistro: TEdit;
+    DtpDtCadastro: TcxDateEdit;
+    ChkSnSituacao: TCheckBox;
+    EdtNmUsuario: TEdit;
+    Label12: TLabel;
+    procedure BtnIncluirClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure ChkSnSituacaoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure BtnAlterarClick(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+    procedure BtnAnteriorClick(Sender: TObject);
+    procedure BtnProximoClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadastro: TFrmCadastro;
+
+implementation
+
+{$R *.dfm}
+
+uses uMensagem, uFuncao;
+
+procedure TFrmCadastro.BtnCancelarClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  BtnIncluir.Enabled    := True;
+  BtnSalvar.Enabled     := False;
+  BtnCancelar.Enabled   := False;
+  BtnFechar.Enabled     := True;
+  ChkSnSituacao.Checked := True;
+
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TEdit then
+    begin
+      TEdit(Components[I]).Color := clWindow;
+    end;
+  end;
+
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TComboBox then
+    begin
+      TComboBox(Components[I]).Color := clWindow;
+    end;
+  end;
+
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TMaskEdit then
+    begin
+      TMaskEdit(Components[I]).Color := clWindow;
+    end;
+  end;
+end;
+
+procedure TFrmCadastro.BtnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmCadastro.BtnIncluirClick(Sender: TObject);
+begin
+  BtnIncluir.Enabled    := False;
+  BtnSalvar.Enabled     := True;
+  BtnCancelar.Enabled   := True;
+  BtnFechar.Enabled     := True;
+  ChkSnSituacao.Checked := True;
+  DtpDtCadastro.Date    := Now;
+  EdtIdRegistro.Clear;
+end;
+
+procedure TFrmCadastro.BtnProximoClick(Sender: TObject);
+begin
+  MsgInformacao(uMensagem.TelaASerImplementada);
+end;
+
+procedure TFrmCadastro.BtnSalvarClick(Sender: TObject);
+begin
+  BtnIncluir.Enabled  := True;
+  BtnSalvar.Enabled   := False;
+  BtnCancelar.Enabled := False;
+  BtnFechar.Enabled   := True;
+end;
+
+procedure TFrmCadastro.ChkSnSituacaoClick(Sender: TObject);
+begin
+  BtnSalvar.Enabled := True;
+end;
+
+procedure TFrmCadastro.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TFrmCadastro.FormCreate(Sender: TObject);
+var
+  I      : Integer;
+begin
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TEdit then
+    begin
+      (Components[I] as TEdit).CharCase := ecUpperCase;
+    end;
+  end;
+  DtpDtCadastro.Date := Now;
+end;
+
+procedure TFrmCadastro.FormShow(Sender: TObject);
+begin
+  // Herança
+end;
+
+procedure TFrmCadastro.BtnAjudaClick(Sender: TObject);
+begin
+  MsgInformacao(uMensagem.TelaASerImplementada);
+end;
+
+procedure TFrmCadastro.BtnAlterarClick(Sender: TObject);
+begin
+  BtnIncluir.Enabled  := False;
+  BtnSalvar.Enabled   := True;
+  BtnCancelar.Enabled := True;
+  BtnFechar.Enabled   := True;
+end;
+
+procedure TFrmCadastro.BtnAnteriorClick(Sender: TObject);
+begin
+  MsgInformacao(uMensagem.TelaASerImplementada);
+end;
+
+end.

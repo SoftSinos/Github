@@ -1,0 +1,96 @@
+﻿program SoftSinos;
+
+uses
+  Vcl.Forms,
+  Vcl.Themes,
+  Vcl.Styles,
+  MidasLib,
+  Windows,
+  Dialogs,
+  fPrincipal in 'fPrincipal.pas' {FrmPrincipal},
+  uAjuda in '..\Classes\Ajuda\uAjuda.pas',
+  fAjuda in '..\Classes\Ajuda\fAjuda.pas' {FrmAjuda},
+  fAtivaSistema in '..\Classes\AtivaSistema\fAtivaSistema.pas' {FrmAtivacaoSistema},
+  uAtualizaExecutavel in '..\Classes\Atualizacao\uAtualizaExecutavel.pas',
+  uAtualizaScript in '..\Classes\Atualizacao\uAtualizaScript.pas',
+  NBioAPI_Type in '..\Classes\Biometria\HamsterDX\NBioAPI_Type.pas',
+  uCarregaDados in '..\Classes\CarregaDados\uCarregaDados.pas',
+  fCarregaPeriodo in '..\Classes\CarregaPeriodo\fCarregaPeriodo.pas' {FrmCarregaPeriodo},
+  fConfiguracao in '..\Classes\Configuracao\fConfiguracao.pas' {FrmConfiguracao},
+  uConfiguracao in '..\Classes\Configuracao\uConfiguracao.pas',
+  fCopiaSeguranca in '..\Classes\CopiaSeguranca\fCopiaSeguranca.pas' {FrmCopiaSeguranca},
+  fCriacaoRelatorios in '..\Classes\CriacaoRelatorios\fCriacaoRelatorios.pas' {FrmCriacaoRelatorios},
+  uCriaPastas in '..\Classes\CriaPastas\uCriaPastas.pas',
+  dArquivos in '..\Classes\DataModule\dArquivos.pas' {DtmArquivos: TDataModule},
+  dMail in '..\Classes\DataModule\dMail.pas' {DtmEmail: TDataModule},
+  dPrincipal in '..\Classes\DataModule\dPrincipal.pas' {DtmPrincipal: TDataModule},
+  dRelatorios in '..\Classes\DataModule\dRelatorios.pas' {DtmRelatorios: TDataModule},
+  uFuncao in '..\Classes\Funcao\uFuncao.pas',
+  GIFImage in '..\Classes\Imagem\GIFImage.pas',
+  fInformacoes in '..\Classes\Informacao\fInformacoes.pas' {FrmInformacoes},
+  fLogPesquisa in '..\Classes\Log\fLogPesquisa.pas',
+  uLog in '..\Classes\Log\uLog.pas',
+  fLogin in '..\Classes\Login\fLogin.pas' {FrmLogin},
+  uMensagem in '..\Classes\Mensagem\uMensagem.pas',
+  uProcedure in '..\Classes\Procedure\uProcedure.pas',
+  fProcessando in '..\Classes\Processamento\fProcessando.pas' {FrmProcessando},
+  fRelatorio in '..\Classes\Relatorio\fRelatorio.pas' {FrmRelatorio},
+  fSobre in '..\Classes\Sobre\fSobre.pas' {FrmSobre},
+  fSplash in '..\Classes\Splash\fSplash.pas' {FrmSplash},
+  uUsuario in '..\Classes\Usuario\uUsuario.pas',
+  fUsuario in '..\Classes\Usuario\fUsuario.pas' {FrmUsuario},
+  fUsuarioPesquisa in '..\Classes\Usuario\fUsuarioPesquisa.pas' {FrmUsuarioPesquisa},
+  fWebCam in '..\Classes\WebCam\fWebCam.pas' {FrmWebCam},
+  uEmpresa in 'uEmpresa.pas',
+  fEmpresa in 'fEmpresa.pas' {FrmEmpresa},
+  fEmpresaPesquisa in 'fEmpresaPesquisa.pas' {FrmEmpresaPesquisa},
+  fCalendario in '..\Classes\Calendario\fCalendario.pas' {FrmCalendario},
+  fCalendarioPesquisa in '..\Classes\Calendario\fCalendarioPesquisa.pas' {FrmCalendarioPesquisa},
+  uCalendario in '..\Classes\Calendario\uCalendario.pas',
+  fConfiguracaoPesquisa in '..\Classes\Configuracao\fConfiguracaoPesquisa.pas' {FrmConfiguracaoPesquisa},
+  uVersao in '..\Classes\Versao\uVersao.pas',
+  uSoftHouse in '..\Classes\SoftHouse\uSoftHouse.pas',
+  uMeioMagnetico in '..\Classes\MeioMagnetico\uMeioMagnetico.pas',
+  uCep in '..\Classes\Geografia\uCep.pas',
+  uCidade in '..\Classes\Geografia\uCidade.pas',
+  uPais in '..\Classes\Geografia\uPais.pas',
+  uRegiao in '..\Classes\Geografia\uRegiao.pas',
+  uAtivacao in '..\Classes\AtivaSistema\uAtivacao.pas',
+  fTipoPessoaPesquisa in 'fTipoPessoaPesquisa.pas' {FrmTipoPessoaPesquisa},
+  fTipoPessoa in 'fTipoPessoa.pas' {FrmTipoPessoa},
+  fCep in '..\Classes\Geografia\fCep.pas' {FrmCep},
+  fCepPesquisa in '..\Classes\Geografia\fCepPesquisa.pas' {FrmCepPesquisa},
+  fCidade in '..\Classes\Geografia\fCidade.pas' {FrmCidade},
+  fCidadePesquisa in '..\Classes\Geografia\fCidadePesquisa.pas' {FrmCidadePesquisa},
+  fCadastro in '..\Classes\Base\fCadastro.pas' {FrmCadastro},
+  fPesquisa in '..\Classes\Base\fPesquisa.pas' {FrmPesquisa},
+  fPessoa in 'fPessoa.pas' {FrmPesquisa1};
+
+{$R *.res}
+
+var
+  HprevHist: HWND;
+
+begin
+  Application.Initialize;
+  HprevHist := FindWindow(Nil, PChar('⁞ ⁞ ⁞ Sistema de Gerenciamento Integrado - ERP ⁞ ⁞ ⁞'));
+
+ if HprevHist = 0 then
+ begin
+  TStyleManager.TrySetStyle('Obsidian');
+  Application.Title := '⁞ ⁞ ⁞ Sistema de Gerenciamento Integrado - ERP ⁞ ⁞ ⁞';
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TDtmPrincipal, DtmPrincipal);
+  Application.CreateForm(TDtmEmail, DtmEmail);
+  Application.CreateForm(TDtmRelatorios, DtmRelatorios);
+  Application.CreateForm(TDtmArquivos, DtmArquivos);
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmPesquisa1, FrmPesquisa1);
+  Application.Run;
+ end
+ else
+ begin
+  Application.MessageBox(PChar('O PROGRAMA NÃO PODE SER ABERTO MAIS DE UMA VEZ!'), 'ATENÇÃO', MB_OK + MB_ICONEXCLAMATION);
+ end;
+
+end.

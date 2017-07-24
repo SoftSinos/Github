@@ -1,0 +1,170 @@
+inherited FrmPainelDiario: TFrmPainelDiario
+  Align = alClient
+  BorderStyle = bsNone
+  Caption = 'Painel Di'#225'rio Agendamento'
+  ClientHeight = 412
+  ClientWidth = 1030
+  ExplicitWidth = 1030
+  ExplicitHeight = 412
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited StbPrincipal: TStatusBar
+    Top = 390
+    Width = 1024
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitTop = 390
+    ExplicitWidth = 1024
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 1024
+    Color = clWhite
+    ParentBackground = False
+    ExplicitWidth = 1024
+    inherited BtnFechar: TcxButton
+      Left = 316
+      TabOrder = 3
+      ExplicitLeft = 420
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnAjuda: TcxButton
+      Left = 420
+      TabOrder = 4
+      OnClick = BtnAjudaClick
+      ExplicitLeft = 524
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnInicializar: TcxButton
+      Left = 577
+      TabOrder = 9
+      ExplicitLeft = 577
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnSalvar: TcxButton
+      Left = 785
+      TabOrder = 5
+      ExplicitLeft = 785
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnExecutar: TcxButton
+      Left = 889
+      TabOrder = 6
+      ExplicitLeft = 889
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnLimpar: TcxButton
+      Left = 473
+      TabOrder = 7
+      ExplicitLeft = 548
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnCarregar: TcxButton
+      Left = 681
+      TabOrder = 8
+      ExplicitLeft = 681
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnAgenda: TcxButton
+      Left = 4
+      Enabled = True
+      TabOrder = 0
+      OnClick = BtnAgendaClick
+      ExplicitLeft = 4
+      ExplicitTop = 10
+      ExplicitHeight = 38
+    end
+    inherited BtnPeriodo: TcxButton
+      Left = 108
+      Enabled = True
+      TabOrder = 1
+      OnClick = BtnPeriodoClick
+      ExplicitLeft = 108
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+    inherited BtnAtualizar: TcxButton
+      Left = 212
+      Enabled = True
+      TabOrder = 2
+      OnClick = BtnAtualizarClick
+      ExplicitLeft = 212
+      ExplicitTop = 4
+      ExplicitHeight = 38
+    end
+  end
+  inherited PnlCampos: TPanel
+    Width = 1024
+    Height = 302
+    ExplicitWidth = 1024
+    ExplicitHeight = 302
+    object StgGrid: TStringGrid
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 1016
+      Height = 294
+      Align = alClient
+      BevelWidth = 5
+      Color = clWhite
+      ColCount = 1
+      DefaultColWidth = 110
+      DefaultRowHeight = 70
+      DrawingStyle = gdsGradient
+      FixedCols = 0
+      RowCount = 1
+      FixedRows = 0
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      GradientEndColor = clBtnFace
+      GridLineWidth = 3
+      ParentFont = False
+      ScrollBars = ssVertical
+      TabOrder = 0
+      OnDrawCell = StgGridDrawCell
+    end
+  end
+  object PrbPesquisa: TProgressBar
+    AlignWithMargins = True
+    Left = 3
+    Top = 367
+    Width = 1024
+    Height = 17
+    Align = alBottom
+    TabOrder = 3
+  end
+  object CdsHorarios: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 550
+    Top = 91
+  end
+  object CdsProfissionais: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 550
+    Top = 187
+  end
+  object CdsAgenda: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 552
+    Top = 138
+  end
+end

@@ -1,0 +1,94 @@
+﻿program SoftSinos;
+
+uses
+  Vcl.Forms,
+  Vcl.Themes,
+  Vcl.Styles,
+  MidasLib,
+  Windows,
+  Dialogs,
+  fPrincipal in 'fPrincipal.pas' {FrmPrincipal},
+  uAjuda in '..\..\..\Modulo\Modulo\Erp\Ajuda\uAjuda.pas',
+  fAjuda in '..\..\..\Modulo\Modulo\Erp\Ajuda\fAjuda.pas' {FrmAjuda},
+  fAtivaSistema in '..\..\..\Modulo\Modulo\Erp\AtivaSistema\fAtivaSistema.pas' {FrmAtivacaoSistema},
+  uAtualizaExecutavel in '..\..\..\Modulo\Modulo\Erp\Atualizacao\uAtualizaExecutavel.pas',
+  uAtualizaScript in '..\..\..\Modulo\Modulo\Erp\Atualizacao\uAtualizaScript.pas',
+  NBioAPI_Type in '..\..\..\Modulo\Modulo\Erp\Biometria\HamsterDX\NBioAPI_Type.pas',
+  uCarregaDados in '..\..\..\Modulo\Modulo\Erp\CarregaDados\uCarregaDados.pas',
+  fCarregaPeriodo in '..\..\..\Modulo\Modulo\Erp\CarregaPeriodo\fCarregaPeriodo.pas' {FrmCarregaPeriodo},
+  fConfiguracao in '..\..\..\Modulo\Modulo\Erp\Configuracao\fConfiguracao.pas' {FrmConfiguracao},
+  uConfiguracao in '..\..\..\Modulo\Modulo\Erp\Configuracao\uConfiguracao.pas',
+  fCopiaSeguranca in '..\..\..\Modulo\Modulo\Erp\CopiaSeguranca\fCopiaSeguranca.pas' {FrmCopiaSeguranca},
+  fCriacaoRelatorios in '..\..\..\Modulo\Modulo\Erp\CriacaoRelatorios\fCriacaoRelatorios.pas' {FrmCriacaoRelatorios},
+  uCriaPastas in '..\..\..\Modulo\Modulo\Erp\CriaPastas\uCriaPastas.pas',
+  dArquivos in '..\..\..\Modulo\Modulo\Erp\DataModule\dArquivos.pas' {DtmArquivos: TDataModule},
+  dMail in '..\..\..\Modulo\Modulo\Erp\DataModule\dMail.pas' {DtmEmail: TDataModule},
+  dPrincipal in '..\..\..\Modulo\Modulo\Erp\DataModule\dPrincipal.pas' {DtmPrincipal: TDataModule},
+  dRelatorios in '..\..\..\Modulo\Modulo\Erp\DataModule\dRelatorios.pas' {DtmRelatorios: TDataModule},
+  uFuncao in '..\..\..\Modulo\Modulo\Erp\Funcao\uFuncao.pas',
+  GIFImage in '..\..\..\Modulo\Modulo\Erp\Imagem\GIFImage.pas',
+  fInformacoes in '..\..\..\Modulo\Modulo\Erp\Informacao\fInformacoes.pas' {FrmInformacoes},
+  fLogPesquisa in '..\..\..\Modulo\Modulo\Erp\Log\fLogPesquisa.pas',
+  uLog in '..\..\..\Modulo\Modulo\Erp\Log\uLog.pas',
+  fLogin in '..\..\..\Modulo\Modulo\Erp\Login\fLogin.pas' {FrmLogin},
+  uMensagem in '..\..\..\Modulo\Modulo\Erp\Mensagem\uMensagem.pas',
+  uProcedure in '..\..\..\Modulo\Modulo\Erp\Procedure\uProcedure.pas',
+  fProcessando in '..\..\..\Modulo\Modulo\Erp\Processamento\fProcessando.pas' {FrmProcessando},
+  fRelatorio in '..\..\..\Modulo\Modulo\Erp\Relatorio\fRelatorio.pas' {FrmRelatorio},
+  fSobre in '..\..\..\Modulo\Modulo\Erp\Sobre\fSobre.pas' {FrmSobre},
+  fSplash in '..\..\..\Modulo\Modulo\Erp\Splash\fSplash.pas' {FrmSplash},
+  uUsuario in '..\..\..\Modulo\Modulo\Erp\Usuario\uUsuario.pas',
+  fUsuario in '..\..\..\Modulo\Modulo\Erp\Usuario\fUsuario.pas' {FrmUsuario},
+  fUsuarioPesquisa in '..\..\..\Modulo\Modulo\Erp\Usuario\fUsuarioPesquisa.pas' {FrmUsuarioPesquisa},
+  fWebCam in '..\..\..\Modulo\Modulo\Erp\WebCam\fWebCam.pas' {FrmWebCam},
+  uEmpresa in 'uEmpresa.pas',
+  fEmpresa in 'fEmpresa.pas' {FrmEmpresa},
+  fEmpresaPesquisa in 'fEmpresaPesquisa.pas' {FrmEmpresaPesquisa},
+  fCalendario in '..\..\..\Modulo\Modulo\Erp\Calendario\fCalendario.pas' {FrmCalendario},
+  fCalendarioPesquisa in '..\..\..\Modulo\Modulo\Erp\Calendario\fCalendarioPesquisa.pas' {FrmCalendarioPesquisa},
+  uCalendario in '..\..\..\Modulo\Modulo\Erp\Calendario\uCalendario.pas',
+  fConfiguracaoPesquisa in '..\..\..\Modulo\Modulo\Erp\Configuracao\fConfiguracaoPesquisa.pas' {FrmConfiguracaoPesquisa},
+  uVersao in '..\..\..\Modulo\Modulo\Erp\Versao\uVersao.pas',
+  uSoftHouse in '..\..\..\Modulo\Modulo\Erp\SoftHouse\uSoftHouse.pas',
+  uMeioMagnetico in '..\..\..\Modulo\Modulo\Erp\MeioMagnetico\uMeioMagnetico.pas',
+  uCep in '..\..\..\Modulo\Modulo\Erp\Geografia\uCep.pas',
+  uCidade in '..\..\..\Modulo\Modulo\Erp\Geografia\uCidade.pas',
+  uPais in '..\..\..\Modulo\Modulo\Erp\Geografia\uPais.pas',
+  uRegiao in '..\..\..\Modulo\Modulo\Erp\Geografia\uRegiao.pas',
+  uAtivacao in '..\..\..\Modulo\Modulo\Erp\AtivaSistema\uAtivacao.pas',
+  fTipoPessoaPesquisa in 'fTipoPessoaPesquisa.pas' {FrmTipoPessoaPesquisa},
+  fTipoPessoa in 'fTipoPessoa.pas' {FrmTipoPessoa},
+  fCep in '..\..\..\Modulo\Modulo\Erp\Geografia\fCep.pas' {FrmCep},
+  fCepPesquisa in '..\..\..\Modulo\Modulo\Erp\Geografia\fCepPesquisa.pas' {FrmCepPesquisa},
+  fCidade in '..\..\..\Modulo\Modulo\Erp\Geografia\fCidade.pas' {FrmCidade},
+  fCidadePesquisa in '..\..\..\Modulo\Modulo\Erp\Geografia\fCidadePesquisa.pas' {FrmCidadePesquisa},
+  fCadastro in '..\..\..\Modulo\Modulo\Erp\Base\fCadastro.pas' {FrmCadastro},
+  fPesquisa in '..\..\..\Modulo\Modulo\Erp\Base\fPesquisa.pas' {FrmPesquisa};
+
+{$R *.res}
+
+var
+  HprevHist: HWND;
+
+begin
+  Application.Initialize;
+  HprevHist := FindWindow(Nil, PChar('⁞ ⁞ ⁞ Sistema de Gerenciamento Integrado - ERP ⁞ ⁞ ⁞'));
+
+ if HprevHist = 0 then
+ begin
+  TStyleManager.TrySetStyle('Obsidian');
+  Application.Title := '⁞ ⁞ ⁞ Sistema de Gerenciamento Integrado - ERP ⁞ ⁞ ⁞';
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TDtmPrincipal, DtmPrincipal);
+  Application.CreateForm(TDtmEmail, DtmEmail);
+  Application.CreateForm(TDtmRelatorios, DtmRelatorios);
+  Application.CreateForm(TDtmArquivos, DtmArquivos);
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.Run;
+ end
+ else
+ begin
+  Application.MessageBox(PChar('O PROGRAMA NÃO PODE SER ABERTO MAIS DE UMA VEZ!'), 'ATENÇÃO', MB_OK + MB_ICONEXCLAMATION);
+ end;
+
+end.
