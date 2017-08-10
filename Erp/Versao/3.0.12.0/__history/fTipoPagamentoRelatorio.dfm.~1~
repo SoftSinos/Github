@@ -1,5 +1,0 @@
-inherited FrmTipoPagamentoRelatorio: TFrmTipoPagamentoRelatorio
-  Caption = 'FrmTipoPagamentoRelatorio'
-  PixelsPerInch = 96
-  TextHeight = 13
-end

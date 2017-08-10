@@ -1,5 +1,0 @@
-inherited FrmServicoRelatorio: TFrmServicoRelatorio
-  Caption = 'FrmServicoRelatorio'
-  PixelsPerInch = 96
-  TextHeight = 13
-end
