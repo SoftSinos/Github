@@ -1,0 +1,398 @@
+unit uRelatorio;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TRelatorio = class
+  private
+    SQLConnection         : TFDConnection;
+    FIdRelatorio          : Integer;
+    FIdUsuario            : Integer;
+    FDtCadastro           : TDateTime;
+    FSnSituacao           : Integer;
+    FNmTpRelatorio        : String;
+    FNmArquivoRelatorio   : String;
+    FNmRelatorio          : String;
+    FNmProcedure          : String;
+    procedure Inicializar;
+  public
+    property IdRelatorio: Integer read FIdRelatorio write FIdRelatorio;
+    property IdUsuario: Integer read FIdUsuario write FIdUsuario;
+    property DtCadastro: TDateTime read FDtCadastro write FDtCadastro;
+    property SnSituacao: Integer read FSnSituacao write FSnSituacao;
+    property NmTpRelatorio: String read FNmTpRelatorio write FNmTpRelatorio;
+    property NmArquivoRelatorio: String read FNmArquivoRelatorio write FNmArquivoRelatorio;
+    property NmRelatorio: String read FNmRelatorio write FNmRelatorio;
+    property NmProcedure: String read FNmProcedure write FNmProcedure;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+    function BuscarNomeRelatorio(ASQLConnection: TFDConnection; ANmRelatorio: String): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdRelatorio: Integer; AConsulta: String; Data: TClientDataSet);
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TRelatorio.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdRelatorio: Integer; AConsulta: String; Data: TClientDataSet);
+var
+  qryRelatorio : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryRelatorio := TFDQuery.Create(nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdRelatorio', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 7, False);
+      Data.FieldDefs.Add('NmTpRelatorio', ftString, 255, False);
+      Data.FieldDefs.Add('NmArquivoRelatorio', ftString, 255, False);
+      Data.FieldDefs.Add('NmRelatorio', ftString, 255, False);
+      Data.FieldDefs.Add('NmProcedure', ftString, 255, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryRelatorio.Params.Clear;
+      qryRelatorio.SQL.Clear;
+      qryRelatorio.SQL.Add('Select                  ');
+      qryRelatorio.SQL.Add('  IdRelatorio,          ');
+      qryRelatorio.SQL.Add('  IdUsuario,            ');
+      qryRelatorio.SQL.Add('  DtCadastro,           ');
+      qryRelatorio.SQL.Add('  SnSituacao,           ');
+      qryRelatorio.SQL.Add('  NmTpRelatorio,        ');
+      qryRelatorio.SQL.Add('  NmArquivoRelatorio,   ');
+      qryRelatorio.SQL.Add('  NmRelatorio,          ');
+      qryRelatorio.SQL.Add('  NmProcedure           ');
+      qryRelatorio.SQL.Add('From Relatorio          ');
+      qryRelatorio.SQL.Add('Where 1 = 1             ');
+      if ISnSituacao = 1 then
+      begin
+         qryRelatorio.SQL.Add('  And SnSituacao = 1 ');
+      end
+      else
+      if ISnSituacao = 0 then
+      begin
+         qryRelatorio.SQL.Add('  And SnSituacao = 0 ');
+      end;
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryRelatorio.SQL.Add (lCondicao);
+          qryRelatorio.SQL.Add ('Order By');
+          qryRelatorio.SQL.Add ('  IdRelatorio');
+
+          qryRelatorio.Open;
+          qryRelatorio.First;
+        end;
+      end else begin
+        qryRelatorio.SQL.Add (lCondicao);
+        qryRelatorio.SQL.Add ('Order By');
+        qryRelatorio.SQL.Add ('  IdRelatorio');
+
+        lFinalizaLoop := 1;
+        qryRelatorio.Open;
+        qryRelatorio.First;
+      end;
+
+      while not qryRelatorio.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdRelatorio').AsInteger = qryRelatorio.FieldByName('IdRelatorio').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdRelatorio').AsInteger       := qryRelatorio.FieldByName('IdRelatorio').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger         := qryRelatorio.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime       := qryRelatorio.FieldByName('DtCadastro').AsDateTime;
+          if qryRelatorio.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString       := 'Ativo';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString       := 'Desativado';
+          end;
+          Data.FieldByName('NmTpRelatorio').AsString      := qryRelatorio.FieldByName('NmTpRelatorio').AsString;
+          Data.FieldByName('NmArquivoRelatorio').AsString := qryRelatorio.FieldByName('NmArquivoRelatorio').AsString;
+          Data.FieldByName('NmRelatorio').AsString        := qryRelatorio.FieldByName('NmRelatorio').AsString;
+          Data.FieldByName('NmProcedure').AsString        := qryRelatorio.FieldByName('NmProcedure').AsString;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryRelatorio.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryRelatorio.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TRelatorio.Create;
+begin
+  Inicializar;
+end;
+
+procedure TRelatorio.Inicializar;
+begin
+  IdRelatorio         := 0;
+  IdUsuario           := 0;
+  DtCadastro          := 0;
+  SnSituacao          := 0;
+  NmTpRelatorio       := '';
+  NmArquivoRelatorio  := '';
+  NmRelatorio         := '';
+  NmProcedure         := '';
+end;
+
+function TRelatorio.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryRelatorio: TFDQuery;
+begin
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdRelatorio) then
+    begin
+      qryRelatorio.SQL.Add('Insert Into Relatorio(');
+      qryRelatorio.SQL.Add('  IdUsuario,          ');
+      qryRelatorio.SQL.Add('  DtCadastro,         ');
+      qryRelatorio.SQL.Add('  SnSituacao,         ');
+      qryRelatorio.SQL.Add('  NmTpRelatorio,      ');
+      qryRelatorio.SQL.Add('  NmArquivoRelatorio, ');
+      qryRelatorio.SQL.Add('  NmRelatorio,        ');
+      qryRelatorio.SQL.Add('  NmProcedure)        ');
+      qryRelatorio.SQL.Add('Values (              ');
+      qryRelatorio.SQL.Add('  :IdUsuario,         ');
+      qryRelatorio.SQL.Add('  :DtCadastro,        ');
+      qryRelatorio.SQL.Add('  :SnSituacao,        ');
+      qryRelatorio.SQL.Add('  :NmTpRelatorio,     ');
+      qryRelatorio.SQL.Add('  :NmArquivoRelatorio,');
+      qryRelatorio.SQL.Add('  :NmRelatorio,       ');
+      qryRelatorio.SQL.Add('  :NmProcedure)       ');
+    end else begin
+      qryRelatorio.SQL.Add('Update Relatorio Set                        ');
+      qryRelatorio.SQL.Add('  IdUsuario = :IdUsuario,                   ');
+      qryRelatorio.SQL.Add('  DtCadastro = :DtCadastro,                 ');
+      qryRelatorio.SQL.Add('  SnSituacao = :SnSituacao,                 ');
+      qryRelatorio.SQL.Add('  NmTpRelatorio = :NmTpRelatorio,           ');
+      qryRelatorio.SQL.Add('  NmArquivoRelatorio = :NmArquivoRelatorio, ');
+      qryRelatorio.SQL.Add('  NmRelatorio = :NmRelatorio,               ');
+      qryRelatorio.SQL.Add('  NmProcedure = :NmProcedure                ');
+      qryRelatorio.SQL.Add('Where IdRelatorio = :IdRelatorio            ');
+
+      qryRelatorio.ParamByName('IdRelatorio').AsInteger       := IdRelatorio;
+
+    end;
+    qryRelatorio.ParamByName('IdUsuario         ').AsInteger  := IdUsuario;
+    qryRelatorio.ParamByName('DtCadastro        ').AsDateTime := DtCadastro;
+    qryRelatorio.ParamByName('SnSituacao        ').AsInteger  := SnSituacao;
+    qryRelatorio.ParamByName('NmTpRelatorio     ').AsString   := NmTpRelatorio;
+    qryRelatorio.ParamByName('NmArquivoRelatorio').AsString   := NmArquivoRelatorio;
+    qryRelatorio.ParamByName('NmRelatorio       ').AsString   := NmRelatorio;
+    qryRelatorio.ParamByName('NmProcedure       ').AsString   := NmProcedure;
+   try
+      qryRelatorio.ExecSQL;
+      qryRelatorio.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+class function TRelatorio.Inativar(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+var
+  qryRelatorio: TFDQuery;
+begin
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    qryRelatorio.SQL.Add('Update Relatorio Set ');
+    qryRelatorio.SQL.Add('  SnSituacao = 0 ');
+    qryRelatorio.SQL.Add('Where 1 = 1');
+    qryRelatorio.SQL.Add('  And IdRelatorio = ' + IntToStr(AIdRelatorio));
+   try
+      qryRelatorio.ExecSQL;
+      qryRelatorio.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+class function TRelatorio.Existe(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+var
+  qryRelatorio: TFDQuery;
+begin
+  Result := False;
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    qryRelatorio.SQL.Add('Select IdRelatorio From Relatorio');
+    qryRelatorio.SQL.Add('Where 1 = 1');
+    qryRelatorio.SQL.Add('  And IdRelatorio = ' + IntToStr(AIdRelatorio));
+    qryRelatorio.Open;
+    if qryRelatorio.Fields[0].Value > 0 then
+      Result := True;
+    qryRelatorio.Close;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+class function TRelatorio.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryRelatorio: TFDQuery;
+begin
+  Result := 0;
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    qryRelatorio.SQL.Add('Select Max(IdRelatorio) As IdRelatorio From Relatorio');
+    qryRelatorio.Open;
+
+    if qryRelatorio.FieldByName('IdRelatorio').AsInteger > 0 then
+      Result := qryRelatorio.FieldByName('IdRelatorio').AsInteger;
+    qryRelatorio.Close;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+function TRelatorio.Buscar(ASQLConnection: TFDConnection; AIdRelatorio: Integer): Boolean;
+var
+  qryRelatorio: TFDQuery;
+begin
+  Result := False;
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    qryRelatorio.SQL.Add('Select * From Relatorio');
+    qryRelatorio.SQL.Add('Where 1 = 1');
+    if AIdRelatorio > 0 then
+    begin
+      qryRelatorio.SQL.Add('  And IdRelatorio = ' + IntToStr(AIdRelatorio));
+    end;
+
+    qryRelatorio.Open;
+    if not qryRelatorio.IsEmpty then
+    begin
+      Result              := True;
+      IdRelatorio         := qryRelatorio.FieldByName('IdRelatorio').AsInteger;
+      IdUsuario           := qryRelatorio.FieldByName('IdUsuario').AsInteger;
+      DtCadastro          := qryRelatorio.FieldByName('DtCadastro').AsDateTime;
+      if qryRelatorio.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao        := 1
+      end else begin
+        SnSituacao        := 0
+      end;
+      NmTpRelatorio       := qryRelatorio.FieldByName('NmTpRelatorio').AsString;
+      NmArquivoRelatorio  := qryRelatorio.FieldByName('NmArquivoRelatorio').AsString;
+      NmRelatorio         := qryRelatorio.FieldByName('NmRelatorio').AsString;
+      NmProcedure         := qryRelatorio.FieldByName('NmProcedure').AsString;
+    end;
+    qryRelatorio.Close;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+function TRelatorio.BuscarNomeRelatorio(ASQLConnection: TFDConnection; ANmRelatorio: String): Boolean;
+var
+  qryRelatorio: TFDQuery;
+begin
+  Result := False;
+  qryRelatorio:= TFDQuery.Create(Nil);
+  try
+    qryRelatorio.Connection := ASQLConnection;
+    qryRelatorio.SQL.Add('Select * From Relatorio         ');
+    qryRelatorio.SQL.Add('Where 1 = 1                     ');
+    qryRelatorio.SQL.Add('  And NmRelatorio = :NmRelatorio');
+
+    qryRelatorio.ParamByName('NmRelatorio').AsString := ANmRelatorio;
+
+    qryRelatorio.Open;
+    if not qryRelatorio.IsEmpty then
+    begin
+      Result              := True;
+      IdRelatorio         := qryRelatorio.FieldByName('IdRelatorio').AsInteger;
+      IdUsuario           := qryRelatorio.FieldByName('IdUsuario').AsInteger;
+      DtCadastro          := qryRelatorio.FieldByName('DtCadastro').AsDateTime;
+      if qryRelatorio.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao        := 1
+      end else begin
+        SnSituacao        := 0
+      end;
+      NmTpRelatorio       := qryRelatorio.FieldByName('NmTpRelatorio').AsString;
+      NmArquivoRelatorio  := qryRelatorio.FieldByName('NmArquivoRelatorio').AsString;
+      NmRelatorio         := qryRelatorio.FieldByName('NmRelatorio').AsString;
+      NmProcedure         := qryRelatorio.FieldByName('NmProcedure').AsString;
+    end;
+    qryRelatorio.Close;
+  finally
+    FreeAndNil(qryRelatorio)
+  end;
+end;
+
+end.
+

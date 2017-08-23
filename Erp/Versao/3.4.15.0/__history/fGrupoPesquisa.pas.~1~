@@ -1,0 +1,24 @@
+unit fGrupoPesquisa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fPesquisa, Data.DB, Datasnap.DBClient, Vcl.ComCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  TFrmGrupoPesquisa = class(TFrmPesquisa)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmGrupoPesquisa: TFrmGrupoPesquisa;
+
+implementation
+
+{$R *.dfm}
+
+end.

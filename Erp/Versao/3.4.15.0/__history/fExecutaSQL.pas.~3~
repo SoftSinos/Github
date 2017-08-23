@@ -1,0 +1,29 @@
+unit fExecutaSQL;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls, cxControls,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit, cxMemo;
+
+type
+  TFrmExecutarSQL = class(TFrmOperacao)
+    BtnLer: TcxButton;
+    GroupBox1: TGroupBox;
+    BtnExecutar: TcxButton;
+    MemSQL: TcxMemo;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmExecutarSQL: TFrmExecutarSQL;
+
+implementation
+
+{$R *.dfm}
+
+end.

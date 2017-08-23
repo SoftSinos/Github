@@ -1,0 +1,1623 @@
+unit fPositive;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.Classes, Vcl.Graphics, Vcl.Dialogs, Vcl.Touch.Keyboard, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.ComCtrls, dPrincipal, uFuncao, Vcl.Menus,
+  Vcl.ImgList, Vcl.ToolWin, Vcl.Buttons, Jpeg, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Contnrs, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, Vcl.Imaging.pngimage, ShellApi, dxGDIPlusClasses, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, cxButtons, Vcl.ButtonGroup;
+
+type
+  TFrmPrincipal = class(TForm)
+    N1                          : TMenuItem;
+    N2                          : TMenuItem;
+    N3                          : TMenuItem;
+    N5                          : TMenuItem;
+    N4                          : TMenuItem;
+    N6                          : TMenuItem;
+    N7                          : TMenuItem;
+    N8                          : TMenuItem;
+    N9                          : TMenuItem;
+    N10                         : TMenuItem;
+    N11                         : TMenuItem;
+    N12                         : TMenuItem;
+    N13                         : TMenuItem;
+    N14                         : TMenuItem;
+    N15                         : TMenuItem;
+    N16                         : TMenuItem;
+    N17                         : TMenuItem;
+    N18                         : TMenuItem;
+    N19                         : TMenuItem;
+    N20                         : TMenuItem;
+    N21                         : TMenuItem;
+    N22                         : TMenuItem;
+    N23                         : TMenuItem;
+    N24                         : TMenuItem;
+    N25                         : TMenuItem;
+    N26                         : TMenuItem;
+    N27                         : TMenuItem;
+    N28                         : TMenuItem;
+    N29                         : TMenuItem;
+    N31                         : TMenuItem;
+    N32                         : TMenuItem;
+    N33                         : TMenuItem;
+    N34                         : TMenuItem;
+    N30                         : TMenuItem;
+    N35                         : TMenuItem;
+    N36                         : TMenuItem;
+    N37                         : TMenuItem;
+    N38                         : TMenuItem;
+    N39                         : TMenuItem;
+    N40                         : TMenuItem;
+    StbPrincipal                : TStatusBar;
+    ImgPrincipal                : TImage;
+    MenPrincipal                : TMainMenu;
+    MenAvancado                 : TMenuItem;
+    MenConfiguracaoSistema      : TMenuItem;
+    MeiAjuda                    : TMenuItem;
+    MenProfissao                : TMenuItem;
+    MenPontoArquivoGeracaoACJEF : TMenuItem;
+    MenPontoArquivoGeracaoAFDT  : TMenuItem;
+    MenPontoArquivoGeracaoAFD   : TMenuItem;
+    MenCadastro                 : TMenuItem;
+    MenFuncionario              : TMenuItem;
+    MenJornada                  : TMenuItem;
+    MenCartoes                  : TMenuItem;
+    MenCalendario               : TMenuItem;
+    MenIdREP                    : TMenuItem;
+    MenRelatorios               : TMenuItem;
+    MenTratamento               : TMenuItem;
+    MenFechamentoPonto          : TMenuItem;
+    MenDescriptografiaAFD       : TMenuItem;
+    MenExportacaoDados          : TMenuItem;
+    MenCadastroREP              : TMenuItem;
+    MenCadastroUsuario          : TMenuItem;
+    MenPainelControle           : TMenuItem;
+    MenLogin                    : TMenuItem;
+    MenSair                     : TMenuItem;
+    MenSetorFuncionario         : TMenuItem;
+    MenSobre                    : TMenuItem;
+    MenRemoto                   : TMenuItem;
+    MenMotivo                   : TMenuItem;
+    TimPrincipal                : TTimer;
+    MenLimpaBD                  : TMenuItem;
+    MenLimparImportacao         : TMenuItem;
+    MenLimparMarcacao           : TMenuItem;
+    MenEncerramentoMarcacao     : TMenuItem;
+    MenCadastroEmpresa          : TMenuItem;
+    MenLimparTratamento         : TMenuItem;
+    MenBancoHora                : TMenuItem;
+    MenBancoHoras               : TMenuItem;
+    MenSeguranca                : TMenuItem;
+    MenLimparColeta             : TMenuItem;
+    MenLimparGeral              : TMenuItem;
+    MenGerenciamentoBancoHoras  : TMenuItem;
+    MenLimparBancoHorasHistorico: TMenuItem;
+    PgcPrincipal                : TPageControl;
+    MenLimpaJustificativa       : TMenuItem;
+    ToolBar1                    : TToolBar;
+    ToolButton1                 : TToolButton;
+    MenBaixaSuporte             : TMenuItem;
+    MemLimpaABC                 : TMenuItem;
+    MenTratamentoPonto          : TMenuItem;
+    MenJustificativaPonto       : TMenuItem;
+    MenEspelhoPonto             : TMenuItem;
+    MenCartaoPonto              : TMenuItem;
+    PnlInstitucional            : TPanel;
+    MemPastaExportacao          : TMenuItem;
+    MemPastaPontos              : TMenuItem;
+    ImgListPrincipal            : TImageList;
+    FrmToolBar                  : TToolBar;
+    ToolButton2                 : TToolButton;
+    ToolButton3                 : TToolButton;
+    ImgLoginSistema             : TcxButton;
+    ImgImportacaoDados          : TcxButton;
+    ImgGerenciamentoBancoHoras  : TcxButton;
+    ImgAjusteConsultaPonto      : TcxButton;
+    ImgPainelControle           : TcxButton;
+    ImgFuncionario              : TcxButton;
+    ToolButton4                 : TToolButton;
+    ToolButton6                 : TToolButton;
+    ToolButton7                 : TToolButton;
+    ToolButton8                 : TToolButton;
+    ToolButton9                 : TToolButton;
+    ToolButton10                : TToolButton;
+    ToolButton11                : TToolButton;
+    ImgSair                     : TcxButton;
+    ImgProcessamento            : TcxButton;
+    MenPastas                   : TMenuItem;
+    MenLiberarAcesso            : TMenuItem;
+    ToolButton5                 : TToolButton;
+    ImgCopiaSeguranca           : TcxButton;
+    MenImagensSistema           : TMenuItem;
+    MenCarregaTabelas           : TMenuItem;
+    MenFrequenciaDiaria         : TMenuItem;
+    MenInconsistencia           : TMenuItem;
+    MenLimpaInconsistencia      : TMenuItem;
+    MenHoraExtraDiria           : TMenuItem;
+    MenInformacoes              : TMenuItem;
+    MenProcessarDados           : TMenuItem;
+    MenCalculadora              : TMenuItem;
+    BtnCalculadora              : TcxButton;
+    MenEscala                   : TMenuItem;
+    MenEscalaHorasExtras        : TMenuItem;
+    MenEscalaEscala             : TMenuItem;
+    ToolButton12                : TToolButton;
+    ToolButton13                : TToolButton;
+    MenFolhaPagamento           : TMenuItem;
+    MemPastaFolhaPagamento      : TMenuItem;
+    MenEscalaDias               : TMenuItem;
+    MenHistoricosSistema        : TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure BtnSairClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure MenSairClick(Sender: TObject);
+    procedure MenSenhaClick(Sender: TObject);
+    procedure MenProfissaoClick(Sender: TObject);
+    procedure MenPontoArquivoGeracaoAFDClick(Sender: TObject);
+    procedure MenPontoArquivoGeracaoAFDTClick(Sender: TObject);
+    procedure MenPontoArquivoGeracaoACJEFClick(Sender: TObject);
+    procedure MenCadastroEmpresaClick(Sender: TObject);
+    procedure MenCadastroUsuarioClick(Sender: TObject);
+    procedure MenLoginClick(Sender: TObject);
+    procedure MenSobreClick(Sender: TObject);
+    procedure MenCadastroREPClick(Sender: TObject);
+    procedure MenPainelControleClick(Sender: TObject);
+    procedure MenDescriptografiaAFDClick(Sender: TObject);
+    procedure MenFuncionarioClick(Sender: TObject);
+    procedure BtnFuncionarioClick(Sender: TObject);
+    procedure MenSetorFuncionarioClick(Sender: TObject);
+    procedure MenMotivoClick(Sender: TObject);
+    procedure MenCartoesClick(Sender: TObject);
+    procedure MenJornadaClick(Sender: TObject);
+    procedure MenCalendarioClick(Sender: TObject);
+    procedure ImgJornadaClick(Sender: TObject);
+    procedure ImgPainelControleClick(Sender: TObject);
+    procedure MenFechamentoPontoClick(Sender: TObject);
+    procedure ImgAjusteConsultaPontoClick(Sender: TObject);
+    procedure TimPrincipalTimer(Sender: TObject);
+    procedure ImgImportacaoDadosClick(Sender: TObject);
+    procedure ImgLoginSistemaClick(Sender: TObject);
+    procedure MenLimparImportacaoClick(Sender: TObject);
+    procedure MenLimparMarcacaoClick(Sender: TObject);
+    procedure MenEncerramentoMarcacaoClick(Sender: TObject);
+    procedure MenConfiguracaoSistemaClick(Sender: TObject);
+    procedure MenLimparTratamentoClick(Sender: TObject);
+    procedure MenBancoHorasClick(Sender: TObject);
+    procedure MenLimparColetaClick(Sender: TObject);
+    procedure MenLimparGeralClick(Sender: TObject);
+    procedure MenLimparBancoHorasHistoricoClick(Sender: TObject);
+    procedure MenGerenciamentoBancoHorasClick(Sender: TObject);
+    procedure ImgGerenciamentoBancoHorasClick(Sender: TObject);
+    procedure MenLimpaJustificativaClick(Sender: TObject);
+    procedure ImgBrSistemasDblClick(Sender: TObject);
+    procedure MenBaixaSuporteClick(Sender: TObject);
+    procedure MenSegurancaClick(Sender: TObject);
+    procedure MenTratamentoPontoClick(Sender: TObject);
+    procedure MenJustificativaPontoClick(Sender: TObject);
+    procedure MenCartaoPontoClick(Sender: TObject);
+    procedure MemPastaExportacaoClick(Sender: TObject);
+    procedure MenEspelhoPontoClick(Sender: TObject);
+    procedure MemPastaPontosClick(Sender: TObject);
+    procedure MenImportacaoAFDIDDataClick(Sender: TObject);
+    procedure ImgSairClick(Sender: TObject);
+    procedure ImgConexaoClick(Sender: TObject);
+    procedure ImgFuncionarioClick(Sender: TObject);
+    procedure ImgProcessamentoClick(Sender: TObject);
+    procedure MenLiberarAcessoClick(Sender: TObject);
+    procedure ImgCopiaSegurancaClick(Sender: TObject);
+    procedure MenCarregaTabelasClick(Sender: TObject);
+    procedure MenPastaCopiaSegurancaClick(Sender: TObject);
+    procedure MenImagensSistemaClick(Sender: TObject);
+    procedure MenFrequenciaDiariaClick(Sender: TObject);
+    procedure MenInconsistenciaClick(Sender: TObject);
+    procedure MenLimpaInconsistenciaClick(Sender: TObject);
+    procedure MenHoraExtraDiriaClick(Sender: TObject);
+    procedure MenInformacoesClick(Sender: TObject);
+    procedure MenProcessarDadosClick(Sender: TObject);
+    procedure MenCalculadoraClick(Sender: TObject);
+    procedure BtnCalculadoraClick(Sender: TObject);
+    procedure MenEscalaEscalaClick(Sender: TObject);
+    procedure MenEscalaHorasExtrasClick(Sender: TObject);
+    procedure MenFolhaPagamentoClick(Sender: TObject);
+    procedure MemPastaFolhaPagamentoClick(Sender: TObject);
+    procedure MenEscalaDiasClick(Sender: TObject);
+    procedure MenHistoricosSistemaClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure InicializarTela;
+  public
+    { Public declarations }
+    TasFechamentoPonto: TTabSheet;
+    procedure PgcVisivel;
+    procedure EmpresaSemUsuario;
+    procedure UsuarioAdministrador(Verificar :Boolean);
+    procedure UsuarioCadastraREP(Verificar :Boolean);
+  published
+    property Menu;
+  end;
+
+var
+  FrmPrincipal: TFrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+uses fLogin, fSplash, fSobre, fGeracaoAFD, fGeracaoAFDT, fGeracaoACJEF, uMensagem, fProfissaoPesquisa, fMotivoPesquisa, fDescriptografiaAFD, uEmpresa, fEmpresa, fEmpresaPesquisa,
+  fUsuarioPesquisa, fIDRepPesquisa, fPainelControle, fFuncionarioPesquisa, fGrupoFuncionarioPesquisa, fCartaoPesquisa, fJornadaPesquisa, fCalendarioPesquisa, fAjusteConsultaPonto,
+  fProcessando, fFecharMarcacao, fConfiguracaoPesquisa, uProcedure, fBancoHorasPesquisa, fMarcacaoCarregaPeriodo, fAjustePonto, fTratamentoPesquisa, fJustificativaPesquisa,
+  fCarregaEmpresaEspelhoCartaoPonto, fCopiaSeguranca, fCarregaFrequenciaFuncionario, dRelatorios, uInconsistencia, fInformacoes, fCalculadora, fExportacaoMarcacao, fEscalaPesquisa,
+  fEscalaHorasExtrasPesquisa, FEscalaDiasPesquisa, fLogPesquisa;
+
+var
+  FrmLogin         : TFrmLogin;
+  FrmEmpresa       : TFrmEmpresa;
+  dnRelatorios     : TDtmRelatorios;
+  unInconsistencia : TInconsistencia;
+  unEmpresa        : TEmpresa;
+
+procedure TFrmPrincipal.BtnSairClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clicado no Botão Sair da tela Principal.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnSairClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  if MsgConfirmacao(uMensagem.DesejaFinalizarOSistema) then
+  begin
+    FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+  end;
+end;
+
+procedure TFrmPrincipal.EmpresaSemUsuario;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Empresa Sem Usuario.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'EmpresaSemUsuario';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenCadastro.Enabled                := False;
+  MenIdREP.Enabled                   := False;
+  MenRelatorios.Enabled              := False;
+  MenTratamento.Enabled              := False;
+  MenBancoHora.Enabled               := False;
+  MenExportacaoDados.Enabled         := False;
+  MenCadastroEmpresa.Enabled         := False;
+  MenCadastroREP.Enabled             := False;
+  MenSeguranca.Enabled               := False;
+  MenPastas.Enabled                  := False;
+  MenLimpaBD.Enabled                 := False;
+  MenConfiguracaoSistema.Enabled     := False;
+  ImgFuncionario.Enabled             := False;
+  ImgAjusteConsultaPonto.Enabled     := False;
+  ImgGerenciamentoBancoHoras.Enabled := False;
+  ImgImportacaoDados.Enabled         := False;
+  ImgPainelControle.Enabled          := False;
+  ImgProcessamento.Enabled           := False;
+  ImgCopiaSeguranca.Enabled          := False;
+  ImgLoginSistema.Enabled            := False;
+end;
+
+procedure TFrmPrincipal.MenProcessarDadosClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clicado no Menu Processar Dados.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenProcessarDadosClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    Application.CreateForm(TFrmMarcacaoCarregaPeriodo, FrmMarcacaoCarregaPeriodo);
+    FrmMarcacaoCarregaPeriodo := TFrmMarcacaoCarregaPeriodo.Create(Self);
+    FrmMarcacaoCarregaPeriodo.ShowModal;
+  finally
+    if FrmMarcacaoCarregaPeriodo.gCancelado then
+    begin
+      FrmMarcacaoCarregaPeriodo.Destroy;
+
+      Application.CreateForm(TFrmProcessando, FrmProcessando);
+      FrmProcessando.Show;
+      Application.ProcessMessages;
+      try
+        uProcedure.GeracaoColeta(DtmPrincipal.NmFabricante);
+        uProcedure.PisMarcacao;
+        uProcedure.EntradaSaida(DtmPrincipal.IdRep, DtmPrincipal.DtDataInicio, DtmPrincipal.DtDataFinal, '');
+        uProcedure.AutoMarcacao;
+        uProcedure.GeracaoACJEF(DtmPrincipal.IdEmpresaLogada, DtmPrincipal.IdRep, DtmPrincipal.DtDataInicio, DtmPrincipal.DtDataFinal, '', '');
+        uProcedure.AtualizaBancoHoras(DtmPrincipal.IdEmpresaLogada, DtmPrincipal.IdRep, DtmPrincipal.DtDataInicio, DtmPrincipal.DtDataFinal);
+
+        dnRelatorios     := TDtmRelatorios.Create(Self);
+        unEmpresa        := TEmpresa.Create(DtmPrincipal.Conexao);
+        unInconsistencia := TInconsistencia.Create(DtmPrincipal.Conexao);
+
+        unInconsistencia.CarregaDbGrid(DtmPrincipal.Conexao, 0, '', '', DtmPrincipal.DtDataInicio, DtmPrincipal.DtDataFinal, dnRelatorios.CDSRelPesquisa);
+
+        if dnRelatorios.CDSRelPesquisa.RecordCount > 0 then
+        begin
+          try
+            MsgInformacao(uMensagem.ExisteInconsistenciaNasMarcacoes);
+            unEmpresa.CarregaDbGrid(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, '', dnRelatorios.CDSRelEmpresa);
+            dnRelatorios.frxPDFExport.ShowDialog := True;
+            dnRelatorios.frxReport.LoadFromFile(DtmPrincipal.NmCaminhoExecutavel + 'Relatorio\RelInconsistencia.fr3');
+            dnRelatorios.frxReport.ShowReport();
+          finally
+            dnRelatorios.Destroy;
+            unEmpresa.Destroy;
+            unInconsistencia.Destroy;
+          end;
+        end;
+      finally
+        MsgInformacao(uMensagem.ProcedureExecutadaComSucesso);
+        lAtualizouMarcacacao := true;
+        FrmProcessando.Destroy;
+      end;
+    end;
+  end
+end;
+
+procedure TFrmPrincipal.MenProfissaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clicado no Menu Profissão.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenProfissaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmProfissaoPesquisa := TFrmProfissaoPesquisa.Create(Application);
+    FrmProfissaoPesquisa.ShowModal;
+  finally
+    FrmProfissaoPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Fechar Aplicação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenProfissaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+end;
+
+procedure TFrmPrincipal.FormCreate(Sender: TObject);
+var
+  Region : hrgn;
+  ExisteCadastroEmpresa: TEmpresa;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Criar Aplicação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.GerarLog;
+
+  Region := CreateRoundRectRgn(0, 0, Width, Height, 40, 40);
+  SetWindowrgn(Handle, Region, True);
+
+  ExisteCadastroEmpresa := TEmpresa.Create(DtmPrincipal.Conexao);
+
+  try
+    FrmSplash                         := TFrmSplash.Create(Application);
+    DtmPrincipal.NrVersaoBd           := VersaoBd(DtmPrincipal.Conexao);
+    FrmSplash.LblVersaoSplash.Caption := VersaoExecutavel(DtmPrincipal.NmCaminhoExecutavel + DtmPrincipal.NmExecutavel) + ' - ' + DtmPrincipal.NrVersaoBd;
+
+    FrmSplash.ShowModal;
+  finally
+    FrmSplash.Free;
+  end;
+
+  FrmPrincipal.Position     := poScreenCenter;
+  FrmPrincipal.WindowState  := wsMaximized;
+
+  if FileExists('Imagem/Sistema/Principal.jpg') then
+  begin
+    ImgPrincipal.Picture.LoadFromFile('Imagem/Sistema/Principal.jpg');
+  end;
+
+  if ExisteCadastroEmpresa.ExisteCadastro then
+  begin
+    try
+      FrmLogin := TFrmLogin.Create(Self);
+    finally
+
+    end;
+  end
+  else
+  begin
+    if MsgConfirmacao(uMensagem.NaoExisteCadastroDeEmpresa) then
+    begin
+      try
+        FrmEmpresa := TFrmEmpresa.Create(Application);
+        FrmEmpresa.BtnIncluir.Enabled   := False;
+        FrmEmpresa.BtnSalvar.Enabled    := True;
+        FrmEmpresa.BtnCancelar.Enabled  := True;
+        FrmEmpresa.BtnFechar.Enabled    := True;
+        FrmEmpresa.ShowModal;
+        MsgAtencao(uMensagem.OSistemaSeraFinalizado);
+        FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+      finally
+        FrmEmpresa.Free;
+      end;
+    end
+    else
+    begin
+      FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+    end;
+  end;
+end;
+
+procedure TFrmPrincipal.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Show Aplicação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.GerarLog;
+
+  FrmLogin.ShowModal;
+  InicializarTela;
+end;
+
+procedure TFrmPrincipal.ImgBrSistemasDblClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no BrRemoto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgBrSistemasDblClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  ShellExecute(Handle, 'open', pchar('http://brsistemas.inf.br'), nil, nil, SW_SHOW);
+end;
+
+procedure TFrmPrincipal.ImgConexaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Conexão BrRemoto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgConexaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenLiberarAcessoClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgCopiaSegurancaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Cópia Segurança.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgCopiaSegurancaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenSegurancaClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgAjusteConsultaPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Ajuste Consulta Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgAjusteConsultaPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenFechamentoPontoClick(Sender)
+end;
+
+procedure TFrmPrincipal.ImgFuncionarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Funcionário.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgFuncionarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenFuncionarioClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgGerenciamentoBancoHorasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Gerenciamento Banco Horas.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgGerenciamentoBancoHorasClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenGerenciamentoBancoHorasClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgImportacaoDadosClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Importação AFD - USB.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgImportacaoDadosClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenDescriptografiaAFDClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgJornadaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Jornada.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgJornadaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenJornadaClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgLoginSistemaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Login Sistema.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgLoginSistemaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenLoginClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgPainelControleClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Painel de Controle.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgPainelControleClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenPainelControleClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgProcessamentoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Processar Dados..';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgProcessamentoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenProcessarDadosClick(Sender);
+end;
+
+procedure TFrmPrincipal.ImgSairClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique na barra de icones Botão Sair.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'ImgSairClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  if MsgConfirmacao(uMensagem.DesejaFinalizarOSistema) then
+  begin
+    FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+  end;
+end;
+
+procedure TFrmPrincipal.InicializarTela;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Inicializar Tela.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'InicializarTela';
+  DtmPrincipal.unLog.GerarLog;
+
+  StbPrincipal.Panels[2].Text := 'Servidor: ' + DtmPrincipal.NmHost + '\' + DtmPrincipal.NmBanco;
+end;
+
+procedure TFrmPrincipal.MemPastaExportacaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Pasta Exportação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MemPastaExportacaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  AbrirExplorer(DtmPrincipal.NmCaminhoExecutavel + 'Exportacao\Ministerio', True, True);
+end;
+
+procedure TFrmPrincipal.MemPastaPontosClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Pasta Pontos.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MemPastaPontosClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  AbrirExplorer(DtmPrincipal.NmCaminhoExecutavel + 'Fechamento\' + FormatDateTime('YYYY',Date) + '\' + FormatDateTime('MM',Date), True, True);
+end;
+
+procedure TFrmPrincipal.MenCadastroEmpresaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cadastro Empresa.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCadastroEmpresaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmEmpresaPesquisa := TFrmEmpresaPesquisa.Create(Application);
+    FrmEmpresaPesquisa.ShowModal;
+  finally
+    FrmEmpresaPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCadastroREPClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cadastro REP.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCadastroREPClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmIDRepPesquisa := TFrmIDRepPesquisa.Create(Application);
+    FrmIDRepPesquisa.ShowModal;
+  finally
+    FrmIDRepPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCadastroUsuarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cadastro Usuário.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCadastroUsuarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmUsuarioPesquisa := TFrmUsuarioPesquisa.Create(Application);
+    FrmUsuarioPesquisa.ShowModal;
+  finally
+    FrmUsuarioPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCalculadoraClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Calculadora.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCalculadoraClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCalculadora := TFrmCalculadora.Create(Application);
+    FrmCalculadora.ShowModal;
+  finally
+    FrmCalculadora.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCalendarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Calendário.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCalendarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCalendarioPesquisa := TFrmCalendarioPesquisa.Create(Application);
+    FrmCalendarioPesquisa.ShowModal;
+  finally
+    FrmCalendarioPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCartoesClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cartões.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCartoesClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCartaoPesquisa := TFrmCartaoPesquisa.Create(Application);
+    FrmCartaoPesquisa.ShowModal;
+  finally
+    FrmCartaoPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenConfiguracaoSistemaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Configurações Sistemas.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenConfiguracaoSistemaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmConfiguracaoPesquisa := TFrmConfiguracaoPesquisa.Create(Application);
+    FrmConfiguracaoPesquisa.ShowModal;
+  finally
+    FrmConfiguracaoPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenDescriptografiaAFDClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Importação AFD - USB.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenDescriptografiaAFDClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmDescriptografiaAFD := TFrmDescriptografiaAFD.Create(Application);
+    FrmDescriptografiaAFD.ShowModal;
+  finally
+    FrmDescriptografiaAFD.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenFechamentoPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Fechamento Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenFechamentoPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmAjusteConsultaPonto := TFrmAjusteConsultaPonto.Create(Application);
+    FrmAjusteConsultaPonto.CarregarTela;
+    FrmAjusteConsultaPonto.ShowModal;
+  finally
+    FrmAjusteConsultaPonto.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenFolhaPagamentoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Folha Pagamento.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenFolhaPagamentoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmExportacaoMarcacao := TFrmExportacaoMarcacao.Create(Application);
+    FrmExportacaoMarcacao.CarregarTela;
+    FrmExportacaoMarcacao.ShowModal;
+  finally
+    FrmExportacaoMarcacao.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenEncerramentoMarcacaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Encerramento Marcação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenEncerramentoMarcacaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmFecharMarcacao := TFrmFecharMarcacao.Create(Application);
+    FrmFecharMarcacao.CarregarTela;
+    FrmFecharMarcacao.ShowModal;
+  finally
+    FrmFecharMarcacao.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenEscalaDiasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Escala Dias.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenEscalaDiasClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmEscalaDiasPesquisa := TFrmEscalaDiasPesquisa.Create(Application);
+    FrmEscalaDiasPesquisa.ShowModal;
+  finally
+    FrmEscalaDiasPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenEscalaEscalaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Escala Escala.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenEscalaEscalaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmEscalaPesquisa         := TFrmEscalaPesquisa.Create(Application);
+    FrmEscalaPesquisa.ShowModal;
+  finally
+    FrmEscalaPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenEscalaHorasExtrasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Escala Horas Extras.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenEscalaHorasExtrasClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmEscalaHorasExtrasPesquisa := TFrmEscalaHorasExtrasPesquisa.Create(Application);
+    FrmEscalaHorasExtrasPesquisa.ShowModal;
+  finally
+    FrmEscalaHorasExtrasPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenEspelhoPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Espelho Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenEspelhoPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCarregaEmpresaEspelhoCartaoPonto         := TFrmCarregaEmpresaEspelhoCartaoPonto.Create(Application);
+    FrmCarregaEmpresaEspelhoCartaoPonto.Caption := '  Relatório de Espelho de Ponto';
+    FrmCarregaEmpresaEspelhoCartaoPonto.ShowModal;
+  finally
+    FrmCarregaEmpresaEspelhoCartaoPonto.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenFuncionarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Funcionario.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenFuncionarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmFuncionarioPesquisa                  := TFrmFuncionarioPesquisa.Create(Application);
+    FrmFuncionarioPesquisa.gTpChamadaClasse := 'Funcionario';
+    FrmFuncionarioPesquisa.ShowModal;
+  finally
+    FrmFuncionarioPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenBancoHorasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Banco Horas.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenBancoHorasClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmBancoHorasPesquisa := TFrmBancoHorasPesquisa.Create(Application);
+    FrmBancoHorasPesquisa.ShowModal;
+  finally
+    FrmBancoHorasPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenGerenciamentoBancoHorasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Gerenciamento Banco Horas.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenGerenciamentoBancoHorasClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmFuncionarioPesquisa                    := TFrmFuncionarioPesquisa.Create(Application);
+    FrmFuncionarioPesquisa.gTpChamadaClasse   := 'BancoHorasFuncionario';
+    FrmFuncionarioPesquisa.BtnIncluir.Enabled := False;
+    FrmFuncionarioPesquisa.ShowModal;
+  finally
+    FrmFuncionarioPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenHistoricosSistemaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Históricos Sistema.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenHistoricosSistemaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmLogPesquisa := TFrmLogPesquisa.Create(Application);
+    FrmLogPesquisa.ShowModal;
+  finally
+    FrmLogPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenHoraExtraDiriaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Hora Extra Diária.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenHoraExtraDiriaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmFrequenciaCarregaPeriodo                           := TFrmFrequenciaCarregaPeriodo.Create(Application);
+    FrmFrequenciaCarregaPeriodo.Caption                   := '  Carrega Hora Extra Diária';
+    FrmFrequenciaCarregaPeriodo.CbbTpFrenquencia.Enabled  := False;
+    FrmFrequenciaCarregaPeriodo.ShowModal;
+  finally
+    FrmFrequenciaCarregaPeriodo.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenImagensSistemaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Imagens Sistema.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenImagensSistemaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  AbrirExplorer(DtmPrincipal.NmCaminhoExecutavel + 'Imagem\Sistema', True, True);
+end;
+
+procedure TFrmPrincipal.MenImportacaoAFDIDDataClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Importação AFD.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenImportacaoAFDIDDataClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmDescriptografiaAFD := TFrmDescriptografiaAFD.Create(Application);
+    FrmDescriptografiaAFD.ShowModal;
+  finally
+    FrmDescriptografiaAFD.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenInconsistenciaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Inconsistência.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenInconsistenciaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    dnRelatorios     := TDtmRelatorios.Create(Self);
+    unEmpresa        := TEmpresa.Create(DtmPrincipal.Conexao);
+    unInconsistencia := TInconsistencia.Create(DtmPrincipal.Conexao);
+
+    unEmpresa.CarregaDbGrid(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, '', dnRelatorios.CDSRelEmpresa);
+    unInconsistencia.CarregaDbGrid(DtmPrincipal.Conexao, 0, '', '', DtmPrincipal.DtDataInicio, DtmPrincipal.DtDataFinal, dnRelatorios.CDSRelPesquisa);
+
+    FrmProcessando.Destroy;
+
+    dnRelatorios.frxPDFExport.ShowDialog := True;
+    dnRelatorios.frxReport.LoadFromFile(DtmPrincipal.NmCaminhoExecutavel + 'Relatorio\RelInconsistencia.fr3');
+    dnRelatorios.frxReport.ShowReport();
+  finally
+    dnRelatorios.Destroy;
+    unEmpresa.Destroy;
+    unInconsistencia.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenInformacoesClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Informações.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenInformacoesClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmInformacoes := TFrmInformacoes.Create(Application);
+    FrmInformacoes.ShowModal;
+  finally
+    FrmInformacoes.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenSetorFuncionarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Setor Funcionário.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenSetorFuncionarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmGrupoFuncionarioPesquisa := TFrmGrupoFuncionarioPesquisa.Create(Application);
+    FrmGrupoFuncionarioPesquisa.ShowModal;
+  finally
+    FrmGrupoFuncionarioPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenJornadaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Jornada.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenJornadaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmJornadaPesquisa := TFrmJornadaPesquisa.Create(Application);
+    FrmJornadaPesquisa.ShowModal;
+  finally
+    FrmJornadaPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenJustificativaPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Justificativa Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenJustificativaPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmJustificativaPesquisa := TFrmJustificativaPesquisa.Create(Application);
+    FrmJustificativaPesquisa.InicializarTela;
+    FrmJustificativaPesquisa.ShowModal;
+  finally
+    FrmJustificativaPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenPainelControleClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Painel Controle.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenPainelControleClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmPainelControle := TFrmPainelControle.Create(Application);
+    FrmPainelControle.ShowModal;
+  finally
+    FrmPainelControle.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenPastaCopiaSegurancaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Pasta Cópia Segurança.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenPastaCopiaSegurancaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  AbrirExplorer(DtmPrincipal.NmCaminhoExecutavel + 'Seguranca', True, True);
+end;
+
+procedure TFrmPrincipal.MenPontoArquivoGeracaoACJEFClick(Sender: TObject);
+var
+  Region : hrgn;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Geração ACJEF.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenPontoArquivoGeracaoACJEFClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmGeracaoACJEF := TFrmGeracaoACJEF.Create(Application);
+    FrmGeracaoACJEF.ShowModal;
+  finally
+    FrmGeracaoACJEF.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenPontoArquivoGeracaoAFDClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Geração AFD.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenPontoArquivoGeracaoAFDClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmGeracaoAFD := TFrmGeracaoAFD.Create(Application);
+    FrmGeracaoAFD.ShowModal;
+  finally
+    FrmGeracaoAFD.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenPontoArquivoGeracaoAFDTClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Geração AFDT.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenPontoArquivoGeracaoAFDTClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmGeracaoAFDT := TFrmGeracaoAFDT.Create(Application);
+    FrmGeracaoAFDT.ShowModal;
+  finally
+    FrmGeracaoAFDT.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenSairClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Sair.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenSairClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  if MsgConfirmacao(uMensagem.DesejaFinalizarOSistema) then
+  begin
+    FinalizarAplicacao(DtmPrincipal.NmExecutavel);
+  end;
+end;
+
+procedure TFrmPrincipal.MenSegurancaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cópia Segurança.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenSegurancaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCopiaSeguranca := TFrmCopiaSeguranca.Create(Application);
+    FrmCopiaSeguranca.ShowModal;
+  finally
+    FrmCopiaSeguranca.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenSenhaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Senha.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenSenhaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmLogin := TFrmLogin.Create(Application);
+    FrmLogin.ShowModal;
+  finally
+    FrmLogin.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenSobreClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Sobre.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenSobreClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmSobre := TFrmSobre.Create(Application);
+    FrmSobre.ShowModal;
+  finally
+    FrmSobre.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.TimPrincipalTimer(Sender: TObject);
+begin
+  StbPrincipal.Panels[0].Text := FormatDateTime('hh:mm:ss', Now);
+end;
+
+procedure TFrmPrincipal.UsuarioAdministrador(Verificar: Boolean);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Usuario Administrador.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'UsuarioAdministrador';
+  DtmPrincipal.unLog.GerarLog;
+
+  if not Verificar then
+  begin
+    MenCadastroREP.Enabled               := False;
+    MenConfiguracaoSistema.Enabled       := False;
+    MenLimpaBD.Enabled                   := False;
+  end
+  else
+  begin
+    MenCadastroREP.Enabled               := True;
+    MenConfiguracaoSistema.Enabled       := True;
+    MenLimpaBD.Enabled                   := True;
+  end;
+
+end;
+
+procedure TFrmPrincipal.UsuarioCadastraREP(Verificar: Boolean);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamada de Procedimento Usuario Cadastra REP.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'UsuarioCadastraREP';
+  DtmPrincipal.unLog.GerarLog;
+
+  if not Verificar then
+  begin
+    MenCadastroREP.Enabled := False;
+    MenLimpaBD.Enabled     := False;
+  end
+  else
+  begin
+    MenCadastroREP.Enabled := True;
+    MenLimpaBD.Enabled     := True;
+  end;
+end;
+
+procedure TFrmPrincipal.BtnCalculadoraClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Botão Calculadora.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnCalculadoraClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenCalculadoraClick(Sender);
+end;
+
+procedure TFrmPrincipal.BtnFuncionarioClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Botão Funcionário.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnFuncionarioClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  MenFuncionarioClick(Sender);
+end;
+
+procedure TFrmPrincipal.MenTratamentoPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Tratamento Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenTratamentoPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmTratamentoPesquisa := TFrmTratamentoPesquisa.Create(Application);
+    FrmTratamentoPesquisa.InicializarTela;
+    FrmTratamentoPesquisa.ShowModal;
+  finally
+    FrmTratamentoPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MemPastaFolhaPagamentoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Pasta Exportação Folha Pagamento.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MemPastaFolhaPagamento';
+  DtmPrincipal.unLog.GerarLog;
+
+  AbrirExplorer(DtmPrincipal.NmCaminhoExecutavel + 'Exportacao\Folha\' + FormatDateTime('YYYY',Date) + '\' + FormatDateTime('MM',Date), True, True);
+end;
+
+procedure TFrmPrincipal.MenLimpaInconsistenciaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Inconsistências.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimpaInconsistenciaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparInconsistencia;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenFrequenciaDiariaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Frenquancia Diária.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenFrequenciaDiariaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmFrequenciaCarregaPeriodo         := TFrmFrequenciaCarregaPeriodo.Create(Application);
+    FrmFrequenciaCarregaPeriodo.Caption := '  Carrega Frequência Diária';
+    FrmFrequenciaCarregaPeriodo.ShowModal;
+  finally
+    FrmFrequenciaCarregaPeriodo.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLiberarAcessoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Conexão BrRemoto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLiberarAcessoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  if FileExists(DtmPrincipal.NmCaminhoExecutavel + 'BrRemoto.exe') then
+  begin
+    WinExec('BrRemoto.exe', SW_NORMAL);
+  end
+  else
+  begin
+    MsgErro(uMensagem.OArquivoNaoExisteOuNaoLocalizado);
+  end;
+end;
+
+procedure TFrmPrincipal.MenCarregaTabelasClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Carregar Dados.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCarregaTabelas';
+  DtmPrincipal.unLog.GerarLog;
+
+  if MsgConfirmacao(uMensagem.DesejaRodarProcedureDeInicializacao) then
+  begin
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+    try
+      uProcedure.Inicializacao;
+    finally
+      FrmProcessando.Destroy;
+    end;
+  end;
+end;
+
+procedure TFrmPrincipal.MenCartaoPontoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Cartão Ponto.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenCartaoPontoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmCarregaEmpresaEspelhoCartaoPonto         := TFrmCarregaEmpresaEspelhoCartaoPonto.Create(Application);
+    FrmCarregaEmpresaEspelhoCartaoPonto.Caption := '  Relatório de Cartão de Ponto';
+    FrmCarregaEmpresaEspelhoCartaoPonto.ShowModal;
+  finally
+    FrmCarregaEmpresaEspelhoCartaoPonto.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenBaixaSuporteClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Baixar BrRemote.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenBaixaSuporteClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  ShellExecute(Handle, 'open', pchar('http://brsistemas.inf.br/brremoto.exe'), nil, nil, SW_SHOW);
+end;
+
+procedure TFrmPrincipal.PgcVisivel;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Call';
+  DtmPrincipal.unLog.NmMensagem := 'Chamda de Procedimento Controle Página.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'PgcVisivel';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    PgcPrincipal.Visible    := False;
+
+    if TasFechamentoPonto <> nil then
+    begin
+      PgcPrincipal.Visible := TasFechamentoPonto.TabVisible;
+      if TasFechamentoPonto.TabVisible then
+      begin
+        Abort;
+      end
+      else
+      begin
+        TasFechamentoPonto := nil;
+      end;
+    end;
+  finally
+
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparGeralClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Geral.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparGeralClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    uProcedure.gNaoMostraMensagemDeConfimacao := True;
+
+    MenLimparImportacaoClick(Sender);
+    MenLimparTratamentoClick(Sender);
+    MenLimparMarcacaoClick(Sender);
+    MenLimparColetaClick(Sender);
+    MenLimparBancoHorasHistoricoClick(Sender);
+    MenLimpaJustificativaClick(Sender);
+    MenLimpaInconsistenciaClick(Sender);
+  finally
+    MsgInformacao(uMensagem.LimpaDB);
+    uProcedure.gNaoMostraMensagemDeConfimacao := False;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimpaJustificativaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Justificativa.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimpaJustificativaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparJustificativa;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparBancoHorasHistoricoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Banco Horas Historico.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparBancoHorasHistoricoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparBancoHoras;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparColetaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Colata.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparColetaClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparColeta;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparImportacaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Importação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparImportacaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparAfds;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparMarcacaoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Marcação.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparMarcacaoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparMarcacao;
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLimparTratamentoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Limpar Tratamento.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLimparTratamentoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  Application.CreateForm(TFrmProcessando, FrmProcessando);
+  FrmProcessando.Show;
+  Application.ProcessMessages;
+  try
+    uProcedure.LimparTratamento
+  finally
+    FrmProcessando.Destroy;
+  end;
+end;
+
+procedure TFrmPrincipal.MenLoginClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Login.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenLoginClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmLogin := TFrmLogin.Create(Application);
+    FrmLogin.EdtNmUsuario.Clear;
+    FrmLogin.EdtNmSenha.Clear;
+    FrmLogin.ShowModal;
+  finally
+    FrmLogin.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.MenMotivoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Click';
+  DtmPrincipal.unLog.NmMensagem := 'Clique no Menu Motivo.';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPrincipal';
+  DtmPrincipal.unLog.NmMetodo   := 'MenMotivoClick';
+  DtmPrincipal.unLog.GerarLog;
+
+  try
+    FrmMotivoPesquisa := TFrmMotivoPesquisa.Create(Application);
+    FrmMotivoPesquisa.ShowModal;
+  finally
+    FrmMotivoPesquisa.Free;
+  end;
+end;
+
+end.

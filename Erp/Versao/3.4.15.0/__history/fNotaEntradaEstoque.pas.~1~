@@ -1,0 +1,25 @@
+unit fNotaEntradaEstoque;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fCadastro, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  Data.DB, Datasnap.DBClient, cxCheckBox, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+
+type
+  TFrmCadastro1 = class(TFrmCadastro)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadastro1: TFrmCadastro1;
+
+implementation
+
+{$R *.dfm}
+
+end.

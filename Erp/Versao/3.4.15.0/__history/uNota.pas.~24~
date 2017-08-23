@@ -1,0 +1,448 @@
+unit uNota;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TNota = class
+  private
+    FIdNota                 : Integer;
+    FIdEmpresa              : Integer;
+    FIdUsuario              : Integer;
+    FDtCadastro             : TDateTime;
+    FSnSituacao             : Integer;
+    FSnFinalizada           : Integer;
+    FIdCliente              : Integer;
+    FIdEmpCliente           : Integer;
+    FVlNota                 : Extended;
+    FNmCliente              : String;
+    FVlTotalProduto         : Extended;
+    FVlTotalServico         : Extended;
+    FVlTotalPagamento       : Extended;
+    FNmFantasiaNmRazaoSocial: String;
+    FNrCelular              : String;
+    FNmUsuarioCadastro      : String;
+    procedure Inicializar;
+  public
+    property IdNota                 : Integer   read FIdNota                  write FIdNota;
+    property IdEmpresa              : Integer   read FIdEmpresa               write FIdEmpresa;
+    property IdUsuario              : Integer   read FIdUsuario               write FIdUsuario;
+    property DtCadastro             : TDateTime read FDtCadastro              write FDtCadastro;
+    property SnSituacao             : Integer   read FSnSituacao              write FSnSituacao;
+    property SnFinalizada           : Integer   read FSnFinalizada            write FSnFinalizada;
+    property IdCliente              : Integer   read FIdCliente               write FIdCliente;
+    property IdEmpCliente           : Integer   read FIdEmpCliente            write FIdEmpCliente;
+    property VlNota                 : Extended  read FVlNota                  write FVlNota;
+    property NmCliente              : String    read FNmCliente               write FNmCliente;
+    property VlTotalProduto         : Extended  read FVlTotalProduto          write FVlTotalProduto;
+    property VlTotalServico         : Extended  read FVlTotalServico          write FVlTotalServico;
+    property VlTotalPagamento       : Extended  read FVlTotalPagamento        write FVlTotalPagamento;
+    property NmFantasiaNmRazaoSocial: String    read FNmFantasiaNmRazaoSocial write FNmFantasiaNmRazaoSocial;
+    property NrCelular              : String    read FNrCelular               write FNrCelular;
+    property NmUsuarioCadastro      : String    read FNmUsuarioCadastro       write FNmUsuarioCadastro;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+    class function Finalizar(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdNota: Integer; AIdEmpresa: Integer; AConsulta: String; ATpChamadaClasse: String; DDtCalendarioInicio: TDateTime; DDtCalendarioFinal: TDateTime; Data: TClientDataSet);
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TNota.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdNota: Integer; AIdEmpresa: Integer; AConsulta: String; ATpChamadaClasse: String; DDtCalendarioInicio: TDateTime; DDtCalendarioFinal: TDateTime; Data: TClientDataSet);
+var
+  qryNota : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryNota := TFDQuery.Create(nil);
+  try
+    qryNota.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdNota', ftInteger);
+      Data.FieldDefs.Add('IdEmpresa', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 9, False);
+      Data.FieldDefs.Add('SnFinalizada', ftString, 9, False);
+      Data.FieldDefs.Add('IdCliente', ftInteger);
+      Data.FieldDefs.Add('IdEmpCliente', ftInteger);
+      Data.FieldDefs.Add('VlNota', ftCurrency);
+      Data.FieldDefs.Add('NmCliente', ftString, 255, False);
+      Data.FieldDefs.Add('VlTotalProduto', ftCurrency);
+      Data.FieldDefs.Add('VlTotalServico', ftCurrency);
+      Data.FieldDefs.Add('VlTotalPagamento', ftCurrency);
+      Data.FieldDefs.Add('NmFantasiaNmRazaoSocial', ftString, 120, False);
+      Data.FieldDefs.Add('NrCelular', ftString, 20, False);
+      Data.FieldDefs.Add('NmUsuarioCadastro', ftString, 255, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryNota.Params.Clear;
+      qryNota.SQL.Clear;
+      qryNota.SQL.Add('Select');
+      qryNota.SQL.Add('  *');
+      qryNota.SQL.Add('From VW_GridNota');
+      qryNota.SQL.Add('Where 1 = 1');
+
+      if ISnSituacao = 1 then
+      begin
+         qryNota.SQL.Add('  And SnSituacao = 1');
+      end
+      else
+      if ISnSituacao = 0 then
+      begin
+         qryNota.SQL.Add('  And SnSituacao = 0');
+      end;
+
+      if AIdNota > 0 then
+      begin
+        qryNota.SQL.Add('  And IdNota = :IdNota');
+
+        qryNota.ParamByName('IdNota').AsInteger := AIdNota
+      end;
+
+      if ATpChamadaClasse = '1' then
+      begin
+        qryNota.SQL.Add('  And DtCadastro Between :DtCadastroInicial And :DtCadastroFinal');
+
+        qryNota.ParamByName('DtCadastroInicial').AsDateTime := DDtCalendarioInicio;
+        qryNota.ParamByName('DtCadastroFinal').AsDateTime   := DDtCalendarioFinal;
+      end;
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryNota.SQL.Add (lCondicao);
+          qryNota.SQL.Add ('Order By');
+          qryNota.SQL.Add ('  IdNota');
+
+          qryNota.Open;
+          qryNota.First;
+        end;
+      end else begin
+        qryNota.SQL.Add (lCondicao);
+        qryNota.SQL.Add ('Order By');
+        qryNota.SQL.Add ('  IdNota');
+
+        lFinalizaLoop := 1;
+        qryNota.Open;
+        qryNota.First;
+      end;
+
+      while not qryNota.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdNota').AsInteger = qryNota.FieldByName('IdNota').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdNota').AsInteger                  := qryNota.FieldByName('IdNota').AsInteger;
+          Data.FieldByName('IdEmpresa').AsInteger               := qryNota.FieldByName('IdEmpresa').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger               := qryNota.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime             := qryNota.FieldByName('DtCadastro').AsDateTime;
+          if qryNota.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString             := 'ATIVA';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString             := 'CANCELADA';
+          end;
+          if qryNota.FieldByName('SnFinalizada').AsBoolean then
+          begin
+            Data.FieldByName('SnFinalizada').AsString             := 'ABERTO';
+          end else begin
+            Data.FieldByName('SnFinalizada').AsString             := 'FINALIZADO';
+          end;
+          Data.FieldByName('IdCliente').AsInteger               := qryNota.FieldByName('IdCliente').AsInteger;
+          Data.FieldByName('IdEmpCliente').AsInteger            := qryNota.FieldByName('IdEmpCliente').AsInteger;
+          Data.FieldByName('VlNota').AsFloat                    := qryNota.FieldByName('VlNota').AsFloat;
+          Data.FieldByName('NmCliente').AsString                := qryNota.FieldByName('NmCliente').AsString;
+          Data.FieldByName('VlTotalProduto').AsFloat            := qryNota.FieldByName('VlTotalProduto').AsFloat;
+          Data.FieldByName('VlTotalServico').AsFloat            := qryNota.FieldByName('VlTotalServico').AsFloat;
+          Data.FieldByName('VlTotalPagamento').AsFloat          := qryNota.FieldByName('VlTotalPagamento').AsFloat;
+          Data.FieldByName('NmFantasiaNmRazaoSocial').AsString  := qryNota.FieldByName('NmFantasiaNmRazaoSocial').AsString;
+          Data.FieldByName('NrCelular').AsString                := FormatMaskText('\(99\)99999\-9999;0;_', qryNota.FieldByName('NrCelular').AsString);
+          Data.FieldByName('NmUsuarioCadastro').AsString        := qryNota.FieldByName('NmUsuarioCadastro').AsString;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryNota.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryNota.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TNota.Create;
+begin
+  Inicializar;
+end;
+
+procedure TNota.Inicializar;
+begin
+  IdNota                  := 0;
+  IdEmpresa               := 0;
+  IdUsuario               := 0;
+  DtCadastro              := 0;
+  SnSituacao              := 0;
+  SnFinalizada            := 0;
+  IdCliente               := 0;
+  IdEmpCliente            := 0;
+  VlNota                  := 0;
+  NmCliente               := '';
+  VlTotalProduto          := 0;
+  VlTotalServico          := 0;
+  VlTotalPagamento        := 0;
+  NmFantasiaNmRazaoSocial := '';
+  NrCelular               := '';
+  NmUsuarioCadastro       := '';
+end;
+
+function TNota.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryNota: TFDQuery;
+begin
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdNota, IdEmpresa) then
+    begin
+      qryNota.SQL.Add('Insert Into Nota(');
+      qryNota.SQL.Add('  IdEmpresa,');
+      qryNota.SQL.Add('  IdUsuario,');
+      qryNota.SQL.Add('  DtCadastro,');
+      qryNota.SQL.Add('  SnSituacao,');
+      qryNota.SQL.Add('  IdCliente,');
+      qryNota.SQL.Add('  IdEmpCliente,');
+      qryNota.SQL.Add('  VlNota)');
+      qryNota.SQL.Add('Values (');
+      qryNota.SQL.Add('  :IdEmpresa,');
+      qryNota.SQL.Add('  :IdUsuario,');
+      qryNota.SQL.Add('  :DtCadastro,');
+      qryNota.SQL.Add('  :SnSituacao,');
+      qryNota.SQL.Add('  :IdCliente,');
+      qryNota.SQL.Add('  :IdEmpCliente,');
+      qryNota.SQL.Add('  :VlNota)');
+
+      qryNota.ParamByName('IdEmpresa').AsInteger := IdEmpresa;
+      qryNota.ParamByName('IdUsuario').AsInteger := IdUsuario;
+      qryNota.ParamByName('DtCadastro').AsDateTime := DtCadastro;
+      qryNota.ParamByName('IdCliente').AsInteger := IdCliente;
+      qryNota.ParamByName('IdEmpCliente').AsInteger := IdEmpCliente;
+      qryNota.ParamByName('SnSituacao').AsInteger := SnSituacao;
+    end else begin
+      qryNota.SQL.Add('Update Nota Set ');
+      qryNota.SQL.Add('  VlNota = :VlNota ');
+      qryNota.SQL.Add('Whare IdEmpresa = :IdEmpresa');
+      qryNota.SQL.Add('  And IdNota = :IdNota');
+
+      qryNota.ParamByName('IdNota').AsInteger := IdNota;
+    end;
+    qryNota.ParamByName('VlNota').AsCurrency := VlNota;
+   try
+      qryNota.ExecSQL;
+      qryNota.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+class function TNota.Inativar(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+var
+  qryNota: TFDQuery;
+begin
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    qryNota.SQL.Add('Update Nota Set ');
+    qryNota.SQL.Add('  SnSituacao = 0 ');
+    qryNota.SQL.Add('Where 1 = 1');
+    qryNota.SQL.Add('  And IdNota = ' + IntToStr(AIdNota));
+    qryNota.SQL.Add('  And IdEmpresa = ' + IntToStr(AIdEmpresa));
+   try
+      qryNota.ExecSQL;
+      qryNota.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+class function TNota.Existe(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+var
+  qryNota: TFDQuery;
+begin
+  Result := False;
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    qryNota.SQL.Add('Select IdNota From Nota');
+    qryNota.SQL.Add('Where 1 = 1');
+    qryNota.SQL.Add('  And IdNota = ' + IntToStr(AIdNota));
+    qryNota.SQL.Add('  And IdEmpresa = ' + IntToStr(AIdEmpresa));
+    qryNota.Open;
+    if qryNota.Fields[0].Value > 0 then
+      Result := True;
+    qryNota.Close;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+class function TNota.Finalizar(ASQLConnection: TFDConnection; AIdNota, AIdEmpresa: Integer): Boolean;
+var
+  qryNota: TFDQuery;
+begin
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    qryNota.SQL.Add('Update Nota Set ');
+    qryNota.SQL.Add('  SnFinalizar = 0 ');
+    qryNota.SQL.Add('Where 1 = 1');
+    qryNota.SQL.Add('  And IdNota = ' + IntToStr(AIdNota));
+    qryNota.SQL.Add('  And IdEmpresa = ' + IntToStr(AIdEmpresa));
+   try
+      qryNota.ExecSQL;
+      qryNota.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+class function TNota.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryNota: TFDQuery;
+begin
+  Result := 0;
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    qryNota.SQL.Add('Select Max(IdNota) As IdNota From Nota');
+    qryNota.Open;
+
+    if qryNota.FieldByName('IdNota').AsInteger > 0 then
+      Result := qryNota.FieldByName('IdNota').AsInteger;
+    qryNota.Close;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+function TNota.Buscar(ASQLConnection: TFDConnection; AIdNota: Integer; AIdEmpresa: Integer): Boolean;
+var
+  qryNota: TFDQuery;
+begin
+  Result := False;
+  qryNota:= TFDQuery.Create(Nil);
+  try
+    qryNota.Connection := ASQLConnection;
+    qryNota.SQL.Add('Select * From VW_GridNota');
+    qryNota.SQL.Add('Where IdNota = :IdNota');
+    qryNota.SQL.Add('  And IdEmpresa = :IdEmpresa');
+
+    qryNota.ParamByName('IdNota').AsString := IntToStr(AIdNota);
+    qryNota.ParamByName('IdEmpresa').AsString := IntToStr(AIdEmpresa);
+
+    qryNota.Open;
+    if not qryNota.IsEmpty then
+    begin
+      Result                  := True;
+      IdNota                  := qryNota.FieldByName('IdNota').AsInteger;
+      IdEmpresa               := qryNota.FieldByName('IdEmpresa').AsInteger;
+      IdUsuario               := qryNota.FieldByName('IdUsuario').AsInteger;
+      DtCadastro              := qryNota.FieldByName('DtCadastro').AsDateTime;
+      if qryNota.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao            := 1
+      end else begin
+        SnSituacao            := 0
+      end;
+      if qryNota.FieldByName('SnFinalizada').AsBoolean then
+      begin
+        SnSituacao            := 1
+      end else begin
+        SnSituacao            := 0
+      end;
+      IdCliente               := qryNota.FieldByName('IdCliente').AsInteger;
+      IdEmpCliente            := qryNota.FieldByName('IdEmpCliente').AsInteger;
+      VlNota                  := qryNota.FieldByName('VlNota').AsFloat;
+      NmCliente               := qryNota.FieldByName('NmCliente').AsString;
+      VlTotalProduto          := qryNota.FieldByName('VlTotalProduto').AsFloat;
+      VlTotalServico          := qryNota.FieldByName('VlTotalServico').AsFloat;
+      VlTotalPagamento        := qryNota.FieldByName('VlTotalPagamento').AsFloat;
+      NmFantasiaNmRazaoSocial := qryNota.FieldByName('NmFantasiaNmRazaoSocial').AsString;
+      NrCelular               := qryNota.FieldByName('NrCelular').AsString;
+      NmUsuarioCadastro       := qryNota.FieldByName('NmUsuarioCadastro').AsString;
+
+    end;
+    qryNota.Close;
+  finally
+    FreeAndNil(qryNota)
+  end;
+end;
+
+end.
+

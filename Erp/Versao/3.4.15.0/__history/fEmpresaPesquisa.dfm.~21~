@@ -1,0 +1,119 @@
+inherited FrmEmpresaPesquisa: TFrmEmpresaPesquisa
+  Caption = 'Pesquisar Empresa'
+  ClientWidth = 950
+  ExplicitWidth = 956
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 944
+    ExplicitWidth = 944
+    inherited GroupBox1: TGroupBox
+      Width = 936
+      ExplicitWidth = 936
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 944
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdEmpresa'
+        Title.Alignment = taCenter
+        Title.Caption = 'Identificador'
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'DtCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cadastro'
+        Width = 130
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'SnSituacao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Situa'#231#227'o'
+        Width = 80
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmRazaoSocial'
+        Title.Alignment = taCenter
+        Title.Caption = 'Raz'#227'o Social'
+        Width = 354
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmFantasia'
+        Title.Alignment = taCenter
+        Title.Caption = 'Fantasia'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NrCnpj'
+        Title.Alignment = taCenter
+        Title.Caption = 'CNPJ'
+        Width = 105
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NrIE'
+        Title.Alignment = taCenter
+        Title.Caption = 'IE'
+        Width = 105
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'SnMatriz'
+        Title.Alignment = taCenter
+        Title.Caption = 'Matriz'
+        Visible = False
+      end>
+  end
+  inherited Panel2: TPanel
+    Width = 944
+    ExplicitWidth = 944
+    inherited GroupBox2: TGroupBox
+      Width = 936
+      ExplicitWidth = 936
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 944
+    ExplicitWidth = 944
+    inherited BtnAjuda: TSpeedButton
+      OnClick = BtnAjudaClick
+    end
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 944
+    ExplicitWidth = 944
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 950
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        BiDiMode = bdLeftToRight
+        ParentBiDiMode = False
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitWidth = 950
+  end
+end

@@ -1,0 +1,358 @@
+unit uProdutoEstoque;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TProdutoEstoque = class
+  private
+    SQLConnection      		   : TFDConnection;
+    FIdProdutoEstoque: Integer;
+    FIdEmpresa: Integer;
+    FIdUsuario: Integer;
+    FDtCadastro: TDateTime;
+    FSnSituacao: Integer;
+    FIdProduto: Integer;
+    FQtdEstoqueAnterior: Extended;
+    FQtdEstoque: Extended;
+    procedure Inicializar;
+  public
+    property IdProdutoEstoque: Integer read FIdProdutoEstoque write FIdProdutoEstoque;
+    property IdEmpresa: Integer read FIdEmpresa write FIdEmpresa;
+    property IdUsuario: Integer read FIdUsuario write FIdUsuario;
+    property DtCadastro: TDateTime read FDtCadastro write FDtCadastro;
+    property SnSituacao: Integer read FSnSituacao write FSnSituacao;
+    property IdProduto: Integer read FIdProduto write FIdProduto;
+    property QtdEstoqueAnterior: Extended read FQtdEstoqueAnterior write FQtdEstoqueAnterior;
+    property QtdEstoque: Extended read FQtdEstoque write FQtdEstoque;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdProdutoEstoque: Integer; AConsulta: String; Data: TClientDataSet);
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TProdutoEstoque.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdProdutoEstoque: Integer; AConsulta: String; Data: TClientDataSet);
+var
+  qryProdutoEstoque : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryProdutoEstoque := TFDQuery.Create(nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdProdutoEstoque', ftInteger);
+      Data.FieldDefs.Add('IdEmpresa', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 7, False);
+      Data.FieldDefs.Add('IdProduto', ftInteger);
+      Data.FieldDefs.Add('QtdEstoqueAnterior', ftCurrency);
+      Data.FieldDefs.Add('QtdEstoque', ftCurrency);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryProdutoEstoque.Params.Clear;
+      qryProdutoEstoque.SQL.Clear;
+      qryProdutoEstoque.SQL.Add('Select');
+      qryProdutoEstoque.SQL.Add('  IdProdutoEstoque,');
+      qryProdutoEstoque.SQL.Add('  IdEmpresa,');
+      qryProdutoEstoque.SQL.Add('  IdUsuario,');
+      qryProdutoEstoque.SQL.Add('  DtCadastro,');
+      qryProdutoEstoque.SQL.Add('  SnSituacao,');
+      qryProdutoEstoque.SQL.Add('  IdProduto,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoqueAnterior,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoque');
+      qryProdutoEstoque.SQL.Add('From ProdutoEstoque');
+      qryProdutoEstoque.SQL.Add('Where 1 = 1');
+      if ISnSituacao = 1 then
+      begin
+         qryProdutoEstoque.SQL.Add('  And SnSituacao = 1');
+      end
+      else
+      if ISnSituacao = 0 then
+      begin
+         qryProdutoEstoque.SQL.Add('  And SnSituacao = 0');
+      end;
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryProdutoEstoque.SQL.Add (lCondicao);
+          qryProdutoEstoque.SQL.Add ('Order By');
+          qryProdutoEstoque.SQL.Add ('  IdProdutoEstoque');
+
+          qryProdutoEstoque.Open;
+          qryProdutoEstoque.First;
+        end;
+      end else begin
+        qryProdutoEstoque.SQL.Add (lCondicao);
+        qryProdutoEstoque.SQL.Add ('Order By');
+        qryProdutoEstoque.SQL.Add ('  IdProdutoEstoque');
+
+        lFinalizaLoop := 1;
+        qryProdutoEstoque.Open;
+        qryProdutoEstoque.First;
+      end;
+
+      while not qryProdutoEstoque.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdProdutoEstoque').AsInteger = qryProdutoEstoque.FieldByName('IdProdutoEstoque').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdProdutoEstoque').AsInteger := qryProdutoEstoque.FieldByName('IdProdutoEstoque').AsInteger;
+          Data.FieldByName('IdEmpresa').AsInteger := qryProdutoEstoque.FieldByName('IdEmpresa').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger := qryProdutoEstoque.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime := qryProdutoEstoque.FieldByName('DtCadastro').AsDateTime;
+          if qryProdutoEstoque.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString  := 'Ativo';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString  := 'Desativado';
+          end;
+          Data.FieldByName('IdProduto').AsInteger := qryProdutoEstoque.FieldByName('IdProduto').AsInteger;
+          Data.FieldByName('QtdEstoqueAnterior').AsFloat := qryProdutoEstoque.FieldByName('QtdEstoqueAnterior').AsFloat;
+          Data.FieldByName('QtdEstoque').AsFloat := qryProdutoEstoque.FieldByName('QtdEstoque').AsFloat;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryProdutoEstoque.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryProdutoEstoque.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TProdutoEstoque.Create;
+begin
+  Inicializar;
+end;
+
+procedure TProdutoEstoque.Inicializar;
+begin
+  IdProdutoEstoque := 0;
+  IdEmpresa := 0;
+  IdUsuario := 0;
+  DtCadastro := 0;
+  SnSituacao := 0;
+  IdProduto := 0;
+  QtdEstoqueAnterior := 0;
+  QtdEstoque := 0;
+end;
+
+function TProdutoEstoque.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryProdutoEstoque: TFDQuery;
+begin
+  qryProdutoEstoque:= TFDQuery.Create(Nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdProdutoEstoque) then
+    begin
+      qryProdutoEstoque.SQL.Add('Insert Into ProdutoEstoque(');
+      qryProdutoEstoque.SQL.Add('  IdEmpresa,');
+      qryProdutoEstoque.SQL.Add('  IdUsuario,');
+      qryProdutoEstoque.SQL.Add('  DtCadastro,');
+      qryProdutoEstoque.SQL.Add('  SnSituacao,');
+      qryProdutoEstoque.SQL.Add('  IdProduto,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoqueAnterior,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoque)');
+      qryProdutoEstoque.SQL.Add('Values (');
+      qryProdutoEstoque.SQL.Add('  :IdEmpresa,');
+      qryProdutoEstoque.SQL.Add('  :IdUsuario,');
+      qryProdutoEstoque.SQL.Add('  :DtCadastro,');
+      qryProdutoEstoque.SQL.Add('  :SnSituacao,');
+      qryProdutoEstoque.SQL.Add('  :IdProduto,');
+      qryProdutoEstoque.SQL.Add('  :QtdEstoqueAnterior,');
+      qryProdutoEstoque.SQL.Add('  :QtdEstoque)');
+    end else begin
+      qryProdutoEstoque.SQL.Add('Update ProdutoEstoque Set ');
+      qryProdutoEstoque.SQL.Add('  IdEmpresa = :IdEmpresa,');
+      qryProdutoEstoque.SQL.Add('  IdUsuario = :IdUsuario,');
+      qryProdutoEstoque.SQL.Add('  DtCadastro = :DtCadastro,');
+      qryProdutoEstoque.SQL.Add('  SnSituacao = :SnSituacao,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoqueAnterior = :QtdEstoqueAnterior,');
+      qryProdutoEstoque.SQL.Add('  QtdEstoque = :QtdEstoque ');
+      qryProdutoEstoque.SQL.Add('Where IdProdutoEstoque = :IdProdutoEstoque');
+
+      qryProdutoEstoque.ParamByName('IdProdutoEstoque').AsInteger := IdProdutoEstoque;
+
+    end;
+    qryProdutoEstoque.ParamByName('IdEmpresa').AsInteger := IdEmpresa;
+    qryProdutoEstoque.ParamByName('IdUsuario').AsInteger := IdUsuario;
+    qryProdutoEstoque.ParamByName('DtCadastro').AsDateTime := DtCadastro;
+    qryProdutoEstoque.ParamByName('SnSituacao').AsInteger := SnSituacao;
+    qryProdutoEstoque.ParamByName('IdProduto').AsInteger := IdProduto;
+    qryProdutoEstoque.ParamByName('QtdEstoqueAnterior').AsFloat := QtdEstoqueAnterior;
+    qryProdutoEstoque.ParamByName('QtdEstoque').AsFloat := QtdEstoque;
+   try
+      qryProdutoEstoque.ExecSQL;
+      qryProdutoEstoque.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryProdutoEstoque)
+  end;
+end;
+
+class function TProdutoEstoque.Inativar(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+var
+  qryProdutoEstoque: TFDQuery;
+begin
+  qryProdutoEstoque:= TFDQuery.Create(Nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+    qryProdutoEstoque.SQL.Add('Update ProdutoEstoque Set ');
+    qryProdutoEstoque.SQL.Add('  SnSituacao = 0 ');
+    qryProdutoEstoque.SQL.Add('Where 1 = 1');
+    qryProdutoEstoque.SQL.Add('  And IdProdutoEstoque = ' + IntToStr(AIdProdutoEstoque));
+   try
+      qryProdutoEstoque.ExecSQL;
+      qryProdutoEstoque.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryProdutoEstoque)
+  end;
+end;
+
+class function TProdutoEstoque.Existe(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+var
+  qryProdutoEstoque: TFDQuery;
+begin
+  Result := False;
+  qryProdutoEstoque:= TFDQuery.Create(Nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+    qryProdutoEstoque.SQL.Add('Select IdProdutoEstoque From ProdutoEstoque');
+    qryProdutoEstoque.SQL.Add('Where 1 = 1');
+    qryProdutoEstoque.SQL.Add('  And IdProdutoEstoque = ' + IntToStr(AIdProdutoEstoque));
+    qryProdutoEstoque.Open;
+    if qryProdutoEstoque.Fields[0].Value > 0 then
+      Result := True;
+    qryProdutoEstoque.Close;
+  finally
+    FreeAndNil(qryProdutoEstoque)
+  end;
+end;
+
+class function TProdutoEstoque.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryProdutoEstoque: TFDQuery;
+begin
+  Result := 0;
+  qryProdutoEstoque:= TFDQuery.Create(Nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+    qryProdutoEstoque.SQL.Add('Select Max(IdProdutoEstoque) As IdProdutoEstoque From ProdutoEstoque');
+    qryProdutoEstoque.Open;
+
+    if qryProdutoEstoque.FieldByName('IdProdutoEstoque').AsInteger > 0 then
+      Result := qryProdutoEstoque.FieldByName('IdProdutoEstoque').AsInteger;
+    qryProdutoEstoque.Close;
+  finally
+    FreeAndNil(qryProdutoEstoque)
+  end;
+end;
+
+function TProdutoEstoque.Buscar(ASQLConnection: TFDConnection; AIdProdutoEstoque: Integer): Boolean;
+var
+  qryProdutoEstoque: TFDQuery;
+begin
+  Result := False;
+  qryProdutoEstoque:= TFDQuery.Create(Nil);
+  try
+    qryProdutoEstoque.Connection := ASQLConnection;
+    qryProdutoEstoque.SQL.Add('Select * From ProdutoEstoque');
+    qryProdutoEstoque.SQL.Add('Where 1 = 1');
+    if AIdEmpresa > 0 then
+    begin
+      qryProdutoEstoque.SQL.Add('  And IdProdutoEstoque = ' + IntToStr(AIdProdutoEstoque));
+    end;
+
+    qryProdutoEstoque.Open;
+    if not qryProdutoEstoque.IsEmpty then
+    begin
+      Result := True;
+      IdProdutoEstoque := qryProdutoEstoque.FieldByName('IdProdutoEstoque').AsInteger;
+      IdEmpresa := qryProdutoEstoque.FieldByName('IdEmpresa').AsInteger;
+      IdUsuario := qryProdutoEstoque.FieldByName('IdUsuario').AsInteger;
+      DtCadastro := qryProdutoEstoque.FieldByName('DtCadastro').AsDateTime;
+      if qryProdutoEstoque.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao := 1
+      end else begin
+        SnSituacao := 0
+      end;
+      IdProduto := qryProdutoEstoque.FieldByName('IdProduto').AsInteger;
+      QtdEstoqueAnterior := qryProdutoEstoque.FieldByName('QtdEstoqueAnterior').AsFloat;
+      QtdEstoque := qryProdutoEstoque.FieldByName('QtdEstoque').AsFloat;
+    end;
+    qryProdutoEstoque.Close;
+  finally
+    FreeAndNil(qryProdutoEstoque)
+  end;
+end;
+
+end.
+

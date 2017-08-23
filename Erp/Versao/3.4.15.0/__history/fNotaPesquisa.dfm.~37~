@@ -1,0 +1,657 @@
+inherited FrmNotaPesquisa: TFrmNotaPesquisa
+  Align = alClient
+  BorderStyle = bsNone
+  Caption = 'Pesquisar Lan'#231'amentos'
+  ClientHeight = 556
+  ClientWidth = 1024
+  ExplicitLeft = -260
+  ExplicitWidth = 1024
+  ExplicitHeight = 556
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 1018
+    ExplicitWidth = 1018
+    inherited GroupBox1: TGroupBox
+      Width = 1010
+      ExplicitWidth = 1010
+      inherited Label2: TLabel
+        Left = 197
+        Top = 8
+        ExplicitLeft = 197
+        ExplicitTop = 8
+      end
+      object Label13: TLabel [1]
+        Left = 10
+        Top = 7
+        Width = 78
+        Height = 13
+        Caption = '* Calend'#225'rio:'
+      end
+      inherited EdtPesquisa: TcxTextEdit
+        Left = 274
+        Top = 5
+        TabOrder = 4
+        ExplicitLeft = 274
+        ExplicitTop = 5
+        ExplicitWidth = 323
+        Width = 323
+      end
+      inherited RdbSnAtivo: TRadioButton
+        Left = 627
+        OnClick = RdbSnAtivoClick
+        ExplicitLeft = 627
+      end
+      inherited RdbSnInativo: TRadioButton
+        Left = 711
+        OnClick = RdbSnInativoClick
+        ExplicitLeft = 711
+      end
+      inherited RdbSnTodos: TRadioButton
+        Left = 808
+        OnClick = RdbSnTodosClick
+        ExplicitLeft = 808
+      end
+      object DtpDtCalendario: TcxDateEdit
+        Left = 94
+        Top = 4
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        TabOrder = 0
+        OnKeyPress = EdtPesquisaKeyPress
+        Width = 92
+      end
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 1018
+    Height = 130
+    Align = alTop
+    OnCellClick = DbgPesquisaCellClick
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdEmpresa'
+        Title.Alignment = taCenter
+        Title.Caption = 'Emp'
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdNota'
+        Title.Alignment = taCenter
+        Title.Caption = 'Identificador'
+        Width = 103
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'DtCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cadastro'
+        Width = 150
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'SnSituacao'
+        Title.Alignment = taCenter
+        Title.Caption = 'Situa'#231#227'o'
+        Width = 75
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdEmpCliente'
+        Title.Alignment = taCenter
+        Title.Caption = 'Emp Cli'
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'IdCliente'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cliente'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmCliente'
+        Title.Alignment = taCenter
+        Title.Caption = 'Nome Cliente'
+        Width = 300
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'VlTotalServico'
+        Title.Alignment = taCenter
+        Title.Caption = 'R$ Total Servico'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'VlTotalProduto'
+        Title.Alignment = taCenter
+        Title.Caption = 'R$ Total Produto'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'VlTotalPagamento'
+        Title.Alignment = taCenter
+        Title.Caption = 'R$ Valor Total'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmUsuarioCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Usuario de Cadastro'
+        Width = 146
+        Visible = True
+      end>
+  end
+  inherited Panel2: TPanel
+    Top = 493
+    Width = 1018
+    ExplicitTop = 493
+    ExplicitWidth = 1018
+    inherited GroupBox2: TGroupBox
+      Width = 1010
+      ExplicitWidth = 1010
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 1018
+    ExplicitWidth = 1018
+    inherited BtnImprimir: TcxButton
+      Left = 393
+      ExplicitLeft = 393
+    end
+    inherited BtnLimpar: TcxButton
+      Left = 491
+      ExplicitLeft = 491
+    end
+    inherited BtnFechar: TcxButton
+      Left = 589
+      ExplicitLeft = 589
+    end
+    inherited BtnAjuda: TcxButton
+      Left = 687
+      ExplicitLeft = 687
+    end
+    object BtnCancelar: TcxButton
+      Left = 295
+      Top = 1
+      Width = 98
+      Height = 36
+      Align = alLeft
+      Caption = '&Anular'
+      OptionsImage.Glyph.Data = {
+        36110000424D3611000000000000360000002800000020000000220000000100
+        2000000000000011000000000000000000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00550000385D0000525E00003D6000
+        002F61000022630000176505040E67090806FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF006809080C6405052064050535FFFFFF00FFFF
+        FF009CC39D2796BE963D95BD953597C19928733E325C6B201A7267100E666200
+        005F5E0000595B0000535800004D5600004955000044540000405300003D5300
+        003A53000037530000345200003252000031500000304F0000304F0000315100
+        00355700003C670F0D4C68120F54630505576405055E64050561FFFFFF009BC3
+        9C1A99BF9AFF9DC29EFF9CC19DFF9ABF9AFF97BD97FD94B992F691B38DEF8EAE
+        88E68CA883DD8AA17DD4889A78CA869272C2858A6CBA838266B3817B60AC8074
+        5BA87F7058A57E6D56A37E6C55A37E6F57A580735AA9817B60AF838668BA8692
+        72C88BA17EDB97B794F17B55458A5D00005F640505656405055FFFFFFF0097BF
+        972899BF9AFFDAF1EAFFE7F9F6FFE0F6F0FFDBF3EBFFD6EFE4FFD0EADDFFCAE6
+        D6FFC3E2CFFFBEDEC8FFB8DBC2FFB4D7BDFFB0D4B8FFACD2B4FFA9D0B0FFA7CE
+        ADFFA5CDACFFA5CCAAFFA4CCAAFFA5CCABFFA7CEADFFAAD0B1FFAED3B6FFB6D8
+        BEFFB9DAC2FF9BC49EFF774B3D805D00005D640505656405055BFFFFFF0096BE
+        96309AC09BFFE3F8F4FFEEFFFFFFEFFFFFFFEFFFFFFFF0FFFFFFF1FFFFFFF1FF
+        FFFFF2FFFFFFF2FFFFFFF2FFFFFFF1FFFFFFF0FFFFFFEFFFFFFFEDFFFFFFECFF
+        FFFFEBFFFFFFEBFFFEFFEBFEFEFFEBFFFFFFECFFFFFFEEFFFFFFEFFFFFFFF5FF
+        FFFFE2F8F3FF97BE98FE723A2F785F00005F6405056564050558FFFFFF0095BE
+        95389CC19EFFE2F8F5FFCFF4EBFFEAFFFEFFECFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFECFF
+        FFFFECFFFFFFECFFFFFFECFFFFFFECFFFFFFECFFFFFFEBFFFFFFEBFFFFFFEFFF
+        FFFFD7F0E6FF94BA93F96E2B2371600000606405056564060655FFFFFF0094BC
+        94409FC3A0FFE3F9F6FFBEECDEFFD8F6F0FFEFFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFF0FF
+        FFFFD2ECE1FF92B68FF36A1B176B620000616405056464050551FFFFFF0094BC
+        9348A1C4A3FFE0F9F5FFBEECDEFFC1EDDFFFE9FEFDFFECFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEDFFFFFFEDFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFF1FF
+        FFFFCDE9DAFF90B28BEC660A096563000162640505636406064EFFFFFF0093BC
+        934FA3C6A5FFDEF9F4FFBEECDEFFBBEADBFFD2F4ECFFEFFFFFFFEBFFFFFFEBFF
+        FFFFEAFFFFFFF0FFFFFFF2FFFFFFEFFFFFFFEDFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFF1FF
+        FFFFC8E5D5FF8EAD87E46200006163010263640505646406064BFFFFFF0093BB
+        9257A6C8A8FFDCF8F3FFBDEBDDFFBFECDEFFBDEBDCFFE2FBF8FFEEFFFFFFEAFF
+        FFFFF2FFFFFFF4FFFFFF4E54FFFF5D64FFFFFFFFFFFFEBFFFFFFEBFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFF1FF
+        FFFFC7E7CCFF93B07FDD5C00005E630303646405056464050548FFFFFF0093BB
+        925FA8C9AAFFDBF8F3FFBCEBDCFFBFECDEFFBDEBDCFFC6EFE3FFECFFFFFFF0FF
+        FFFFE3EEFFFF3539FFFF0000FFFF0000FFFF8E99FFFFFFFFFFFFEAFFFFFFEBFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEAFFFFFFFFFF
+        FFFFB3D0D4FF6E7F8FD16C040058630405646405056465060545FFFFFF0092BB
+        9167AACBADFFD9F8F2FFBCEBDCFFBFECDEFFBFECDEFFBBEADBFFD2F4ECFFF3FF
+        FFFFE8F2FFFF2D31FFFF0000FFFF0000FFFF0101FFFFB7C3FFFFFDFFFFFFEAFF
+        FFFFEBFFFFFFEBFFFFFFEBFFFFFFEBFFFFFFEAFFFFFFEEFFFFFFFFFFFFFFB7C0
+        FFFF1B1EFFFF0000F0E669071063690501616405056464050542FFFFFF0092BA
+        916EACCCAFFFD7F7F1FFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBCEADBFFDAF8
+        F3FFF9FFFFFFE0EBFFFF191BFFFF0000FFFF0000FFFF1314FFFFDAE5FFFFF6FF
+        FFFFEAFFFFFFEBFFFFFFEBFFFFFFEAFFFFFFF6FFFFFFF7FFFFFF7A81FFFF0000
+        FFFF0000FFFF0000FFFF1301CEC57406025B650504636505053EFFFFFF0091BA
+        9175AECEB1FFD6F7F1FFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBEECDDFFBDEB
+        DCFFDDF9F5FFFFFFFFFFC2CEFFFF0505FFFF0000FFFF0000FFFF2E32FFFFF1FB
+        FFFFF1FFFFFFEAFFFFFFEBFFFFFFFFFFFFFFD4DEFFFF3C40FFFF0000FFFF0000
+        FFFF0000FFFF0000FFF92002B7AD6C05045F650504626504043CFFFFFF0091B9
+        907CB0CFB4FFD5F7F0FFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBEEC
+        DDFFBDEBDCFFD9F7F2FFFFFFFFFF9CA7FFFF0000FFFF0000FFFF0000FFFF535B
+        FFFFFDFFFFFFF2FFFFFFFFFFFFFF9EA6FFFF0D0FFFFF0000FFFF0000FFFF0000
+        FFFF1B24EFFF656292B97A02004F640504646405056364040438FFFFFF0091B9
+        9084B2D1B7FFD4F7F0FFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBEECDDFFBCEBDCFFCFF3EAFFFDFFFBFF7379FFFF0000FFFF0000FFFF0000
+        FFFF838EFFFFF1F6FFFF5F64FFFF0000FFFF0000FFFF0000FFFF0000FFFF5F64
+        FFFFAAD1B2FF949860AD55000057640505656405056265050535FFFFFF0091B9
+        8F8CB4D3BAFFD3F6EFFFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBBEADBFFC3EFDFFFDEFFE8FF3E48F8FF0000FFFF0000
+        FFFF0202FFFF1D20FFFF0000FFFF0000FFFF0000FFFF0D0FFFFF9EA5FFFFFFFF
+        FFFFAED5AFFF817D63A757000057640505656405056264050533FFFFFF0091B9
+        9093B6D5BCFFD2F6EFFFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBEEBDDFFC1F1DBFFC4F2DDFF2B34F8FF0000
+        FFFF0000FFFF0000FFFF0000FFFF0000FFFF393EFFFFD3DDFFFFFFFFFFFFECFF
+        FFFFA6CDACFF81795FA25800005864050565640505626406052FFFFFFF0090B9
+        8F9BB9D7BFFFD1F6EFFFBCEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFCEFEDBFFB7E2DFFF343FF6FF0000
+        FFFF0000FFFF0000FFFF0000FFFF727BFFFFFBFFFFFFF6FFFFFFEBFFFFFFEAFE
+        FEFFA4CCAAFF80725A9C5900005964050565640505616506052DFFFFFF0091B9
+        8FA2BBD8C2FFD1F6EEFFBDEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBEEBDEFFC3F1DDFFD1FFDBFF88A7E7FF0F12FCFF0000FFFF0000
+        FFFF0000FFFF0000FFFF0000FFFF565CFFFFFDFFFFFFEDFFFFFFECFFFFFFE9FD
+        FCFFA2CAA7FF7F6D56975A00005964050565640505606407062AFFFFFF0091B9
+        90AABEDBC6FFD0F6EEFFBDEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBEEBDEFFCAFADCFFC3F0DDFF5468F0FF0000FFFF0000FFFF0000FFFF0000
+        FFFF262FF8FF0000FFFF0000FFFF0000FFFF6E78FFFFFFFFFFFFECFFFFFFE8FC
+        FBFFA1C9A6FF7D6852935A00005A640505656405056064060627FFFFFF0091B9
+        90B2C1DDC9FFCFF5EDFFBDEBDCFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFC0ED
+        DEFFD0FFDBFFA1C6E3FF242CF9FF0000FFFF0000FFFF0000FFFF0708FEFF7A96
+        EAFFD3FEDBFF4757F3FF0000FFFF0000FFFF0000FFFF98A4FFFFFFFFFFFFE5FB
+        F9FF9FC8A4FF7C634E8F5B00005B640505656405056065060625FFFFFF0091B9
+        90B9C3DFCDFFCFF5EDFFBDEBDCFFBFECDEFFBFECDEFFBFECDEFFC0EDDEFFC3F1
+        DDFF728CEBFF0404FEFF0000FFFF0000FFFF0000FFFF2A33F8FFA7CEE2FFD0FF
+        DBFFC4F2DDFFC4F2DDFF2730F8FF0000FFFF0000FFFF0404FFFFC3CEFFFFF6FF
+        F8FF9DC6A3FF7C5F4C8D5B00005B640505656405055F65070722FFFFFF0092B9
+        91C2C6E2D1FFCEF5ECFFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFCDFDDCFF6A82
+        EDFF0000FFFF0000FFFF0000FFFF0000FFFF5B6FEFFFC5F3DDFFC9F9DCFFBEEB
+        DEFFBEEBDEFFC8F7DCFFB2DBE0FF1013FCFF0000FFFF0000FFFF1A1CFFFFDAE8
+        F7FFA7D1A1FF7A5B498C5C00005C640505656405055E64060620FFFFFF0092BA
+        91CACAE5D5FFCDF4ECFFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFC4F2DDFFB1DA
+        E0FF1216FCFF0000FFFF1419FCFF8EAFE6FFD1FFDBFFC2F0DDFFBEEBDEFFBFEC
+        DEFFBFECDEFFBEEBDEFFCDFEDBFF97BAE5FF0101FEFF0000FFFF0000FFFF3237
+        F9FFA6D0A0FF8063478B5C00005C640505656405055E6505051DA1CCA30893BA
+        92D2CEE8DAFFCCF4EBFFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFBEEBDEFFCEFE
+        DCFF82A1E8FF3B49F5FFB5E0E0FFCEFEDBFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBEEBDEFFD0FFDAFF7B91EFFF0000FFFF0000FFFF0000
+        FFFF394ADDFF876B468C5E00005C640505646405055D6506051B9CC59D1694BB
+        93DAD2EBDFFFCCF3EAFFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEB
+        DEFFC4F2DDFFC7F6DDFFC5F3DDFFBEEBDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBEECDDFFD7FFE0FF636CFDFF0000FFFF0000
+        FFFF3849DFFF83684D8D5F00005B640505656405055C640504189BC39B2795BC
+        95E2D7EEE5FFCBF3E9FFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFEDDEFFC0EDDEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEFDBFFE2FEF0FF4041FFFF646D
+        FAFFADD8A1FF816A4E915A00005A640505666405055C6504041799C0993E97BD
+        97EADBF2EBFFCAF2E8FFBDEBDDFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBFEC
+        DEFFBFECDEFFBFECDEFFBFECDEFFBFECDEFFBDEBDDFFCAF3E2FFEEFFFFFFF2FF
+        FDFFA4CDA7FF7E6D569759000059640505666405055B6404041597BE975A99BF
+        9AF2E1F6F1FFC9F1E7FFBBEADCFFBDEBDCFFBCEBDCFFBCEBDCFFBBEADBFFBBEA
+        DBFFBBEADBFFBBEADBFFBBEADBFFBBEADBFFBCEBDBFFBCEBDCFFBCEBDCFFBDEB
+        DCFFBDEBDDFFBEEBDDFFBEECDDFFBFECDEFFBFECDEFFBEEBDEFFE9FFFCFFEEFF
+        FFFFA6CEACFF80765DA45800005F6405056D640505616405051494BD947E9DC2
+        9FF8EAFEFDFFD0F6EEFFC9F2E9FFD0F5EEFFD4F7F1FFD7F8F3FFD9F9F5FFDBFA
+        F5FFDBFAF6FFDAFAF5FFD9F9F4FFD7F8F2FFD5F7F0FFD2F5EEFFCFF3EBFFCBF2
+        E8FFC8F0E5FFC5EFE3FFC2EDE0FFBFECDEFFBDEBDDFFBCEBDCFFE4FCFAFFF1FF
+        FFFFABCFB1FF8895749D580000366505053F650505376605040A95BD95B3A0C4
+        A3FFD6EEE4FFCEE9DBFFCBE6D7FFCAE4D5FFC9E3D3FFC9E3D3FFCAE4D4FFCCE5
+        D7FFCFE7DAFFD2EADEFFD6EDE3FFDAF0E8FFDFF4EDFFE3F7F2FFE6FAF7FFE9FC
+        FBFFEBFEFDFFEBFFFFFFEBFFFFFFE9FFFFFFE6FEFDFFE3FDFBFFEDFFFFFFF5FF
+        FFFFB4D3BAFF92BE939CFFFFFF00FFFFFF00FFFFFF00FFFFFF0099C09AEF99BF
+        9AF195BC95E394BB93D692BA92CC91B991C591B990C091B990BF91B990C192B9
+        91C692BA91CC93BA92D394BB93DA95BC95E297BD97E999BF99EF9BC19CF59EC3
+        A0F9A1C5A3FCA4C7A7FEA8CAABFEABCCAFFFAECEB2FFAFCFB4FEADCEB1FFAACB
+        ADFF9FC3A1FD98BF99D59FC6A005FFFFFF00FFFFFF00FFFFFF009AC19B829AC1
+        9B589AC29B2A9FC8A010F4FFF501FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF01A2CDA30A9CC49D179AC29B2798C0993B97BF975195BD956A94BC
+        948593BC93A192BB92BC92BA91D491B990E790B990F890B88FFE90B88FF990B9
+        90E397BE97BA9CC29D7DA0C8A009FFFFFF00FFFFFF00FFFFFF00}
+      TabOrder = 7
+      TabStop = False
+      OnClick = BtnCancelarClick
+    end
+  end
+  inherited PrbPesquisa: TProgressBar
+    Top = 470
+    Width = 1018
+    ExplicitTop = 470
+    ExplicitWidth = 1018
+  end
+  inherited StbPrincipal: TStatusBar
+    Top = 534
+    Width = 1018
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitTop = 534
+    ExplicitWidth = 1018
+  end
+  object PgcExtra: TPageControl [6]
+    AlignWithMargins = True
+    Left = 3
+    Top = 231
+    Width = 1018
+    Height = 233
+    ActivePage = TabServico
+    Align = alClient
+    TabOrder = 6
+    object TabServico: TTabSheet
+      Caption = 'Servi'#231'os'
+      object GrbServico: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1004
+        Height = 199
+        Align = alClient
+        Caption = '  Sele'#231#227'o de Servi'#231'os  '
+        Enabled = False
+        TabOrder = 0
+        TabStop = True
+        object DbgServico: TDBGrid
+          AlignWithMargins = True
+          Left = 5
+          Top = 18
+          Width = 994
+          Height = 176
+          Align = alClient
+          DataSource = DtsServico
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Verdana'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'IdProfissional'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'NmProfissional'
+              Title.Alignment = taCenter
+              Title.Caption = 'Profissional'
+              Width = 156
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'IdServico'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'NmTpServico'
+              Title.Alignment = taCenter
+              Title.Caption = 'Servi'#231'o'
+              Width = 191
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'QtdNotaItem'
+              Title.Alignment = taCenter
+              Title.Caption = 'Qtds'
+              Width = 55
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'PcDesconto'
+              Title.Alignment = taCenter
+              Title.Caption = 'Desc'
+              Width = 56
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'VlServico'
+              Title.Alignment = taCenter
+              Title.Caption = 'R$ Servico'
+              Width = 80
+              Visible = True
+            end>
+        end
+      end
+    end
+    object TabProduto: TTabSheet
+      Caption = 'Produtos'
+      ImageIndex = 1
+      object GrbProduto: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1004
+        Height = 199
+        Align = alClient
+        Caption = '  Sele'#231#227'o de Produtos  '
+        Enabled = False
+        TabOrder = 0
+        TabStop = True
+        object DbgProduto: TDBGrid
+          AlignWithMargins = True
+          Left = 5
+          Top = 18
+          Width = 994
+          Height = 176
+          Align = alClient
+          DataSource = DtsProduto
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Verdana'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'IdProfissional'
+              Visible = False
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'IdProduto'
+              Title.Alignment = taCenter
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'NmProfissional'
+              Title.Alignment = taCenter
+              Title.Caption = 'Profissional'
+              Width = 156
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'NrEan'
+              Title.Alignment = taCenter
+              Title.Caption = 'Ean'
+              Width = 92
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'NmProduto'
+              Title.Alignment = taCenter
+              Title.Caption = 'Produto'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'QtdNotaItem'
+              Title.Alignment = taCenter
+              Title.Caption = 'Qtds'
+              Width = 55
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'PcDesconto'
+              Title.Alignment = taCenter
+              Title.Caption = 'Desc'
+              Width = 56
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'VlProduto'
+              Title.Alignment = taCenter
+              Title.Caption = 'R$ Produto'
+              Width = 80
+              Visible = True
+            end>
+        end
+      end
+    end
+    object TabTipoPagamento: TTabSheet
+      Caption = 'Tipos de Pagamentos'
+      ImageIndex = 2
+      object GrbTipoPagamento: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1004
+        Height = 199
+        Align = alClient
+        Caption = '  Sele'#231#227'o de Pagamento  '
+        Enabled = False
+        TabOrder = 0
+        TabStop = True
+        object DbgPagamento: TDBGrid
+          AlignWithMargins = True
+          Left = 5
+          Top = 18
+          Width = 994
+          Height = 176
+          Align = alClient
+          DataSource = DtsTipoPagamento
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Verdana'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'IdTpPagamento'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'NmTpPagamento'
+              Title.Alignment = taCenter
+              Title.Caption = 'Tipo de Pagamento'
+              Width = 309
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'QtdNotaPagamento'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'VlPagamento'
+              Title.Alignment = taCenter
+              Title.Caption = 'R$ Pagamento'
+              Width = 103
+              Visible = True
+            end>
+        end
+      end
+    end
+  end
+  inherited CdsPesquisa: TClientDataSet
+    Left = 696
+    Top = 8
+  end
+  inherited DtsPesquisa: TDataSource
+    Left = 696
+    Top = 57
+  end
+  object CdsProduto: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 909
+    Top = 11
+  end
+  object DtsProduto: TDataSource
+    DataSet = CdsProduto
+    Left = 912
+    Top = 57
+  end
+  object CdsServico: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 970
+    Top = 11
+  end
+  object DtsServico: TDataSource
+    DataSet = CdsServico
+    Left = 970
+    Top = 57
+  end
+  object CdsTipoPagamento: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 831
+    Top = 10
+  end
+  object DtsTipoPagamento: TDataSource
+    DataSet = CdsTipoPagamento
+    Left = 831
+    Top = 57
+  end
+end

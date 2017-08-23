@@ -1,0 +1,75 @@
+program SginERP;
+
+uses
+  Vcl.Forms,
+  fPrincipal in 'fPrincipal.pas' {Form1},
+  dArquivos in '..\..\Classes\DataModule\dArquivos.pas' {DtmArquivos: TDataModule},
+  dMail in '..\..\Classes\DataModule\dMail.pas' {DtmEmail: TDataModule},
+  dPrincipal in '..\..\Classes\DataModule\dPrincipal.pas' {DtmPrincipal: TDataModule},
+  dRelatorios in '..\..\Classes\DataModule\dRelatorios.pas' {DtmRelatorios: TDataModule},
+  fCadastro in '..\..\Classes\Base\fCadastro.pas' {FrmCadastro},
+  fOperacao in '..\..\Classes\Base\fOperacao.pas' {FrmOperacao},
+  fPesquisa in '..\..\Classes\Base\fPesquisa.pas' {FrmPesquisa},
+  fRelatorio in '..\..\Classes\Base\fRelatorio.pas' {FrmRelatorio},
+  fLogin in '..\..\Classes\Login\fLogin.pas' {FrmLogin},
+  fWebCam in '..\..\Classes\WebCam\fWebCam.pas' {FrmWebCam},
+  fAjuda in '..\..\Classes\Ajuda\fAjuda.pas' {FrmAjuda},
+  uAjuda in '..\..\Classes\Ajuda\uAjuda.pas',
+  fAtivacaoSistema in '..\..\Classes\AtivaSistema\fAtivacaoSistema.pas' {FrmAtivacaoSistema},
+  fContraSenha in '..\..\Classes\AtivaSistema\fContraSenha.pas' {FrmContraSenha},
+  uAtivacao in '..\..\Classes\AtivaSistema\uAtivacao.pas',
+  uLicenca in '..\..\Classes\AtivaSistema\uLicenca.pas',
+  fCalendario in '..\..\Classes\Calendario\fCalendario.pas' {FrmCalendario},
+  fCalendarioPesquisa in '..\..\Classes\Calendario\fCalendarioPesquisa.pas' {FrmCalendarioPesquisa},
+  uCalendario in '..\..\Classes\Calendario\uCalendario.pas',
+  uCarregaDados in '..\..\Classes\CarregaDados\uCarregaDados.pas',
+  fConfiguracao in '..\..\Classes\Configuracao\fConfiguracao.pas' {FrmConfiguracao},
+  fConfiguracaoPesquisa in '..\..\Classes\Configuracao\fConfiguracaoPesquisa.pas' {FrmConfiguracaoPesquisa},
+  uConfiguracao in '..\..\Classes\Configuracao\uConfiguracao.pas',
+  fCopiaSeguranca in '..\..\Classes\CopiaSeguranca\fCopiaSeguranca.pas' {FrmCopiaSeguranca},
+  fCriacaoRelatorios in '..\..\Classes\CriacaoRelatorios\fCriacaoRelatorios.pas' {FrmCriacaoRelatorios},
+  uCriaPastas in '..\..\Classes\CriaPastas\uCriaPastas.pas',
+  fExecutaScriptSQL in '..\..\Classes\ExecutaScriptSQL\fExecutaScriptSQL.pas' {FrmExecutaScriptSQL},
+  uFuncao in '..\..\Classes\Funcao\uFuncao.pas',
+  fCep in '..\..\Classes\Geografia\fCep.pas' {FrmCep},
+  fCepPesquisa in '..\..\Classes\Geografia\fCepPesquisa.pas' {FrmCepPesquisa},
+  fCidade in '..\..\Classes\Geografia\fCidade.pas' {FrmCidade},
+  fCidadePesquisa in '..\..\Classes\Geografia\fCidadePesquisa.pas' {FrmCidadePesquisa},
+  uCep in '..\..\Classes\Geografia\uCep.pas',
+  uCidade in '..\..\Classes\Geografia\uCidade.pas',
+  uPais in '..\..\Classes\Geografia\uPais.pas',
+  uRegiao in '..\..\Classes\Geografia\uRegiao.pas',
+  GIFImage in '..\..\Classes\Imagem\GIFImage.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TDtmArquivos, DtmArquivos);
+  Application.CreateForm(TDtmEmail, DtmEmail);
+  Application.CreateForm(TDtmPrincipal, DtmPrincipal);
+  Application.CreateForm(TDtmRelatorios, DtmRelatorios);
+  Application.CreateForm(TFrmCadastro, FrmCadastro);
+  Application.CreateForm(TFrmOperacao, FrmOperacao);
+  Application.CreateForm(TFrmPesquisa, FrmPesquisa);
+  Application.CreateForm(TFrmRelatorio, FrmRelatorio);
+  Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TFrmWebCam, FrmWebCam);
+  Application.CreateForm(TFrmAjuda, FrmAjuda);
+  Application.CreateForm(TFrmAtivacaoSistema, FrmAtivacaoSistema);
+  Application.CreateForm(TFrmContraSenha, FrmContraSenha);
+  Application.CreateForm(TFrmCalendario, FrmCalendario);
+  Application.CreateForm(TFrmCalendarioPesquisa, FrmCalendarioPesquisa);
+  Application.CreateForm(TFrmConfiguracao, FrmConfiguracao);
+  Application.CreateForm(TFrmConfiguracaoPesquisa, FrmConfiguracaoPesquisa);
+  Application.CreateForm(TFrmCopiaSeguranca, FrmCopiaSeguranca);
+  Application.CreateForm(TFrmCriacaoRelatorios, FrmCriacaoRelatorios);
+  Application.CreateForm(TFrmExecutaScriptSQL, FrmExecutaScriptSQL);
+  Application.CreateForm(TFrmCep, FrmCep);
+  Application.CreateForm(TFrmCepPesquisa, FrmCepPesquisa);
+  Application.CreateForm(TFrmCidade, FrmCidade);
+  Application.CreateForm(TFrmCidadePesquisa, FrmCidadePesquisa);
+  Application.Run;
+end.

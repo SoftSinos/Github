@@ -1,0 +1,369 @@
+unit uAgendaEmCaixe;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TAgendaEmCaixe = class
+  private
+    SQLConnection      		   : TFDConnection;
+    FIdAgendaEmCaixe: Integer;
+    FIdEmpAgenda: Integer;
+    FIdUsuario: Integer;
+    FDtCadastro: TDateTime;
+    FSnSituacao: Integer;
+    FIdAgenda: Integer;
+    FIdTpServico: Integer;
+    FIdEmpCliente: Integer;
+    FIdCliente: Integer;
+    procedure Inicializar;
+  public
+    property IdAgendaEmCaixe: Integer read FIdAgendaEmCaixe write FIdAgendaEmCaixe;
+    property IdEmpAgenda: Integer read FIdEmpAgenda write FIdEmpAgenda;
+    property IdUsuario: Integer read FIdUsuario write FIdUsuario;
+    property DtCadastro: TDateTime read FDtCadastro write FDtCadastro;
+    property SnSituacao: Integer read FSnSituacao write FSnSituacao;
+    property IdAgenda: Integer read FIdAgenda write FIdAgenda;
+    property IdTpServico: Integer read FIdTpServico write FIdTpServico;
+    property IdEmpCliente: Integer read FIdEmpCliente write FIdEmpCliente;
+    property IdCliente: Integer read FIdCliente write FIdCliente;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdAgendaEmCaixe: Integer; AConsulta: String; Data: TClientDataSet);
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TAgendaEmCaixe.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdAgendaEmCaixe: Integer; AConsulta: String; Data: TClientDataSet);
+var
+  qryAgendaEmCaixe : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryAgendaEmCaixe := TFDQuery.Create(nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdAgendaEmCaixe', ftInteger);
+      Data.FieldDefs.Add('IdEmpAgenda', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 7, False);
+      Data.FieldDefs.Add('IdAgenda', ftInteger);
+      Data.FieldDefs.Add('IdTpServico', ftInteger);
+      Data.FieldDefs.Add('IdEmpCliente', ftInteger);
+      Data.FieldDefs.Add('IdCliente', ftInteger);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryAgendaEmCaixe.Params.Clear;
+      qryAgendaEmCaixe.SQL.Clear;
+      qryAgendaEmCaixe.SQL.Add('Select');
+      qryAgendaEmCaixe.SQL.Add('  IdAgendaEmCaixe,');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  IdUsuario,');
+      qryAgendaEmCaixe.SQL.Add('  DtCadastro,');
+      qryAgendaEmCaixe.SQL.Add('  SnSituacao,');
+      qryAgendaEmCaixe.SQL.Add('  IdAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  IdTpServico,');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpCliente,');
+      qryAgendaEmCaixe.SQL.Add('  IdCliente');
+      qryAgendaEmCaixe.SQL.Add('From AgendaEmCaixe');
+      qryAgendaEmCaixe.SQL.Add('Where 1 = 1');
+      if ISnSituacao = 1 then
+      begin
+         qryAgendaEmCaixe.SQL.Add('  And SnSituacao = 1');
+      end
+      else
+      if ISnSituacao = 0 then
+      begin
+         qryAgendaEmCaixe.SQL.Add('  And SnSituacao = 0');
+      end;
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryAgendaEmCaixe.SQL.Add (lCondicao);
+          qryAgendaEmCaixe.SQL.Add ('Order By');
+          qryAgendaEmCaixe.SQL.Add ('  IdAgendaEmCaixe');
+
+          qryAgendaEmCaixe.Open;
+          qryAgendaEmCaixe.First;
+        end;
+      end else begin
+        qryAgendaEmCaixe.SQL.Add (lCondicao);
+        qryAgendaEmCaixe.SQL.Add ('Order By');
+        qryAgendaEmCaixe.SQL.Add ('  IdAgendaEmCaixe');
+
+        lFinalizaLoop := 1;
+        qryAgendaEmCaixe.Open;
+        qryAgendaEmCaixe.First;
+      end;
+
+      while not qryAgendaEmCaixe.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdAgendaEmCaixe').AsInteger = qryAgendaEmCaixe.FieldByName('IdAgendaEmCaixe').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdAgendaEmCaixe').AsInteger := qryAgendaEmCaixe.FieldByName('IdAgendaEmCaixe').AsInteger;
+          Data.FieldByName('IdEmpAgenda').AsInteger := qryAgendaEmCaixe.FieldByName('IdEmpAgenda').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger := qryAgendaEmCaixe.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime := qryAgendaEmCaixe.FieldByName('DtCadastro').AsDateTime;
+          if qryAgendaEmCaixe.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString  := 'Ativo';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString  := 'Desativado';
+          end;
+          Data.FieldByName('IdAgenda').AsInteger := qryAgendaEmCaixe.FieldByName('IdAgenda').AsInteger;
+          Data.FieldByName('IdTpServico').AsInteger := qryAgendaEmCaixe.FieldByName('IdTpServico').AsInteger;
+          Data.FieldByName('IdEmpCliente').AsInteger := qryAgendaEmCaixe.FieldByName('IdEmpCliente').AsInteger;
+          Data.FieldByName('IdCliente').AsInteger := qryAgendaEmCaixe.FieldByName('IdCliente').AsInteger;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryAgendaEmCaixe.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryAgendaEmCaixe.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TAgendaEmCaixe.Create;
+begin
+  Inicializar;
+end;
+
+procedure TAgendaEmCaixe.Inicializar;
+begin
+  IdAgendaEmCaixe := 0;
+  IdEmpAgenda := 0;
+  IdUsuario := 0;
+  DtCadastro := 0;
+  SnSituacao := 0;
+  IdAgenda := 0;
+  IdTpServico := 0;
+  IdEmpCliente := 0;
+  IdCliente := 0;
+end;
+
+function TAgendaEmCaixe.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryAgendaEmCaixe: TFDQuery;
+begin
+  qryAgendaEmCaixe:= TFDQuery.Create(Nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdAgendaEmCaixe) then
+    begin
+      qryAgendaEmCaixe.SQL.Add('Insert Into AgendaEmCaixe(');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  IdUsuario,');
+      qryAgendaEmCaixe.SQL.Add('  DtCadastro,');
+      qryAgendaEmCaixe.SQL.Add('  SnSituacao,');
+      qryAgendaEmCaixe.SQL.Add('  IdAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  IdTpServico,');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpCliente,');
+      qryAgendaEmCaixe.SQL.Add('  IdCliente)');
+      qryAgendaEmCaixe.SQL.Add('Values (');
+      qryAgendaEmCaixe.SQL.Add('  :IdEmpAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  :IdUsuario,');
+      qryAgendaEmCaixe.SQL.Add('  :DtCadastro,');
+      qryAgendaEmCaixe.SQL.Add('  :SnSituacao,');
+      qryAgendaEmCaixe.SQL.Add('  :IdAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  :IdTpServico,');
+      qryAgendaEmCaixe.SQL.Add('  :IdEmpCliente,');
+      qryAgendaEmCaixe.SQL.Add('  :IdCliente)');
+    end else begin
+      qryAgendaEmCaixe.SQL.Add('Update AgendaEmCaixe Set ');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpAgenda = :IdEmpAgenda,');
+      qryAgendaEmCaixe.SQL.Add('  IdUsuario = :IdUsuario,');
+      qryAgendaEmCaixe.SQL.Add('  DtCadastro = :DtCadastro,');
+      qryAgendaEmCaixe.SQL.Add('  SnSituacao = :SnSituacao,');
+      qryAgendaEmCaixe.SQL.Add('  IdTpServico = :IdTpServico,');
+      qryAgendaEmCaixe.SQL.Add('  IdEmpCliente = :IdEmpCliente,');
+      qryAgendaEmCaixe.SQL.Add('  IdCliente = :IdCliente ');
+      qryAgendaEmCaixe.SQL.Add('Where IdAgendaEmCaixe = :IdAgendaEmCaixe');
+
+      qryAgendaEmCaixe.ParamByName('IdAgendaEmCaixe').AsInteger := IdAgendaEmCaixe;
+
+    end;
+    qryAgendaEmCaixe.ParamByName('IdEmpAgenda').AsInteger := IdEmpAgenda;
+    qryAgendaEmCaixe.ParamByName('IdUsuario').AsInteger := IdUsuario;
+    qryAgendaEmCaixe.ParamByName('DtCadastro').AsDateTime := DtCadastro;
+    qryAgendaEmCaixe.ParamByName('SnSituacao').AsInteger := SnSituacao;
+    qryAgendaEmCaixe.ParamByName('IdAgenda').AsInteger := IdAgenda;
+    qryAgendaEmCaixe.ParamByName('IdTpServico').AsInteger := IdTpServico;
+    qryAgendaEmCaixe.ParamByName('IdEmpCliente').AsInteger := IdEmpCliente;
+    qryAgendaEmCaixe.ParamByName('IdCliente').AsInteger := IdCliente;
+   try
+      qryAgendaEmCaixe.ExecSQL;
+      qryAgendaEmCaixe.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryAgendaEmCaixe)
+  end;
+end;
+
+class function TAgendaEmCaixe.Inativar(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+var
+  qryAgendaEmCaixe: TFDQuery;
+begin
+  qryAgendaEmCaixe:= TFDQuery.Create(Nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+    qryAgendaEmCaixe.SQL.Add('Update AgendaEmCaixe Set ');
+    qryAgendaEmCaixe.SQL.Add('  SnSituacao = 0 ');
+    qryAgendaEmCaixe.SQL.Add('Where 1 = 1');
+    qryAgendaEmCaixe.SQL.Add('  And IdAgendaEmCaixe = ' + IntToStr(AIdAgendaEmCaixe));
+   try
+      qryAgendaEmCaixe.ExecSQL;
+      qryAgendaEmCaixe.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryAgendaEmCaixe)
+  end;
+end;
+
+class function TAgendaEmCaixe.Existe(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+var
+  qryAgendaEmCaixe: TFDQuery;
+begin
+  Result := False;
+  qryAgendaEmCaixe:= TFDQuery.Create(Nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+    qryAgendaEmCaixe.SQL.Add('Select IdAgendaEmCaixe From AgendaEmCaixe');
+    qryAgendaEmCaixe.SQL.Add('Where 1 = 1');
+    qryAgendaEmCaixe.SQL.Add('  And IdAgendaEmCaixe = ' + IntToStr(AIdAgendaEmCaixe));
+    qryAgendaEmCaixe.Open;
+    if qryAgendaEmCaixe.Fields[0].Value > 0 then
+      Result := True;
+    qryAgendaEmCaixe.Close;
+  finally
+    FreeAndNil(qryAgendaEmCaixe)
+  end;
+end;
+
+class function TAgendaEmCaixe.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryAgendaEmCaixe: TFDQuery;
+begin
+  Result := 0;
+  qryAgendaEmCaixe:= TFDQuery.Create(Nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+    qryAgendaEmCaixe.SQL.Add('Select Max(IdAgendaEmCaixe) As IdAgendaEmCaixe From AgendaEmCaixe');
+    qryAgendaEmCaixe.Open;
+
+    if qryAgendaEmCaixe.FieldByName('IdAgendaEmCaixe').AsInteger > 0 then
+      Result := qryAgendaEmCaixe.FieldByName('IdAgendaEmCaixe').AsInteger;
+    qryAgendaEmCaixe.Close;
+  finally
+    FreeAndNil(qryAgendaEmCaixe)
+  end;
+end;
+
+function TAgendaEmCaixe.Buscar(ASQLConnection: TFDConnection; AIdAgendaEmCaixe: Integer): Boolean;
+var
+  qryAgendaEmCaixe: TFDQuery;
+begin
+  Result := False;
+  qryAgendaEmCaixe:= TFDQuery.Create(Nil);
+  try
+    qryAgendaEmCaixe.Connection := ASQLConnection;
+    qryAgendaEmCaixe.SQL.Add('Select * From AgendaEmCaixe');
+    qryAgendaEmCaixe.SQL.Add('Where 1 = 1');
+    if AIdEmpresa > 0 then
+    begin
+      qryAgendaEmCaixe.SQL.Add('  And IdAgendaEmCaixe = ' + IntToStr(AIdAgendaEmCaixe));
+    end;
+
+    qryAgendaEmCaixe.Open;
+    if not qryAgendaEmCaixe.IsEmpty then
+    begin
+      Result := True;
+      IdAgendaEmCaixe := qryAgendaEmCaixe.FieldByName('IdAgendaEmCaixe').AsInteger;
+      IdEmpAgenda := qryAgendaEmCaixe.FieldByName('IdEmpAgenda').AsInteger;
+      IdUsuario := qryAgendaEmCaixe.FieldByName('IdUsuario').AsInteger;
+      DtCadastro := qryAgendaEmCaixe.FieldByName('DtCadastro').AsDateTime;
+      if qryAgendaEmCaixe.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao := 1
+      end else begin
+        SnSituacao := 0
+      end;
+      IdAgenda := qryAgendaEmCaixe.FieldByName('IdAgenda').AsInteger;
+      IdTpServico := qryAgendaEmCaixe.FieldByName('IdTpServico').AsInteger;
+      IdEmpCliente := qryAgendaEmCaixe.FieldByName('IdEmpCliente').AsInteger;
+      IdCliente := qryAgendaEmCaixe.FieldByName('IdCliente').AsInteger;
+    end;
+    qryAgendaEmCaixe.Close;
+  finally
+    FreeAndNil(qryAgendaEmCaixe)
+  end;
+end;
+
+end.
+

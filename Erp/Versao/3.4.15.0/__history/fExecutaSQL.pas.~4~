@@ -1,0 +1,87 @@
+unit fExecutaSQL;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls, cxControls,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit, cxMemo;
+
+type
+  TFrmExecutarSQL = class(TFrmOperacao)
+    BtnLer: TcxButton;
+    GroupBox1: TGroupBox;
+    BtnExecutar: TcxButton;
+    MemSQL: TcxMemo;
+    OpdSQL: TOpenDialog;
+    Panel2: TPanel;
+    GroupBox2: TGroupBox;
+    Label1: TLabel;
+    LbtTotalRegistros: TLabel;
+    procedure BtnLerClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmExecutarSQL: TFrmExecutarSQL;
+
+implementation
+
+uses dPrincipal, uFuncao, fProcessando, uMensagem, fAjuda;
+
+
+{$R *.dfm}
+
+procedure TFrmExecutarSQL.BtnLerClick(Sender: TObject);
+var
+  Arq: TextFile;
+  Linha: String;
+  Registro: String;
+  Tam: Integer;
+  I: Integer;
+  PFilePath: Packed array [0 .. 200] of Byte;
+  FilePath: String;
+  Return: Integer;
+  EofIDData: Boolean;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmExecutarSQL';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnLerClick';
+  DtmPrincipal.unLog.NmTabela   := 'SQL Server';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  LbtTotalRegistros.Caption := '0';
+
+  EofIDData := False;
+
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    MemSQL.Clear();
+
+    OpdSQL.FileName := '*.Sql';
+    OpdSQL.Title := 'Selecione o Arquivo';
+    OpdSQL.DefaultExt := '*.Sql';
+    OpdSQL.Filter := 'Arquivos SQL (*.sql)|Todos os Arquivos (*.*)|*.*';
+
+    if OpdSQL.Execute then
+    begin
+      AssignFile(Arq, OpdSQL.FileName);
+      Reset(Arq);
+
+      while not Eof(Arq) do
+      begin
+        MemSQL.Lines.LoadFromFile(OpdSQL.FileName);
+      end;
+    end;
+  finally
+
+  end;
+end;
+
+end.

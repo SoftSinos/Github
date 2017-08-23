@@ -1,0 +1,62 @@
+inherited FrmDataPeriodo: TFrmDataPeriodo
+  Caption = 'Carregar Per'#237'odo'
+  ClientHeight = 154
+  ExplicitHeight = 183
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited StbPrincipal: TStatusBar
+    Top = 132
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitTop = 132
+  end
+  inherited PnlPrincipal: TPanel
+    inherited BtnFechar: TcxButton
+      Left = 105
+      ExplicitLeft = 105
+    end
+    inherited BtnAjuda: TcxButton
+      Left = 204
+      OnClick = BtnAjudaClick
+      ExplicitLeft = 204
+    end
+  end
+  inherited PnlCampos: TPanel
+    Height = 67
+    ExplicitHeight = 67
+    object GroupBox1: TGroupBox
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 785
+      Height = 59
+      Align = alClient
+      Caption = '  Data  '
+      TabOrder = 0
+      ExplicitWidth = 480
+      object Label9: TLabel
+        Left = 19
+        Top = 27
+        Width = 49
+        Height = 13
+        Caption = 'Selecione:'
+      end
+      object DtpDtPeriodoInicio: TcxDateEdit
+        Left = 70
+        Top = 24
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        Properties.DateOnError = deNull
+        TabOrder = 0
+        Width = 96
+      end
+    end
+  end
+end

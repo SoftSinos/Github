@@ -1,0 +1,77 @@
+unit fProdutoPesquisar;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fPesquisa, Data.DB, Datasnap.DBClient, Vcl.ComCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  TFrmProdutoPesquisa = class(TFrmPesquisa)
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnIncluirClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmProdutoPesquisa: TFrmProdutoPesquisa;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmProdutoPesquisa.BtnIncluirClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmProdutoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnIncluirClick';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  try
+    FrmProduto := TFrmProduto.Create(Application);
+    ControleBotao;
+    FrmProduto.CarregarTela;
+    FrmProduto.ShowModal;
+  finally
+    FrmProduto.Free;
+  end;
+end;
+
+procedure TFrmProdutoPesquisa.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmProdutoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmProdutoPesquisa.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmProdutoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmProdutoPesquisa.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmProdutoPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+end.
