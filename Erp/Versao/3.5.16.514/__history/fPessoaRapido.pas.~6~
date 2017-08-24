@@ -1,0 +1,521 @@
+unit fPessoaRapido;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fCadastro, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  Data.DB, Datasnap.DBClient, Vcl.StdCtrls, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.Buttons, Vcl.ExtCtrls, cxImage, cxDBEdit,
+  Vcl.Mask, Vcl.Imaging.jpeg, Camera, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, cxButtons, cxMemo, cxGroupBox, cxRadioGroup, cxCheckBox;
+
+type
+  TFrmPessoaRapido = class(TFrmCadastro)
+    DtsRetorno              : TDataSource;
+    GroupBox2: TGroupBox;
+    LblDtNascFund: TLabel;
+    LblPessoaRazaoSocial: TLabel;
+    LblNmApelido: TLabel;
+    DtpDtNascimento: TcxDateEdit;
+    EdtNmPessoa: TcxTextEdit;
+    EdtNmApelido: TcxTextEdit;
+    Label2: TLabel;
+    GroupBox1: TGroupBox;
+    Label8: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label13: TLabel;
+    Label17: TLabel;
+    Label5: TLabel;
+    Label10: TLabel;
+    BtnCepPesquisa: TcxButton;
+    EdtNmComplemento: TcxTextEdit;
+    MkeNrCep: TcxMaskEdit;
+    EdtNmCidade: TcxTextEdit;
+    EdtNmUf: TcxTextEdit;
+    EdtNrNumero: TcxTextEdit;
+    EdtNmBairro: TcxTextEdit;
+    EdtNmEndereco: TcxTextEdit;
+    MkeNrCelular: TcxMaskEdit;
+    procedure BtnIncluirClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnAnteriorClick(Sender: TObject);
+    procedure BtnProximoClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure CamposEdicao(Sender: TObject; var CanEdit: Boolean);
+    procedure MkeNrCepExit(Sender: TObject);
+    procedure BtnCepPesquisaClick(Sender: TObject);
+    procedure MkeNrCelularPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure MkeNrCepPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure MkeNrCepKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+    procedure InicializarTela;
+  public
+    { Public declarations }
+    procedure CopulaTela;
+    procedure Edicao;
+  end;
+
+var
+  FrmPessoaRapido: TFrmPessoaRapido;
+
+implementation
+
+{$R *.dfm}
+
+uses dPrincipal, uFuncao, uMensagem, uProcedure, uCarregaDados, fProcessando, fAjuda, uPessoa, uTipoPessoa, uCep, fWebCam, fTipoPessoaPesquisa, fCepPesquisa, fEmpresaPesquisa,
+  fServicoPesquisa, uServico, fGrupoServicoPesquisa;
+
+var
+  unPessoa         : TPessoa;
+  unTipoPessoa     : TTipoPessoa;
+  unCarregaDados   : TCarregaDados;
+  unCep            : TCep;
+  unServico        : TServico;
+  LimpaArquivo     : String;
+  lTpChamadaClasse : Boolean;
+
+procedure TFrmPessoaRapido.BtnAjudaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAjudaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmAjuda := TFrmAjuda.Create(Application);
+    FrmAjuda.Caption        := 'Ajuda Sobre à Tela de ' +  Caption;
+    FrmAjuda.gNmTelaChamada := Name;
+    FrmAjuda.ShowModal;
+  finally
+    FrmAjuda.Free;
+  end;
+end;
+
+procedure TFrmPessoaRapido.BtnAnteriorClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAnteriorClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if Trim(EdtIdRegistro.Text) = '' then
+  begin
+    EdtIdRegistro.Text := '0';
+  end;
+
+  uProcedure.Registro(DtmPrincipal.IdEmpresaLogada, StrToInt(EdtIdRegistro.Text), 'Pessoa', 'Anterior', CdsRetorno);
+
+  if CdsRetorno.RecordCount > 0 then
+  begin
+    CopulaTela;
+  end
+  else
+  begin
+    MsgAtencao(uMensagem.JaEstamosNoPrimeiroRegistro);
+  end;
+end;
+
+procedure TFrmPessoaRapido.BtnCancelarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnCancelarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmPessoaRapido.BtnCepPesquisaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnTipoPessoaPesquisaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmCepPesquisa := TFrmCepPesquisa.Create(Application);
+    FrmCepPesquisa.TpAcao := 'CarregaDados';
+    FrmCepPesquisa.ShowModal;
+  finally
+    if not FrmCepPesquisa.CdsPesquisa.IsEmpty then
+    begin
+      MkeNrCep.Text       := FrmCepPesquisa.CdsPesquisa.FieldByName('NrCep').AsString;;
+      MkeNrCepExit(Sender);
+      Edicao;
+    end;
+    FrmCepPesquisa.Free;
+  end;
+
+end;
+
+procedure TFrmPessoaRapido.BtnFecharClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnFecharClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  unPessoa.Free;
+end;
+
+procedure TFrmPessoaRapido.BtnIncluirClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnLocalClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  InicializarTela;
+end;
+
+procedure TFrmPessoaRapido.BtnProximoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnProximoClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if Trim(EdtIdRegistro.Text) = '' then
+  begin
+    EdtIdRegistro.Text := '0';
+  end;
+
+  uProcedure.Registro(DtmPrincipal.IdEmpresaLogada, StrToInt(EdtIdRegistro.Text), 'Pessoa', 'Proximo', CdsRetorno);
+
+  if CdsRetorno.RecordCount > 0 then
+  begin
+    CopulaTela;
+  end
+  else
+  begin
+    MsgAtencao(uMensagem.JaEstamosNoUltimoRegistro);
+  end;
+end;
+
+procedure TFrmPessoaRapido.BtnSalvarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnSalvarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    if ((Trim(EdtNmPessoa.Text) <> '') and (Trim(MkeNrCelular.Text) <> '')) then
+    begin
+      if Trim(EdtIdRegistro.Text) <> '' then
+      begin
+        unPessoa.IdPessoa     := StrToInt(EdtIdRegistro.Text);
+      end
+      else
+      begin
+        unPessoa.IdPessoa     := 0;
+      end;
+      unPessoa.IdUsuario      := DtmPrincipal.IdUsuarioLogado;
+      unPessoa.DtCadastro     := Now;
+      if ChkSnSituacao.Checked then
+      begin
+        unPessoa.SnSituacao   := 1;
+      end
+      else
+      begin
+        unPessoa.SnSituacao   := 0;
+      end;
+      unPessoa.IdEmpresa      := DtmPrincipal.IdEmpresaLogada;
+      unPessoa.NmPessoa       := EdtNmPessoa.Text;
+      unPessoa.NmApelido      := EdtNmApelido.Text;
+      unPessoa.TpCadastro     := 'F';
+      unPessoa.IdTpPessoa     := 1;
+      unPessoa.NrCep            := RemoveCaracteres(MkeNrCep.Text);
+      unPessoa.NrNumero         := EdtNrNumero.Text;
+      unPessoa.NmComplemento    := EdtNmComplemento.Text;
+      unPessoa.NrCelular        := RemoveCaracteres(MkeNrCelular.Text);
+      if DtpDtNascimento.Text = '' then
+      begin
+        unPessoa.DtNascimento   := 0;
+      end else
+      begin
+        unPessoa.DtNascimento   := StrToDate(DtpDtNascimento.Text);
+      end;
+
+      if unPessoa.Salvar(DtmPrincipal.Conexao) then
+      begin
+        if Trim(EdtIdRegistro.Text) <> '' then
+        begin
+          unPessoa.Buscar(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, StrToInt(EdtIdRegistro.Text));
+        end
+        else
+        begin
+          unPessoa.Buscar(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, unPessoa.BuscaMaxId(DtmPrincipal.Conexao));
+        end;
+        EdtIdRegistro.Text      := IntToStr(unPessoa.IdPessoa);
+        DtpDtCadastro.Date      := unPessoa.DtCadastro;
+        EdtNmUsuario.Text       := unPessoa.NmUsuarioCadastro;
+
+        if unPessoa.SnSituacao = 1 then
+        begin
+          ChkSnSituacao.Checked := True;
+        end
+        else
+        begin
+          ChkSnSituacao.Checked := False;
+        end;
+
+        MsgInformacao(uMensagem.ORegistroFoiSalvoComSucesso);
+
+        MkeNrCelular.Enabled        := False;
+        inherited;
+
+        EdtNmPessoa.Style.Color       := clWindow;
+        MkeNrCelular.Style.Color      := clWindow;
+      end
+      else
+      begin
+        MsgErro(uMensagem.ErroAoTentarSalvarORegisto);
+      end;
+    end
+    else
+    begin
+      EdtNmPessoa.Style.Color       := clHighlight;
+      MkeNrCelular.Style.Color      := clHighlight;
+
+      BtnIncluir.Enabled      := False;
+      BtnSalvar.Enabled       := True;
+      BtnCancelar.Enabled     := True;
+      BtnFechar.Enabled       := True;
+
+      MsgAtencao(uMensagem.VerificarOsCamposQueContemOSinalDeAsterisco);
+      Abort;
+    end;
+  finally
+    BtnIncluirClick(Sender);
+  end;
+end;
+
+procedure TFrmPessoaRapido.CopulaTela;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'CopulaTela';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    unPessoa.CarregaDbGrid(DtmPrincipal.Conexao, 2, 0, CdsRetorno.FieldByName('IdRetorno').AsInteger, '', 0, '', CdsCopula);
+
+    lTpChamadaClasse := True;
+
+    EdtIdRegistro.Text        := CdsCopula.FieldByName('IdPessoa').AsString;
+    DtpDtCadastro.Date        := CdsCopula.FieldByName('DtCadastro').AsDateTime;
+    EdtNmUsuario.Text         := CdsCopula.FieldByName('NmUsuarioCadastro').AsString;
+    if CdsCopula.FieldByName('SnSituacao').AsString = 'ATIVO' then
+    begin
+      ChkSnSituacao.Checked   := True;
+      ChkSnSituacao.Caption   := 'Cadastro Ativo';
+    end
+    else
+    begin
+      ChkSnSituacao.Checked   := False;
+      ChkSnSituacao.Caption   := 'Cadastro Inativo';
+    end;
+    EdtNmPessoa.Text          := CdsCopula.FieldByName('NmPessoa').AsString;
+    EdtNmApelido.Text         := CdsCopula.FieldByName('NmApelido').AsString;
+    MkeNrCep.Text             := CdsCopula.FieldByName('NrCep').AsString;
+    MkeNrCepExit(Self);
+    EdtNrNumero.Text          := CdsCopula.FieldByName('NrNumero').AsString;
+    EdtNmComplemento.Text     := CdsCopula.FieldByName('NmComplemento').AsString;
+    MkeNrCelular.Text         := CdsCopula.FieldByName('NrCelular').AsString;
+    if ConverteDataPorNumero(DtmPrincipal.Conexao, (CdsCopula.FieldByName('DtNascimento').AsDateTime)) > 0 then
+    begin
+      DtpDtNascimento.Date    := CdsCopula.FieldByName('DtNascimento').AsDateTime;
+    end
+    else
+    begin
+      DtpDtNascimento.Clear;
+    end;
+
+  finally
+    lTpChamadaClasse := False;
+  end;
+end;
+
+procedure TFrmPessoaRapido.CamposEdicao(Sender: TObject; var CanEdit: Boolean);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'CamposEdicao';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+  Edicao;
+end;
+
+procedure TFrmPessoaRapido.Edicao;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'Edicao';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if not lTpChamadaClasse then
+  begin
+    BtnIncluir.Enabled   := False;
+    BtnSalvar.Enabled    := True;
+    BtnCancelar.Enabled  := True;
+    BtnFechar.Enabled    := True;
+    BtnAnterior.Enabled  := False;
+    BtnProximo.Enabled   := False;
+  end;
+end;
+
+procedure TFrmPessoaRapido.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmPessoaRapido.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  unCarregaDados := TCarregaDados.Create;
+  unPessoa       := TPessoa.Create;
+  unTipoPessoa   := TTipoPessoa.Create;
+  unCep          := TCep.Create;
+  unServico      := TServico.Create;
+end;
+
+procedure TFrmPessoaRapido.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  InicializarTela;
+end;
+
+procedure TFrmPessoaRapido.InicializarTela;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoa';
+  DtmPrincipal.unLog.NmMetodo   := 'InicializarTela';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  unPessoa.IdPessoa             := 0;
+  EdtNmUsuario.Clear;
+  ChkSnSituacao.Caption         := 'Cadastro Ativo';
+  EdtNmPessoa.SetFocus;
+  EdtNmPessoa.Clear;
+  EdtNmApelido.Clear;
+  MkeNrCelular.Enabled          := True;
+  MkeNrCep.Clear;
+  EdtNmEndereco.Clear;
+  EdtNrNumero.Clear;
+  EdtNmBairro.Clear;
+  EdtNmComplemento.Clear;
+  EdtNmCidade.Clear;
+  EdtNmUf.Clear;
+  MkeNrCelular.Clear;
+  DtpDtNascimento.Clear;
+end;
+
+procedure TFrmPessoaRapido.MkeNrCelularPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'MkeNrCelularPropertiesValidate';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if (Length(Trim(RemoveCaracteres(TcxMaskEdit(Sender).Text))) < 11) then
+  begin
+    MsgAtencao(uMensagem.OValorDeveCompletarTodaAMascaraDoCampo);
+    Error := False;
+  end;
+end;
+
+procedure TFrmPessoaRapido.MkeNrCepExit(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'MkeNrCpfExit';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  EdtNmEndereco.Clear;
+  EdtNmBairro.Clear;
+  EdtNmCidade.Clear;
+  EdtNmUf.Clear;
+
+  unCep.BuscarNrCep(DtmPrincipal.Conexao, RemoveCaracteres(MkeNrCep.EditText));
+  if unCep.NrCep = RemoveCaracteres(MkeNrCep.EditText) then
+  begin
+    EdtNmEndereco.Text  := unCep.NmEndereco;
+    EdtNmBairro.Text    := unCep.NmBairro;
+    EdtNmCidade.Text    := unCep.NmCidade;
+    EdtNmUf.Text        := unCep.NmSiglaUf;
+  end;
+end;
+
+procedure TFrmPessoaRapido.MkeNrCepKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  if Key = #13 then
+  begin
+    MkeNrCepExit(Sender);
+  end;
+end;
+
+procedure TFrmPessoaRapido.MkeNrCepPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPessoaRapido';
+  DtmPrincipal.unLog.NmMetodo   := 'MkeNrCepPropertiesValidate';
+  DtmPrincipal.unLog.NmTabela   := 'Pessoa';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if (Length(Trim(RemoveCaracteres(TcxMaskEdit(Sender).Text))) < 8) then
+  begin
+    MsgAtencao(uMensagem.OValorDeveCompletarTodaAMascaraDoCampo);
+    Error := False;
+  end;
+end;
+
+end.

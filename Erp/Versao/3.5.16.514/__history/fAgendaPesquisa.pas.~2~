@@ -1,0 +1,25 @@
+unit fAgendaPesquisa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fPesquisa, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, Data.DB, Datasnap.DBClient,
+  Vcl.ComCtrls, Vcl.StdCtrls, cxButtons, Vcl.Grids, Vcl.DBGrids, cxTextEdit, Vcl.ExtCtrls;
+
+type
+  TFrmAgendaPesquisa = class(TFrmPesquisa)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmAgendaPesquisa: TFrmAgendaPesquisa;
+
+implementation
+
+{$R *.dfm}
+
+end.

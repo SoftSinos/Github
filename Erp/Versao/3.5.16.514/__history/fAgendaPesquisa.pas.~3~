@@ -1,0 +1,167 @@
+unit fAgendaPesquisa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fPesquisa, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, Data.DB, Datasnap.DBClient,
+  Vcl.ComCtrls, Vcl.StdCtrls, cxButtons, Vcl.Grids, Vcl.DBGrids, cxTextEdit, Vcl.ExtCtrls;
+
+type
+  TFrmAgendaPesquisa = class(TFrmPesquisa)
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure BtnLimparClick(Sender: TObject);
+    procedure BtnImprimirClick(Sender: TObject);
+    procedure BtnPesquisarClick(Sender: TObject);
+    procedure EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmAgendaPesquisa: TFrmAgendaPesquisa;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmAgendaPesquisa.BtnAjudaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAjudaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmAjuda := TFrmAjuda.Create(Application);
+    FrmAjuda.Caption        := 'Ajuda Sobre à Tela de ' +  Caption;
+    FrmAjuda.gNmTelaChamada := Name;
+    FrmAjuda.ShowModal;
+  finally
+    FrmAjuda.Free;
+  end;
+end;
+
+procedure TFrmAgendaPesquisa.BtnFecharClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnFecharClick';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.BtnImprimirClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnImprimirClick';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    dnRelatorios := TDtmRelatorios.Create(Self);
+    unEmpresa    := TEmpresa.Create;
+    unEmpresa.CarregaDbGrid(DtmPrincipal.Conexao, 2, DtmPrincipal.IdEmpresaLogada, '', dnRelatorios.CDSRelEmpresa);
+
+    unPessoa.CarregaDbGrid(DtmPrincipal.Conexao, 2, 0, 0, EdtPesquisa.Text, 0, '', dnRelatorios.CDSRelPesquisa);
+
+    FrmProcessando.Destroy;
+
+    dnRelatorios.frxPDFExport.ShowDialog := True;
+    dnRelatorios.frxReport.LoadFromFile(DtmPrincipal.NmCaminhoExecutavel +  'Relatorio\RelPesqImpAgenda.fr3');
+    dnRelatorios.frxReport.ShowReport();
+  finally
+    dnRelatorios.Destroy;
+  end;
+end;
+
+procedure TFrmAgendaPesquisa.BtnLimparClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnLimparClick';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.BtnPesquisarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnPesquisarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  Pesquisar(EdtPesquisa.Text);
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.EdtPesquisaKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    DtmPrincipal.unLog.NmOperacao := 'Entrou';
+    DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+    DtmPrincipal.unLog.NmMetodo   := 'EdtPesquisaKeyPress';
+    DtmPrincipal.unLog.NmTabela   := 'Agenda';
+    DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+    BtnPesquisarClick(Sender);
+  end;
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmAgendaPesquisa.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaPesquisa';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+end.
