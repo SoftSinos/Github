@@ -1,0 +1,83 @@
+inherited FrmAgendaPesquisa: TFrmAgendaPesquisa
+  Caption = 'Pesquisar Agenda'
+  ClientWidth = 889
+  ExplicitWidth = 895
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 883
+    inherited GroupBox1: TGroupBox
+      Width = 875
+      inherited Label2: TLabel
+        Left = 182
+        ExplicitLeft = 182
+      end
+      object Label13: TLabel [1]
+        Left = 4
+        Top = 7
+        Width = 75
+        Height = 13
+        Caption = '* Data Base:'
+      end
+      inherited EdtPesquisa: TcxTextEdit
+        Left = 266
+        ExplicitLeft = 266
+      end
+      inherited RdbSnAtivo: TRadioButton
+        Left = 620
+        ExplicitLeft = 620
+      end
+      inherited RdbSnInativo: TRadioButton
+        Left = 704
+        ExplicitLeft = 704
+      end
+      inherited RdbSnTodos: TRadioButton
+        Left = 801
+        ExplicitLeft = 801
+      end
+      object DtpDtBase: TcxDateEdit
+        Left = 80
+        Top = 4
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        TabOrder = 4
+        Width = 92
+      end
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 883
+  end
+  inherited Panel2: TPanel
+    Width = 883
+    inherited GroupBox2: TGroupBox
+      Width = 875
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 883
+    inherited BtnIncluir: TcxButton
+      Enabled = False
+    end
+    inherited BtnAlterar: TcxButton
+      Enabled = False
+    end
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 883
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 883
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+  end
+end

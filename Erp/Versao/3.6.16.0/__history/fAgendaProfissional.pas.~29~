@@ -1,0 +1,264 @@
+unit fAgendaProfissional;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fBase, Vcl.ExtCtrls, Vcl.ComCtrls, Planner, DBPlanner, Data.DB, Datasnap.DBClient, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Menus, cxControls, cxContainer, cxEdit, cxTextEdit, cxMaskEdit, cxDropDownEdit, Vcl.StdCtrls, cxButtons;
+
+type
+  TFrmAgendaProfissional = class(TFrmBase)
+    CdsProfissional       : TClientDataSet;
+    CdsAgenda             : TClientDataSet;
+    DtsProfissional       : TDataSource;
+    DtsAgenda             : TDataSource;
+    CdsRetorno            : TClientDataSet;
+    CdsCopula             : TClientDataSet;
+    PrbPesquisa: TProgressBar;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    BtnAgendaExtra: TcxButton;
+    BtnFaltar: TcxButton;
+    BtnAjuda: TcxButton;
+    PnlPrincipal: TPanel;
+    BtnIncluir: TcxButton;
+    BtnPesquisar: TcxButton;
+    PnlCalendario: TPanel;
+    CldMeses: TMonthCalendar;
+    PaintBox1: TPaintBox;
+    Panel3: TPanel;
+    DbpAgendaProfissional: TDBPlanner;
+    BtnImprimir: TcxButton;
+    BtnDesfazerAgenda: TcxButton;
+    BtnFechar: TcxButton;
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure DbpAgendaProfissionalItemInsert(Sender: TObject; Position, FromSel, FromSelPrecise, ToSel, ToSelPrecise: Integer);
+    procedure DbpAgendaProfissionalItemDelete(Sender: TObject; Item: TPlannerItem);
+    procedure BtnFaltarClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure InicializarTela;
+    procedure Pesquisar(AIdEmpProfissional: Integer; AIdProfissional: Integer);
+  public
+    { Public declarations }
+    procedure CopulaTela;
+    procedure DesenhaGrid;
+    procedure CarregarProfissional;
+  end;
+
+var
+  FrmAgendaProfissional: TFrmAgendaProfissional;
+
+implementation
+
+{$R *.dfm}
+
+
+uses dPrincipal, uFuncao, uMensagem, uProcedure, uCarregaDados, fProcessando, uAgenda, fAjuda, fPrincipal, fPessoaPesquisa, dRelatorios, uEmpresa, uPessoa, uTipoServico, uServico,
+  uAgendaEncaixe, fAgendaPesquisa, uConfiguracao;
+
+{ TFrmAgendaProfissional }
+
+var
+  unAgenda         : TAgenda;
+  unAgendaEncaixe  : TAgendaEncaixe;
+  unEmpresa        : TEmpresa;
+  dnRelatorios     : TDtmRelatorios;
+  unCarregaDados   : TCarregaDados;
+  lTpChamadaClasse : Boolean;
+  unConfiguracao   : TConfiguracao;
+  unPessoa         : TPessoa;
+  unTipoServico    : TTipoServico;
+  unServico        : TServico;
+  lFormEdit        : Boolean;
+  lIdEmpCliente    : Integer;
+  lIdCliente       : Integer;
+  lDadosSalvos     : Boolean;
+
+procedure TFrmAgendaProfissional.BtnFaltarClick(Sender: TObject);
+begin
+  try
+    Close;
+  finally
+
+  end;
+end;
+
+procedure TFrmAgendaProfissional.CarregarProfissional;
+var
+  I : Integer;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaStarter';
+  DtmPrincipal.unLog.NmMetodo   := 'CarregarProfissional';
+  DtmPrincipal.unLog.NmTabela   := 'AgendaProfissional';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    DbpAgendaProfissional.Positions := AtendimentoProfissionalDia(DtmPrincipal.Conexao, CldMeses.Date, 'Profissional');
+    unAgenda.CarregaDbGridProfissionais(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, Now, CdsProfissional);
+
+    CdsProfissional.First;
+
+    for I := 1 to DbpAgendaProfissional.Positions do
+    begin
+      DbpAgendaProfissional.Header.Captions.Strings[I] := CdsProfissional.FieldByName('NmProfissional').AsString;
+
+      CdsProfissional.Next;
+    end;
+
+
+  finally
+
+  end;
+end;
+
+procedure TFrmAgendaProfissional.CopulaTela;
+begin
+
+end;
+
+procedure TFrmAgendaProfissional.DbpAgendaProfissionalItemDelete(Sender: TObject; Item: TPlannerItem);
+begin
+  inherited;
+  ShowMessage('Delete');
+  Item.Free;
+end;
+
+procedure TFrmAgendaProfissional.DbpAgendaProfissionalItemInsert(Sender: TObject; Position, FromSel, FromSelPrecise, ToSel, ToSelPrecise: Integer);
+begin
+  inherited;
+  ShowMessage('Insert');
+
+  DbpAgendaProfissional.Items.Selected:=nil;
+
+  if DbpAgendaProfissional.Items.HasItem(fromSel,toSel,Position) then
+  begin
+    ShowMessage('Cannot create item.'#13#10'Selected period already contains an item without overlap !');
+    Exit;
+  end;
+
+  DbpAgendaProfissional.Items.BeginUpdate;
+  with (DbpAgendaProfissional.Items.Add) do
+  begin
+    Text.Add('This item is created at');
+    Text.Add('run-time in the planner');
+    Text.Add('at '+timetostr(now));
+    Name := 'Test';
+
+
+    ItemPos := Position;
+    ItemEnd := ToSel;
+    ItemBegin := FromSel;
+  end;
+  DbpAgendaProfissional.Items.EndUpdate;
+end;
+
+procedure TFrmAgendaProfissional.DesenhaGrid;
+begin
+
+end;
+
+procedure TFrmAgendaProfissional.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaProfissional';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+  begin
+    try
+      Action := caFree;
+    finally
+
+    end;
+  end;
+  unAgenda.Free;
+  FrmPrincipal.TasAgendaProfissional.TabVisible := False;
+  FrmPrincipal.PgcVisivel;
+end;
+
+procedure TFrmAgendaProfissional.FormCreate(Sender: TObject);
+begin
+  inherited;
+  unConfiguracao := TConfiguracao.Create;
+end;
+
+procedure TFrmAgendaProfissional.FormShow(Sender: TObject);
+begin
+  inherited;
+
+  InicializarTela;
+end;
+
+procedure TFrmAgendaProfissional.InicializarTela;
+var
+  I         : Integer;
+  FatoFinal : Extended;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaProfissional';
+  DtmPrincipal.unLog.NmMetodo   := 'InicializarTela';
+  DtmPrincipal.unLog.NmTabela   := 'AgendaProfissional';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  //AGENDA - TEMPO DE INTERVALO ENTRE ATENDIMENTOS - 00:30
+  unConfiguracao.BuscarSigla(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, 'TIEA');
+
+  FatoFinal := 60 / (StrToInt(Copy(unConfiguracao.NmValor, 4, 2)));
+
+  DbpAgendaProfissional.Display.DisplayUnit   := StrToInt(Copy(unConfiguracao.NmValor, 4, 2));
+  DbpAgendaProfissional.Display.DisplayStart  := 0;
+  DbpAgendaProfissional.Display.DisplayEnd    := DbpAgendaProfissional.Display.DisplayEnd -  Trunc(FatoFinal);
+
+  try
+    CarregarProfissional;
+  finally
+
+  end;
+end;
+
+procedure TFrmAgendaProfissional.Pesquisar(AIdEmpProfissional, AIdProfissional: Integer);
+var
+  I: Integer;
+  lConsulta: Integer;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaStarter';
+  DtmPrincipal.unLog.NmMetodo   := 'Pesquisar';
+  DtmPrincipal.unLog.NmTabela   := 'Agenda';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  PrbPesquisa.Position := 0;
+  lConsulta := 0;
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    for I := 1 to 100 do
+    begin
+      Sleep(15);
+      PrbPesquisa.Position := PrbPesquisa.Position + 1;
+
+      if lConsulta = 0 then
+      begin
+        lConsulta  := 1;
+        unAgenda   := TAgenda.Create;
+
+        unAgenda.CarregaDbGrid(DtmPrincipal.Conexao, 1, 0, AIdEmpProfissional, AIdProfissional, CldMeses.Date, '', '', CdsAgenda);
+      end;
+    end;
+  finally
+    FrmProcessando.Destroy;
+  end;
+
+  inherited;
+end;
+
+end.

@@ -1,0 +1,707 @@
+unit uAgenda;
+
+interface
+
+uses Windows, TLHelp32, Forms, Controls, DateUtils, WinInet, MaskUtils, StdCtrls, Variants, DbTables, SysUtils, Classes, Contnrs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+     FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+     Datasnap.DBClient, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+
+type
+  TAgenda = class
+  private
+    FIdAgenda               : Integer;
+    FIdAgendaEnCaixe        : Integer;
+    FIdEmpresa              : Integer;
+    FIdUsuario              : Integer;
+    FDtCadastro             : TDateTime;
+    FSnSituacao             : Integer;
+    FDtAgenda               : TDateTime;
+    FHrAgenda               : String;
+    FSnRealizada            : Integer;
+    FStAgenda               : String;
+    FIdEmpProfissional      : Integer;
+    FIdProfissional         : Integer;
+    FIdTpServico            : Integer;
+    FIdEmpCliente           : Integer;
+    FIdCliente              : Integer;
+    FNrCelular              : String;
+    FNmProfissional         : String;
+    FNmApelidoProfissional  : String;
+    FNmCliente              : String;
+    FNmTpServico            : String;
+    FHxCor                  : String;
+    FNrAgenda               : String;
+    FNmTpAgenda             : String;
+    FNmUsuarioCadastro      : String;
+  public
+    property IdAgenda               : Integer   read FIdAgenda              write FIdAgenda;
+    property IdAgendaEnCaixe        : Integer   read FIdAgendaEnCaixe       write FIdAgendaEnCaixe;
+    property IdEmpresa              : Integer   read FIdEmpresa             write FIdEmpresa;
+    property IdUsuario              : Integer   read FIdUsuario             write FIdUsuario;
+    property DtCadastro             : TDateTime read FDtCadastro            write FDtCadastro;
+    property SnSituacao             : Integer   read FSnSituacao            write FSnSituacao;
+    property DtAgenda               : TDateTime read FDtAgenda              write FDtAgenda;
+    property HrAgenda               : String    read FHrAgenda              write FHrAgenda;
+    property SnRealizada            : Integer   read FSnRealizada           write FSnRealizada;
+    property StAgenda               : String    read FStAgenda              write FStAgenda;
+    property IdEmpProfissional      : Integer   read FIdEmpProfissional     write FIdEmpProfissional;
+    property IdProfissional         : Integer   read FIdProfissional        write FIdProfissional;
+    property IdTpServico            : Integer   read FIdTpServico           write FIdTpServico;
+    property IdEmpCliente           : Integer   read FIdEmpCliente          write FIdEmpCliente;
+    property IdCliente              : Integer   read FIdCliente             write FIdCliente;
+    property NrCelular              : String    read FNrCelular             write FNrCelular;
+    property NmProfissional         : String    read FNmProfissional        write FNmProfissional;
+    property NmApelidoProfissional  : String    read FNmApelidoProfissional write FNmApelidoProfissional;
+    property NmCliente              : String    read FNmCliente             write FNmCliente;
+    property NmTpServico            : String    read FNmTpServico           write FNmTpServico;
+    property HxCor                  : String    read FHxCor                 write FHxCor;
+    property NrAgenda               : String    read FNrAgenda              write FNrAgenda;
+    property NmTpAgenda             : String    read FNmTpAgenda            write FNmTpAgenda;
+    property NmUsuarioCadastro      : String    read FNmUsuarioCadastro     write FNmUsuarioCadastro;
+    constructor Create;
+    function Salvar(ASQLConnection: TFDConnection): Boolean;
+    class function Inativar(ASQLConnection: TFDConnection; AIdAgenda: Integer): Boolean;
+    class function Existe(ASQLConnection: TFDConnection; AIdAgenda: Integer; AIdEmpresa: Integer): Boolean;
+    function Buscar(ASQLConnection: TFDConnection; AIdAgenda: Integer): Boolean;
+    function BuscarNrAgenda(ASQLConnection: TFDConnection; ANrAgenda: String): Boolean;
+    class function BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+    procedure CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdAgenda: Integer; AIdEmpProfissional: Integer; AIdProfissional: Integer; ADtAgenda: TDate; ATpChamadaClasse: String; AConsulta: String; Data: TClientDataSet);
+    procedure CarregaDbGridHorarios(ASQLConnection: TFDConnection; AIdEmpresa: Integer; ADtAgenda: TDate; Data: TClientDataSet);
+    procedure CarregaDbGridProfissionais(ASQLConnection: TFDConnection; AIdEmpresa: Integer; ADtAgenda: TDate; AOrdem: String; Data: TClientDataSet);
+    procedure Inicializar;
+  end;
+
+implementation
+
+uses uFuncao, dPrincipal, uMensagem, uLog, uProcedure, dRelatorios, fProcessando;
+
+procedure TAgenda.CarregaDbGrid(ASQLConnection: TFDConnection; ISnSituacao: Integer; AIdAgenda: Integer; AIdEmpProfissional: Integer; AIdProfissional: Integer; ADtAgenda: TDate; ATpChamadaClasse: String; AConsulta: String; Data: TClientDataSet);
+var
+  qryAgenda : TFDQuery;
+  I            : Integer;
+  lCampo       : TField;
+  lCondicao    : String;
+  lVerificacao : Integer;
+  lFinalizaLoop: Integer;
+begin
+  lVerificacao := 0;
+  lFinalizaLoop:= 0;
+
+  qryAgenda := TFDQuery.Create(nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('SnSelecao', ftBoolean);
+      Data.FieldDefs.Add('IdAgenda', ftInteger);
+      Data.FieldDefs.Add('IdAgendaEncaixe', ftInteger);
+      Data.FieldDefs.Add('IdEmpresa', ftInteger);
+      Data.FieldDefs.Add('IdUsuario', ftInteger);
+      Data.FieldDefs.Add('DtCadastro', ftDateTime);
+      Data.FieldDefs.Add('SnSituacao', ftString, 9, False);
+      Data.FieldDefs.Add('DtAgenda', ftDateTime);
+      Data.FieldDefs.Add('HrAgenda', ftTime);
+      Data.FieldDefs.Add('SnRealizada', ftString, 15, False);
+      Data.FieldDefs.Add('StAgenda', ftString, 10, False);
+      Data.FieldDefs.Add('IdEmpProfissional', ftInteger);
+      Data.FieldDefs.Add('IdProfissional', ftInteger);
+      Data.FieldDefs.Add('IdTpServico', ftInteger);
+      Data.FieldDefs.Add('IdEmpCliente', ftInteger);
+      Data.FieldDefs.Add('IdCliente', ftInteger);
+      Data.FieldDefs.Add('NrCelular', ftString, 20, False);
+      Data.FieldDefs.Add('NmProfissional', ftString, 255, False);
+      Data.FieldDefs.Add('NmApelidoProfissional', ftString, 255, False);
+      Data.FieldDefs.Add('NmCliente', ftString, 255, False);
+      Data.FieldDefs.Add('NmTpServico', ftString, 255, False);
+      Data.FieldDefs.Add('HxCor', ftString, 255, False);
+      Data.FieldDefs.Add('NrAgenda', ftString, 10, False);
+      Data.FieldDefs.Add('NmTpAgenda', ftString, 255, False);
+      Data.FieldDefs.Add('NmUsuarioCadastro', ftString, 255, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      lCampo := Data.Fields[I];
+
+      qryAgenda.Params.Clear;
+      qryAgenda.SQL.Clear;
+      qryAgenda.SQL.Add('Select            ');
+      qryAgenda.SQL.Add('  *               ');
+      qryAgenda.SQL.Add('From VW_GridAgenda');
+      qryAgenda.SQL.Add('Where 1 = 1');
+      if ISnSituacao = 1 then
+      begin
+         qryAgenda.SQL.Add('  And SnSituacao = 1');
+      end
+      else
+
+      if ISnSituacao = 0 then
+      begin
+         qryAgenda.SQL.Add('  And SnSituacao = 0');
+      end;
+
+      if AIdAgenda > 0 then
+      begin
+        qryAgenda.SQL.Add('  And IdAgenda = :IdAgenda');
+
+        qryAgenda.ParamByName('IdAgenda').AsInteger := AIdAgenda;
+      end;
+
+      if AIdProfissional > 0 then
+      begin
+        qryAgenda.SQL.Add('  And IdEmpProfissional = :IdEmpProfissional');
+        qryAgenda.SQL.Add('  And IdProfissional = :IdProfissional');
+
+        qryAgenda.ParamByName('IdEmpProfissional').AsInteger := AIdEmpProfissional;
+        qryAgenda.ParamByName('IdProfissional').AsInteger    := AIdProfissional;
+      end;
+
+      if (ADtAgenda > 0) and (ATpChamadaClasse = '') then
+      begin
+        qryAgenda.SQL.Add('  And DtAgenda = :DtAgenda');
+
+        qryAgenda.ParamByName('DtAgenda').AsDate := ADtAgenda;
+      end
+      else
+      if (ADtAgenda > 0) and (ATpChamadaClasse = 'AgendaPesquisa') then
+      begin
+        qryAgenda.SQL.Add('  And DtAgenda >= :DtAgenda');
+
+        qryAgenda.ParamByName('DtAgenda').AsDate := ADtAgenda;
+      end;
+
+
+      if Trim(AConsulta) <> '' then
+      begin
+        if PermitePesquisa(lCampo, AConsulta) then
+        begin
+          if lCampo.DataType in [ftString] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' Like ' + QuotedStr('%' + AConsulta + '%');
+          end else if lCampo.DataType in [ftInteger] then
+          begin
+            lCondicao := ' And ' + lCampo.FieldName + ' = ' + AConsulta;
+          end;
+          qryAgenda.SQL.Add (lCondicao);
+          qryAgenda.SQL.Add ('Order By');
+          qryAgenda.SQL.Add ('  IdAgenda');
+
+          qryAgenda.Open;
+          qryAgenda.First;
+        end;
+      end else begin
+        qryAgenda.SQL.Add (lCondicao);
+        qryAgenda.SQL.Add ('Order By');
+        qryAgenda.SQL.Add ('  IdAgenda');
+
+        lFinalizaLoop := 1;
+        qryAgenda.Open;
+        qryAgenda.First;
+      end;
+
+      while not qryAgenda.Eof do
+      begin
+        if Trim(AConsulta) <> '' then
+        begin
+          if not Data.IsEmpty then
+          begin
+            Data.First;
+            while not Data.Eof do
+            begin
+              if Data.FieldByName('IdAgenda').AsInteger = qryAgenda.FieldByName('IdAgenda').AsInteger then
+              begin
+                lVerificacao := 1;
+              end;
+              Data.Next
+            end;
+          end;
+        end;
+        if lVerificacao = 0 then
+        begin
+          Data.Append;
+          Data.FieldByName('IdAgenda').AsInteger              := qryAgenda.FieldByName('IdAgenda').AsInteger;
+          Data.FieldByName('IdAgendaEncaixe').AsInteger       := qryAgenda.FieldByName('IdAgendaEncaixe').AsInteger;
+          Data.FieldByName('IdEmpresa').AsInteger             := qryAgenda.FieldByName('IdEmpresa').AsInteger;
+          Data.FieldByName('IdUsuario').AsInteger             := qryAgenda.FieldByName('IdUsuario').AsInteger;
+          Data.FieldByName('DtCadastro').AsDateTime           := qryAgenda.FieldByName('DtCadastro').AsDateTime;
+          if qryAgenda.FieldByName('SnSituacao').AsBoolean then
+          begin
+            Data.FieldByName('SnSituacao').AsString           := 'ATIVO';
+          end else begin
+            Data.FieldByName('SnSituacao').AsString           := 'CANCELADA';
+          end;
+          Data.FieldByName('DtAgenda').AsDateTime             := qryAgenda.FieldByName('DtAgenda').AsDateTime;
+          Data.FieldByName('HrAgenda').AsDateTime             := qryAgenda.FieldByName('HrAgenda').AsDateTime;
+          if qryAgenda.FieldByName('SnRealizada').AsBoolean then
+          begin
+            Data.FieldByName('SnRealizada').AsString          := 'RELIZADO';
+          end else begin
+            Data.FieldByName('SnRealizada').AsString          := 'NÃO REALIZADO';
+          end;
+          Data.FieldByName('StAgenda').AsString               := qryAgenda.FieldByName('StAgenda').AsString;
+          Data.FieldByName('IdEmpProfissional').AsInteger     := qryAgenda.FieldByName('IdEmpProfissional').AsInteger;
+          Data.FieldByName('IdProfissional').AsInteger        := qryAgenda.FieldByName('IdProfissional').AsInteger;
+          Data.FieldByName('IdTpServico').AsInteger           := qryAgenda.FieldByName('IdTpServico').AsInteger;
+          Data.FieldByName('IdEmpCliente').AsInteger          := qryAgenda.FieldByName('IdEmpCliente').AsInteger;
+          Data.FieldByName('IdCliente').AsInteger             := qryAgenda.FieldByName('IdCliente').AsInteger;
+          Data.FieldByName('NrCelular').AsString              := FormatMaskText('\(99\)99999\-9999;0;_', qryAgenda.FieldByName('NrCelular').AsString);
+          Data.FieldByName('NmProfissional').AsString         := qryAgenda.FieldByName('NmProfissional').AsString;
+          Data.FieldByName('NmApelidoProfissional').AsString  := qryAgenda.FieldByName('NmApelidoProfissional').AsString;
+          Data.FieldByName('NmCliente').AsString              := qryAgenda.FieldByName('NmCliente').AsString;
+          Data.FieldByName('NmTpServico').AsString            := qryAgenda.FieldByName('NmTpServico').AsString;
+          Data.FieldByName('HxCor').AsString                  := qryAgenda.FieldByName('HxCor').AsString;
+          Data.FieldByName('NrAgenda').AsString               := qryAgenda.FieldByName('NrAgenda').AsString;
+          Data.FieldByName('NmTpAgenda').AsString             := qryAgenda.FieldByName('NmTpAgenda').AsString;
+          Data.FieldByName('NmUsuarioCadastro').AsString      := qryAgenda.FieldByName('NmUsuarioCadastro').AsString;
+          Data.Post;
+        end;
+
+        lVerificacao := 0;
+        qryAgenda.Next;
+      end;
+      if lFinalizaLoop = 1 then
+      begin
+        Break;
+      end;
+    end;
+  finally
+    qryAgenda.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+procedure TAgenda.CarregaDbGridHorarios(ASQLConnection: TFDConnection; AIdEmpresa: Integer; ADtAgenda: TDate; Data: TClientDataSet);
+var
+  qryAgenda : TFDQuery;
+  I         : Integer;
+begin
+
+  qryAgenda := TFDQuery.Create(nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('HrAgenda', ftString, 5, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      qryAgenda.Params.Clear;
+      qryAgenda.SQL.Clear;
+      qryAgenda.SQL.Add('Select Distinct                                  ');
+      qryAgenda.SQL.Add('  Top (dbo.FN_AtendimentoProfissionaisDia(:DtAgenda, ''Atendimento''))');
+      qryAgenda.SQL.Add('  IdAgendaEncaixe,                               ');
+      qryAgenda.SQL.Add('  Cast(HrAgenda As Varchar(5)) HrAgenda          ');
+      qryAgenda.SQL.Add('From VW_GridAgenda                               ');
+      qryAgenda.SQL.Add('Where 1 = 1                                      ');
+      qryAgenda.SQL.Add('  And DtAgenda = :DtAgenda                       ');
+
+      qryAgenda.ParamByName('DtAgenda').AsDate := ADtAgenda;
+
+      if AIdEmpresa > 0 then
+      begin
+         qryAgenda.SQL.Add('  And IdEmpresa = :IdEmpresa                  ');
+
+         qryAgenda.ParamByName('IdEmpresa').AsInteger := AIdEmpresa;
+      end;
+
+      qryAgenda.SQL.Add ('Order By                                        ');
+      qryAgenda.SQL.Add ('  HrAgenda                                      ');
+
+      qryAgenda.Open;
+      qryAgenda.First;
+      end;
+
+      while not qryAgenda.Eof do
+      begin
+        Data.Append;
+        Data.FieldByName('HrAgenda').AsString := qryAgenda.FieldByName('HrAgenda').AsString;
+        Data.Post;
+
+        qryAgenda.Next;
+      end;
+  finally
+    qryAgenda.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+procedure TAgenda.CarregaDbGridProfissionais(ASQLConnection: TFDConnection; AIdEmpresa: Integer; ADtAgenda: TDate; AOrdem: String; Data: TClientDataSet);
+var
+  qryAgenda : TFDQuery;
+  I         : Integer;
+begin
+
+  qryAgenda := TFDQuery.Create(nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+
+    if Data.FieldCount = 0 then
+    begin
+      Data.FieldDefs.Add('IdEmpProfissional', ftString, 255, False);
+      Data.FieldDefs.Add('IdProfissional', ftInteger);
+      Data.FieldDefs.Add('NmProfissional', ftString, 255, False);
+      Data.FieldDefs.Add('NmApelidoProfissional', ftString, 255, False);
+      Data.CreateDataSet;
+    end;
+
+    Data.EmptyDataSet;
+    Data.DisableControls;
+
+    for I := 0 to Data.FieldCount -1 do
+    begin
+      qryAgenda.Params.Clear;
+      qryAgenda.SQL.Clear;
+      qryAgenda.SQL.Add('Select                                           ');
+      qryAgenda.SQL.Add('  Distinct IdProfissional,                       ');
+      qryAgenda.SQL.Add('  IdEmpProfissional,                             ');
+      qryAgenda.SQL.Add('  NmProfissional,                                ');
+      qryAgenda.SQL.Add('  NmApelidoProfissional                          ');
+      qryAgenda.SQL.Add('From VW_GridAgenda                               ');
+      qryAgenda.SQL.Add('Where 1 = 1                                      ');
+      qryAgenda.SQL.Add('  And DtAgenda = :DtAgenda                       ');
+
+      qryAgenda.ParamByName('DtAgenda').AsDate := ADtAgenda;
+
+      if AIdEmpresa > 0 then
+      begin
+         qryAgenda.SQL.Add('  And IdEmpresa = :IdEmpresa                  ');
+
+         qryAgenda.ParamByName('IdEmpresa').AsInteger := AIdEmpresa;
+      end;
+
+      if AOrdem = 'Nome' then
+      begin
+        qryAgenda.SQL.Add ('Order By                                      ');
+        qryAgenda.SQL.Add ('  NmApelidoProfissional                       ');
+      end
+      else
+      if AOrdem = 'Codigo' then
+      begin
+      begin
+        qryAgenda.SQL.Add ('Order By                                      ');
+        qryAgenda.SQL.Add ('  NmApelidoProfissional                       ');
+      end;
+
+      qryAgenda.Open;
+      qryAgenda.First;
+      end;
+
+      while not qryAgenda.Eof do
+      begin
+        Data.Append;
+          Data.FieldByName('IdEmpProfissional').AsString      := 'EMPRESA: ' + qryAgenda.FieldByName('IdEmpProfissional').AsString;
+          Data.FieldByName('IdProfissional').AsString         := qryAgenda.FieldByName('IdProfissional').AsString;
+          Data.FieldByName('NmProfissional').AsString         := qryAgenda.FieldByName('NmProfissional').AsString;
+          Data.FieldByName('NmApelidoProfissional').AsString  := qryAgenda.FieldByName('NmApelidoProfissional').AsString;
+        Data.Post;
+
+        qryAgenda.Next;
+      end;
+  finally
+    qryAgenda.FreeOnRelease;
+    Data.EnableControls;
+    Data.First;
+  end;
+end;
+
+constructor TAgenda.Create;
+begin
+  Inicializar;
+end;
+
+procedure TAgenda.Inicializar;
+begin
+  IdAgenda              := 0;
+  IdAgendaEncaixe       := 0;
+  IdEmpresa             := 0;
+  IdUsuario             := 0;
+  DtCadastro            := 0;
+  SnSituacao            := 0;
+  DtAgenda              := 0;
+  HrAgenda              := '';
+  SnRealizada           := 0;
+  StAgenda              := '';
+  IdEmpProfissional     := 0;
+  IdProfissional        := 0;
+  IdTpServico           := 0;
+  IdEmpCliente          := 0;
+  IdCliente             := 0;
+  NrCelular             := '';
+  NmProfissional        := '';
+  NmApelidoProfissional := '';
+  NmCliente             := '';
+  NmTpServico           := '';
+  HxCor                 := '';
+  NrAgenda              := '';
+  NmTpAgenda            := '';
+  NmUsuarioCadastro     := '';
+end;
+
+function TAgenda.Salvar(ASQLConnection: TFDConnection): Boolean;
+var
+ qryAgenda: TFDQuery;
+begin
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    if not Existe(ASQLConnection, IdAgenda, IdEmpresa) then
+    begin
+      qryAgenda.SQL.Add('Insert Into Agenda(  ');
+      qryAgenda.SQL.Add('  IdEmpresa,         ');
+      qryAgenda.SQL.Add('  IdUsuario,         ');
+      qryAgenda.SQL.Add('  DtCadastro,        ');
+      qryAgenda.SQL.Add('  SnSituacao,        ');
+      qryAgenda.SQL.Add('  DtAgenda,          ');
+      qryAgenda.SQL.Add('  HrAgenda,          ');
+      qryAgenda.SQL.Add('  SnRealizada,       ');
+      qryAgenda.SQL.Add('  IdEmpProfissional, ');
+      qryAgenda.SQL.Add('  IdProfissional,    ');
+      qryAgenda.SQL.Add('  IdTpServico,       ');
+      qryAgenda.SQL.Add('  IdEmpCliente,      ');
+      qryAgenda.SQL.Add('  IdCliente)         ');
+      qryAgenda.SQL.Add('Values (             ');
+      qryAgenda.SQL.Add('  :IdEmpresa,        ');
+      qryAgenda.SQL.Add('  :IdUsuario,        ');
+      qryAgenda.SQL.Add('  :DtCadastro,       ');
+      qryAgenda.SQL.Add('  :SnSituacao,       ');
+      qryAgenda.SQL.Add('  :DtAgenda,         ');
+      qryAgenda.SQL.Add('  :HrAgenda,         ');
+      qryAgenda.SQL.Add('  :SnRealizada,      ');
+      qryAgenda.SQL.Add('  :IdEmpProfissional,');
+      qryAgenda.SQL.Add('  :IdProfissional,   ');
+      qryAgenda.SQL.Add('  :IdTpServico,      ');
+      qryAgenda.SQL.Add('  :IdEmpCliente,     ');
+      qryAgenda.SQL.Add('  :IdCliente)        ');
+
+      qryAgenda.ParamByName('IdEmpresa').AsInteger          := IdEmpresa;
+      qryAgenda.ParamByName('DtCadastro').AsDateTime        := DtCadastro;
+      qryAgenda.ParamByName('DtAgenda').AsDateTime          := DtAgenda;
+      qryAgenda.ParamByName('HrAgenda').AsString            := HrAgenda;
+      qryAgenda.ParamByName('IdEmpProfissional').AsInteger  := IdEmpProfissional;
+      qryAgenda.ParamByName('IdProfissional').AsInteger     := IdProfissional;
+
+    end else begin
+      qryAgenda.SQL.Add('Update Agenda Set              ');
+      qryAgenda.SQL.Add('  IdUsuario = :IdUsuario,      ');
+      qryAgenda.SQL.Add('  SnSituacao = :SnSituacao,    ');
+      qryAgenda.SQL.Add('  SnRealizada = :SnRealizada,  ');
+      qryAgenda.SQL.Add('  IdTpServico = :IdTpServico,  ');
+      qryAgenda.SQL.Add('  IdEmpCliente = :IdEmpCliente,');
+      qryAgenda.SQL.Add('  IdCliente = :IdCliente       ');
+      qryAgenda.SQL.Add('Where IdAgenda = :IdAgenda     ');
+
+      qryAgenda.ParamByName('IdAgenda').AsInteger     := IdAgenda;
+
+    end;
+    qryAgenda.ParamByName('IdUsuario').AsInteger      := IdUsuario;
+    qryAgenda.ParamByName('SnSituacao').AsInteger     := SnSituacao;
+    qryAgenda.ParamByName('SnRealizada').AsInteger    := SnRealizada;
+    qryAgenda.ParamByName('IdTpServico').AsInteger    := IdTpServico;
+    qryAgenda.ParamByName('IdEmpCliente').AsInteger   := IdEmpCliente;
+    qryAgenda.ParamByName('IdCliente').AsInteger      := IdCliente;
+   try
+      qryAgenda.ExecSQL;
+      qryAgenda.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+class function TAgenda.Inativar(ASQLConnection: TFDConnection; AIdAgenda: Integer): Boolean;
+var
+  qryAgenda: TFDQuery;
+begin
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    qryAgenda.SQL.Add('Update Agenda Set ');
+    qryAgenda.SQL.Add('  SnSituacao = 0 ');
+    qryAgenda.SQL.Add('Where 1 = 1');
+    qryAgenda.SQL.Add('  And IdAgenda = ' + IntToStr(AIdAgenda));
+   try
+      qryAgenda.ExecSQL;
+      qryAgenda.Close;
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+class function TAgenda.Existe(ASQLConnection: TFDConnection; AIdAgenda: Integer; AIdEmpresa: Integer): Boolean;
+var
+  qryAgenda: TFDQuery;
+begin
+  Result := False;
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    qryAgenda.SQL.Add('Select IdAgenda From Agenda');
+    qryAgenda.SQL.Add('Where 1 = 1');
+    qryAgenda.SQL.Add('  And IdAgenda = ' + IntToStr(AIdAgenda));
+    qryAgenda.Open;
+    if qryAgenda.Fields[0].Value > 0 then
+      Result := True;
+    qryAgenda.Close;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+class function TAgenda.BuscaMaxId(ASQLConnection: TFDConnection): Integer;
+var
+  qryAgenda: TFDQuery;
+begin
+  Result := 0;
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    qryAgenda.SQL.Add('Select Max(IdAgenda) As IdAgenda From Agenda');
+    qryAgenda.Open;
+
+    if qryAgenda.FieldByName('IdAgenda').AsInteger > 0 then
+      Result := qryAgenda.FieldByName('IdAgenda').AsInteger;
+    qryAgenda.Close;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+function TAgenda.Buscar(ASQLConnection: TFDConnection; AIdAgenda: Integer): Boolean;
+var
+  qryAgenda: TFDQuery;
+begin
+  Result := False;
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    qryAgenda.SQL.Add('Select * From VW_GridAgenda');
+    qryAgenda.SQL.Add('Where 1 = 1');
+    if AIdAgenda > 0 then
+    begin
+      qryAgenda.SQL.Add('  And IdAgenda = ' + IntToStr(AIdAgenda));
+    end;
+
+    qryAgenda.Open;
+    if not qryAgenda.IsEmpty then
+    begin
+      Result                := True;
+      IdAgenda              := qryAgenda.FieldByName('IdAgenda').AsInteger;
+      IdAgendaEncaixe       := qryAgenda.FieldByName('IdAgendaEncaixe').AsInteger;
+      IdEmpresa             := qryAgenda.FieldByName('IdEmpresa').AsInteger;
+      IdUsuario             := qryAgenda.FieldByName('IdUsuario').AsInteger;
+      DtCadastro            := qryAgenda.FieldByName('DtCadastro').AsDateTime;
+      if qryAgenda.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao          := 1
+      end else begin
+        SnSituacao          := 0
+      end;
+      DtAgenda              := qryAgenda.FieldByName('DtAgenda').AsDateTime;
+      HrAgenda              := qryAgenda.FieldByName('HrAgenda').AsString;
+      if qryAgenda.FieldByName('SnRealizada').AsBoolean then
+      begin
+        SnRealizada         := 1
+      end else begin
+        SnRealizada         := 0
+      end;
+      StAgenda              := qryAgenda.FieldByName('StAgenda').AsString;
+      IdEmpProfissional     := qryAgenda.FieldByName('IdEmpProfissional').AsInteger;
+      IdProfissional        := qryAgenda.FieldByName('IdProfissional').AsInteger;
+      IdTpServico           := qryAgenda.FieldByName('IdTpServico').AsInteger;
+      IdEmpCliente          := qryAgenda.FieldByName('IdEmpCliente').AsInteger;
+      IdCliente             := qryAgenda.FieldByName('IdCliente').AsInteger;
+      NrCelular             := qryAgenda.FieldByName('NrCelular').AsString;
+      NmProfissional        := qryAgenda.FieldByName('NmProfissional').AsString;
+      NmApelidoProfissional := qryAgenda.FieldByName('NmProfissional').AsString;
+      NmCliente             := qryAgenda.FieldByName('NmCliente').AsString;
+      NmTpServico           := qryAgenda.FieldByName('NmTpServico').AsString;
+      HxCor                 := qryAgenda.FieldByName('HxCor').AsString;
+      NrAgenda              := qryAgenda.FieldByName('NrAgenda').AsString;
+      NmTpAgenda            := qryAgenda.FieldByName('NmTpAgenda').AsString;
+      NmUsuarioCadastro     := qryAgenda.FieldByName('NmUsuarioCadastro').AsString;
+    end;
+    qryAgenda.Close;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+function TAgenda.BuscarNrAgenda(ASQLConnection: TFDConnection; ANrAgenda: String): Boolean;
+var
+  qryAgenda: TFDQuery;
+begin
+  Result := False;
+  qryAgenda:= TFDQuery.Create(Nil);
+  try
+    qryAgenda.Connection := ASQLConnection;
+    qryAgenda.SQL.Add('Select * From VW_GridAgenda    ');
+    qryAgenda.SQL.Add('Where 1 = 1                    ');
+    qryAgenda.SQL.Add('  And NrAgenda = ' + ANrAgenda );
+
+    qryAgenda.Open;
+    if not qryAgenda.IsEmpty then
+    begin
+      Result                := True;
+      IdAgenda              := qryAgenda.FieldByName('IdAgenda').AsInteger;
+      IdAgendaEncaixe       := qryAgenda.FieldByName('IdAgendaEncaixe').AsInteger;
+      IdEmpresa             := qryAgenda.FieldByName('IdEmpresa').AsInteger;
+      IdUsuario             := qryAgenda.FieldByName('IdUsuario').AsInteger;
+      DtCadastro            := qryAgenda.FieldByName('DtCadastro').AsDateTime;
+      if qryAgenda.FieldByName('SnSituacao').AsBoolean then
+      begin
+        SnSituacao          := 1
+      end else begin
+        SnSituacao          := 0
+      end;
+      DtAgenda              := qryAgenda.FieldByName('DtAgenda').AsDateTime;
+      HrAgenda              := qryAgenda.FieldByName('HrAgenda').AsString;
+      if qryAgenda.FieldByName('SnRealizada').AsBoolean then
+      begin
+        SnRealizada         := 1
+      end else begin
+        SnRealizada         := 0
+      end;
+      StAgenda              := qryAgenda.FieldByName('StAgenda').AsString;
+      IdEmpProfissional     := qryAgenda.FieldByName('IdEmpProfissional').AsInteger;
+      IdProfissional        := qryAgenda.FieldByName('IdProfissional').AsInteger;
+      IdTpServico           := qryAgenda.FieldByName('IdTpServico').AsInteger;
+      IdEmpCliente          := qryAgenda.FieldByName('IdEmpCliente').AsInteger;
+      IdCliente             := qryAgenda.FieldByName('IdCliente').AsInteger;
+      NrCelular             := qryAgenda.FieldByName('NrCelular').AsString;
+      NmProfissional        := qryAgenda.FieldByName('NmProfissional').AsString;
+      NmApelidoProfissional := qryAgenda.FieldByName('NmProfissional').AsString;
+      NmCliente             := qryAgenda.FieldByName('NmCliente').AsString;
+      NmTpServico           := qryAgenda.FieldByName('NmTpServico').AsString;
+      HxCor                 := qryAgenda.FieldByName('HxCor').AsString;
+      NrAgenda              := qryAgenda.FieldByName('NrAgenda').AsString;
+      NmTpAgenda            := qryAgenda.FieldByName('NmTpAgenda').AsString;
+      NmUsuarioCadastro     := qryAgenda.FieldByName('NmUsuarioCadastro').AsString;
+    end;
+    qryAgenda.Close;
+  finally
+    FreeAndNil(qryAgenda)
+  end;
+end;
+
+end.
+

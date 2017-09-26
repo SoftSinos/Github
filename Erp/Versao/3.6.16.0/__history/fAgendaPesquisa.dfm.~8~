@@ -1,0 +1,145 @@
+inherited FrmAgendaPesquisa: TFrmAgendaPesquisa
+  Caption = 'Pesquisar Agenda'
+  ClientWidth = 977
+  ExplicitWidth = 983
+  ExplicitHeight = 398
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 971
+    inherited GroupBox1: TGroupBox
+      Width = 963
+      inherited Label2: TLabel
+        Left = 182
+        ExplicitLeft = 182
+      end
+      object Label13: TLabel [1]
+        Left = 4
+        Top = 7
+        Width = 75
+        Height = 13
+        Caption = '* Data Base:'
+      end
+      inherited EdtPesquisa: TcxTextEdit
+        Left = 266
+        TabOrder = 1
+        ExplicitLeft = 266
+      end
+      inherited RdbSnAtivo: TRadioButton
+        Left = 620
+        TabOrder = 2
+        ExplicitLeft = 620
+      end
+      inherited RdbSnInativo: TRadioButton
+        Left = 704
+        TabOrder = 3
+        ExplicitLeft = 704
+      end
+      inherited RdbSnTodos: TRadioButton
+        Left = 801
+        TabOrder = 4
+        ExplicitLeft = 801
+      end
+      object DtpDtBase: TcxDateEdit
+        Left = 80
+        Top = 4
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        TabOrder = 0
+        Width = 92
+      end
+    end
+  end
+  inherited DbgPesquisa: TDBGrid
+    Width = 971
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'DtAgenda'
+        Title.Alignment = taCenter
+        Title.Caption = 'Agenda'
+        Width = 69
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'HrAgenda'
+        Title.Alignment = taCenter
+        Title.Caption = 'Hora'
+        Width = 45
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmApelidoProfissional'
+        Title.Alignment = taCenter
+        Title.Caption = 'Profissional'
+        Width = 130
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmCliente'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cliente'
+        Width = 270
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmTpServico'
+        Title.Alignment = taCenter
+        Title.Caption = 'Servi'#231'o'
+        Width = 127
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmTpAgenda'
+        Title.Alignment = taCenter
+        Title.Caption = 'Tipo Agenda'
+        Width = 127
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NmUsuarioCadastro'
+        Title.Alignment = taCenter
+        Title.Caption = 'Usu'#225'rio'
+        Width = 155
+        Visible = True
+      end>
+  end
+  inherited Panel2: TPanel
+    Width = 971
+    inherited GroupBox2: TGroupBox
+      Width = 963
+    end
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 971
+    inherited BtnIncluir: TcxButton
+      Enabled = False
+    end
+    inherited BtnAlterar: TcxButton
+      Enabled = False
+    end
+  end
+  inherited PrbPesquisa: TProgressBar
+    Width = 971
+  end
+  inherited StbPrincipal: TStatusBar
+    Width = 971
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+  end
+end

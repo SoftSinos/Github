@@ -1,0 +1,31 @@
+unit fFechamentoCaixa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+
+type
+  TFrmOperacao1 = class(TFrmOperacao)
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    CbbIdEmpresa: TcxComboBox;
+    BtnEmpresaPesquisa: TcxButton;
+    Label9: TLabel;
+    DtpDtPeriodoInicio: TcxDateEdit;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmOperacao1: TFrmOperacao1;
+
+implementation
+
+{$R *.dfm}
+
+end.

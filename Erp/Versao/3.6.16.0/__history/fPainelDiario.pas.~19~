@@ -1,0 +1,460 @@
+﻿unit fPainelDiario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fOperacao, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls, Data.DB, Datasnap.DBClient, Vcl.DBGrids;
+
+type
+  TFrmPainelDiario = class(TFrmOperacao)
+    CdsHorarios       : TClientDataSet;
+    CdsProfissionais  : TClientDataSet;
+    CdsAgenda         : TClientDataSet;
+    PrbPesquisa       : TProgressBar;
+    StgGrid           : TStringGrid;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BtnAtualizarClick(Sender: TObject);
+    procedure StgGridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure BtnAjudaClick(Sender: TObject);
+    procedure BtnAgendaClick(Sender: TObject);
+    procedure BtnPeriodoClick(Sender: TObject);
+    procedure BtnPesquisarClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure InicializarTela;
+    procedure Pesquisar(AConsulta: String);
+  public
+    { Public declarations }
+    procedure CopulaTela;
+    procedure DesenhaGrid;
+    procedure CarregarCabecalhos;
+    procedure CarregarTela(ATpChamadaClasse:String);
+  end;
+
+var
+  FrmPainelDiario: TFrmPainelDiario;
+
+implementation
+
+{$R *.dfm}
+
+uses uFuncao, dPrincipal, fPrincipal, uAgenda, fProcessando, fAgendaStarter, uMensagem, fAjuda, fDataPeriodo, fAgendaPesquisa;
+
+var
+  unAgenda          : TAgenda;
+  lDataEntrada      : TDate;
+  lNrColuna         : Integer;
+  lNrLinha          : Integer;
+
+procedure TFrmPainelDiario.BtnAgendaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAgendaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    if FrmPrincipal.TasAgendaBasica = Nil then
+    begin
+      FrmPrincipal.TasAgendaBasica             := TTabSheet.Create(FrmPrincipal.PgcPrincipal);
+      FrmPrincipal.TasAgendaBasica.Caption     := 'Agenda do Básica';
+      FrmPrincipal.TasAgendaBasica.PageControl := FrmPrincipal.PgcPrincipal;
+    end
+    else
+    begin
+      FrmPrincipal.TasAgendaBasica.TabVisible  := True;
+    end;
+
+    FrmPrincipal.PgcPrincipal.Visible    := True;
+    FrmPrincipal.PgcPrincipal.ActivePage := FrmPrincipal.TasAgendaBasica;
+    Application.CreateForm(TFrmAgendaStarter, FrmAgendaStarter);
+    FrmAgendaStarter.Parent              := FrmPrincipal.TasAgendaBasica;
+    FrmAgendaStarter.CarregarTela('Geral');
+    FrmAgendaStarter.Show;
+  finally
+
+  end;
+end;
+
+procedure TFrmPainelDiario.BtnAjudaClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAjudaClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmAjuda := TFrmAjuda.Create(Application);
+    FrmAjuda.Caption        := 'Ajuda Sobre à Tela de ' +  Caption;
+    FrmAjuda.gNmTelaChamada := Name;
+    FrmAjuda.ShowModal;
+  finally
+    FrmAjuda.Free;
+  end;
+end;
+
+procedure TFrmPainelDiario.BtnAtualizarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnAtualizarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  InicializarTela;
+end;
+
+procedure TFrmPainelDiario.BtnFecharClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnFecharClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+end;
+
+procedure TFrmPainelDiario.BtnPeriodoClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnPeriodoClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  try
+    FrmDataPeriodo := TFrmDataPeriodo.Create(Self);
+    FrmDataPeriodo.ShowModal;
+  finally
+    lDataEntrada := FrmDataPeriodo.DtpDtPeriodoInicio.Date;
+    FrmDataPeriodo.Free;
+  end;
+
+  CopulaTela;
+end;
+
+procedure TFrmPainelDiario.BtnPesquisarClick(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'BtnPesquisarClick';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    FrmAgendaPesquisa := TFrmAgendaPesquisa.Create(Self);
+    FrmAgendaPesquisa.ShowModal;
+  finally
+    FrmAgendaPesquisa.Free;
+  end;
+end;
+
+procedure TFrmPainelDiario.CarregarCabecalhos;
+var
+  I : Integer;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'CarregarCabecalhos';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if lDataEntrada = 0 then
+  begin
+    unAgenda.CarregaDbGridHorarios(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, Now, CdsHorarios);
+    unAgenda.CarregaDbGridProfissionais(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, Now, 'Nome', CdsProfissionais);
+  end
+  else
+  begin
+    unAgenda.CarregaDbGridHorarios(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, lDataEntrada, CdsHorarios);
+    unAgenda.CarregaDbGridProfissionais(DtmPrincipal.Conexao, DtmPrincipal.IdEmpresaLogada, lDataEntrada, 'Nome', CdsProfissionais);
+  end;
+
+  CdsHorarios.First;
+
+  CdsProfissionais.First;
+
+  while not CdsProfissionais.Eof do
+  begin
+    for I := 0 to CdsProfissionais.RecordCount do
+    begin
+      StgGrid.Cells[I, 0] := 'PROFISSIONAL' + #13 + #13 +  #13 +
+                              Copy(CdsProfissionais.FieldByName('NmProfissional').AsString, 1, 30) + #13 +
+                              '"' + CdsProfissionais.FieldByName('NmApelidoProfissional').AsString + '"';
+      CdsProfissionais.Next;
+    end;
+  end;
+end;
+
+procedure TFrmPainelDiario.CarregarTela(ATpChamadaClasse: String);
+var
+  I         : Integer;
+  lNrCol    : Integer;
+  lPesquisa : String;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'CarregarTela';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  lNrCol := -1;
+
+  CdsProfissionais.First;
+
+  while not CdsProfissionais.Eof do
+  begin
+    lPesquisa := 'IdProfissional = ' + CdsProfissionais.FieldByName('IdProfissional').AsString;
+
+    CdsAgenda.Filtered := False;
+    CdsAgenda.Filter   := lPesquisa;
+    CdsAgenda.Filtered := True;
+
+    lNrCol := lNrCol + 1;
+
+    CdsAgenda.First;
+
+    while not CdsAgenda.Eof do
+    begin
+      for I := 1 to CdsAgenda.RecordCount do
+      begin
+        if CdsAgenda.FieldByName('NmCliente').AsString <> '' then
+        begin
+          StgGrid.Cells[lNrCol, I] := (CdsAgenda.FieldByName('NrAgenda').AsString + #13 +
+                                       '► ' + CdsAgenda.FieldByName('DtAgenda').AsString + ' - ' + Copy(CdsAgenda.FieldByName('HrAgenda').AsString, 1, 5) + ' ◄' + #13 +
+                                       CdsAgenda.FieldByName('StAgenda').AsString + ' ' + CdsAgenda.FieldByName('NmTpAgenda').AsString + #13 +
+                                       CdsAgenda.FieldByName('NmTpServico').AsString + #13 +
+                                       Copy(CdsAgenda.FieldByName('NmCliente').AsString, 1, 30) + #13 +
+                                       CdsAgenda.FieldByName('NrCelular').AsString);
+        end
+        else
+        begin
+          StgGrid.Cells[lNrCol, I] := '';
+        end;
+        CdsAgenda.Next;
+      end;
+    end;
+    CdsProfissionais.Next;
+  end;
+end;
+
+procedure TFrmPainelDiario.CopulaTela;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'CopulaTela';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  try
+    DesenhaGrid;
+    CarregarCabecalhos;
+    Pesquisar('');
+    CarregarTela('');
+  finally
+    if (StgGrid.RowCount = 1) and (StgGrid.ColCount = 1) then
+    begin
+      MsgAtencao(uMensagem.NaoExisteAgendaParaODia);
+    end
+    else
+    begin
+      StgGrid.Row  := 1;
+      StgGrid.Col  := 0;
+    end;
+  end;
+end;
+
+procedure TFrmPainelDiario.DesenhaGrid;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'DesenhaGrid';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  if lDataEntrada = 0 then
+  begin
+    StgGrid.RowCount := AtendimentoProfissionalDia(DtmPrincipal.Conexao, Now, 'Atendimento') + 1 {Geração da linha de titulo};
+    StgGrid.ColCount := AtendimentoProfissionalDia(DtmPrincipal.Conexao, Now, 'Profissional'){Geração da coluna de titulo};
+  end
+  else
+  begin
+    StgGrid.RowCount := AtendimentoProfissionalDia(DtmPrincipal.Conexao, lDataEntrada, 'Atendimento') + 1 {Geração da linha de titulo};
+    StgGrid.ColCount := AtendimentoProfissionalDia(DtmPrincipal.Conexao, lDataEntrada, 'Profissional'){Geração da coluna de titulo};
+  end;
+
+  lNrLinha  := StgGrid.RowCount;
+  lNrColuna := StgGrid.ColCount;
+end;
+
+
+procedure TFrmPainelDiario.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'FormClose';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  FrmPrincipal.TasPainel.TabVisible := False;
+  FrmPrincipal.PgcVisivel;
+end;
+
+procedure TFrmPainelDiario.FormCreate(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'FormCreate';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  unAgenda       := TAgenda.Create;
+end;
+
+procedure TFrmPainelDiario.FormShow(Sender: TObject);
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'FormShow';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  inherited;
+
+  InicializarTela;
+end;
+
+procedure TFrmPainelDiario.InicializarTela;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'InicializarTela';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  lDataEntrada := 0;
+  CopulaTela;
+
+  //CONGELOU LINHA E COLUNA
+  if (StgGrid.RowCount > 1) and (StgGrid.ColCount > 1) then
+  begin
+    StgGrid.FixedRows := 1;
+  end;
+end;
+
+procedure TFrmPainelDiario.Pesquisar(AConsulta: String);
+var
+  I: Integer;
+  lConsulta: Integer;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmAgendaStarter';
+  DtmPrincipal.unLog.NmMetodo   := 'Pesquisar';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+  PrbPesquisa.Position := 0;
+  lConsulta            := 0;
+  try
+    Application.CreateForm(TFrmProcessando, FrmProcessando);
+    FrmProcessando.Show;
+    Application.ProcessMessages;
+
+    for I := 1 to 100 do
+    begin
+      Sleep(15);
+      PrbPesquisa.Position := PrbPesquisa.Position + 1;
+      if lConsulta = 0 then
+      begin
+        lConsulta  := 1;
+        unAgenda   := TAgenda.Create;
+
+        if lDataEntrada = 0 then
+        begin
+          unAgenda.CarregaDbGrid(DtmPrincipal.Conexao, 1, 0, DtmPrincipal.IdEmpresaLogada, 0, StrToDate(FormatDateTime('DD/MM/YYYY', Now)), '', '', CdsAgenda);
+        end
+        else
+        begin
+          unAgenda.CarregaDbGrid(DtmPrincipal.Conexao, 1, 0, DtmPrincipal.IdEmpresaLogada, 0, lDataEntrada, '', '', CdsAgenda);
+        end;
+      end;
+    end;
+  finally
+    FrmProcessando.Destroy;
+  end;
+
+  inherited;
+end;
+
+procedure TFrmPainelDiario.StgGridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+  sIdAgenda: String;
+  sTexto   : String;
+begin
+  DtmPrincipal.unLog.NmOperacao := 'Entrou';
+  DtmPrincipal.unLog.NmClasse   := 'TFrmPainelDiario';
+  DtmPrincipal.unLog.NmMetodo   := 'StgGridDrawCell';
+  DtmPrincipal.unLog.NmTabela   := 'Painel';
+  DtmPrincipal.unLog.GerarLog(DtmPrincipal.Conexao);
+
+   //Pinta o SetFocus
+   with TStringGrid(Sender) do
+   begin
+     Canvas.Brush.Color := StgGrid.Color;
+     Canvas.FillRect(Rect);
+   end;
+
+  //Pinta a linha 0 X todas as Colunas
+  if (ARow = 0) then
+  begin
+    with TStringGrid(Sender) do
+    begin
+      Canvas.Brush.Color := cl3DLight;
+      Canvas.FillRect(Rect);
+    end;
+  end;
+
+  //Quebra de linha para o texto.
+  if (ARow > -1) and (ACol > -1) then
+  begin
+    with TStringGrid(Sender) do
+    begin
+      Canvas.FillRect(Rect);
+      sTexto := Cells[ACol, ARow];
+
+      //Pinta conforme a linha, coluna e conteudo.
+      if (sTexto <> '') and (ARow > 0) and (ACol > -1) then
+      begin
+        sIdAgenda := Copy(sTexto, 1, 10);
+
+        unAgenda.BuscarNrAgenda(DtmPrincipal.Conexao, sIdAgenda);
+
+        if unAgenda.HxCor = '' then
+        begin
+          Canvas.Brush.Color := clWhite;
+        end
+        else
+        begin
+          Canvas.Brush.Color := StringToColor(unAgenda.HxCor);
+        end;
+        Canvas.FillRect(Rect);
+      end;
+     Canvas.TextRect(Rect, sTexto, [tfWordBreak,tfVerticalCenter,tfCenter]);
+    end;
+  end;
+end;
+
+end.

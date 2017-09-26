@@ -1,0 +1,181 @@
+inherited FrmOperacao1: TFrmOperacao1
+  Caption = 'FrmOperacao1'
+  ClientHeight = 321
+  ClientWidth = 1276
+  ExplicitWidth = 1282
+  ExplicitHeight = 350
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited StbPrincipal: TStatusBar
+    Top = 299
+    Width = 1270
+    Panels = <
+      item
+        Text = '  SoftSinos Inform'#225'tica    '
+        Width = 130
+      end
+      item
+        Text = '  www.softsinos.com.br'
+        Width = 130
+      end>
+    ExplicitWidth = 1140
+  end
+  inherited PnlPrincipal: TPanel
+    Width = 1270
+    ExplicitWidth = 1140
+    inherited BtnFechar: TcxButton
+      Left = 295
+      ExplicitLeft = 203
+      ExplicitTop = 4
+    end
+    inherited BtnAjuda: TcxButton
+      Left = 393
+      ExplicitLeft = 301
+      ExplicitTop = 4
+    end
+    inherited BtnInicializar: TcxButton
+      Left = 440
+    end
+    inherited BtnSalvar: TcxButton
+      Left = 636
+      ExplicitLeft = 295
+    end
+    inherited BtnExecutar: TcxButton
+      Left = 734
+      ExplicitLeft = 393
+    end
+    inherited BtnLimpar: TcxButton
+      Left = 1028
+      ExplicitLeft = 785
+    end
+    inherited BtnCarregar: TcxButton
+      Left = 99
+      Enabled = True
+      Visible = True
+      ExplicitLeft = 93
+    end
+    inherited BtnAgenda: TcxButton
+      Left = 930
+      ExplicitLeft = 687
+    end
+    inherited BtnPeriodo: TcxButton
+      Left = 832
+      ExplicitLeft = 589
+    end
+    inherited BtnAtualizar: TcxButton
+      Left = 197
+      Enabled = True
+      Visible = True
+      ExplicitLeft = 105
+      ExplicitTop = 4
+    end
+    inherited BtnGerar: TcxButton
+      Left = 1
+      Enabled = True
+      Visible = True
+      ExplicitLeft = 1
+      ExplicitTop = -2
+    end
+    inherited BtnPesquisar: TcxButton
+      Left = 538
+    end
+  end
+  inherited PnlCampos: TPanel
+    Width = 1270
+    Height = 242
+    ExplicitWidth = 1140
+    object GroupBox1: TGroupBox
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 1262
+      Height = 63
+      Align = alTop
+      Caption = '  Caixa  '
+      TabOrder = 0
+      ExplicitWidth = 440
+      object Label2: TLabel
+        Left = 33
+        Top = 19
+        Width = 49
+        Height = 13
+        Caption = '* Usu'#225'rio:'
+      end
+      object Label9: TLabel
+        Left = 17
+        Top = 38
+        Width = 65
+        Height = 13
+        Caption = '* Movimento:'
+      end
+      object CbbIdEmpresa: TcxComboBox
+        Left = 83
+        Top = 15
+        Properties.DropDownListStyle = lsFixedList
+        TabOrder = 0
+        Width = 325
+      end
+      object BtnEmpresaPesquisa: TcxButton
+        Left = 407
+        Top = 15
+        Width = 21
+        Height = 21
+        BiDiMode = bdLeftToRight
+        LookAndFeel.Kind = lfUltraFlat
+        LookAndFeel.NativeStyle = True
+        OptionsImage.Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF004E4E4E004E4E4E004E4E4E104E4E4E1A4E4E4E1F4E4E
+          4E164E4E4E084E4E4E004E4E4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF004E4E4E004E4E4E174E4E4E334E4E4E334E4E4E334E4E
+          4E334E4E4E324E4E4E034E4E4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF004E4E4E064E4E4E204E4E4EFF4E4E4EFF4E4E
+          4E274E4E4E17FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004E4E4EFF4E4E4EFF4E4E
+          4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF004E4E4E004E4E4E004E4E4E004E4E4E004E4E4EFF4E4E4EFF4E4E
+          4E004E4E4E004E4E4E004E4E4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF004E4E4E004E4E4E004E4E4E004E4E4E004E4E4EFF4E4E4EFF4E4E
+          4E004E4E4E004E4E4E004E4E4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF004E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E
+          4EFF4E4E4EFF4E4E4EFF4E4E4EFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF004E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E4EFF4E4E
+          4EFF4E4E4EFF4E4E4EFF4E4E4EFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004E4E4EFF4E4E4EFF4E4E
+          4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004E4E4EFF4E4E4EFF4E4E
+          4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004E4E4EFF4E4E4EFF4E4E
+          4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004E4E4EFF4E4E4EFF4E4E
+          4E00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        OptionsImage.Layout = blGlyphBottom
+        PaintStyle = bpsGlyph
+        ParentBiDiMode = False
+        ParentShowHint = False
+        PopupAlignment = paCenter
+        ShowHint = False
+        TabOrder = 1
+        TabStop = False
+      end
+      object DtpDtPeriodoInicio: TcxDateEdit
+        Left = 83
+        Top = 35
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DateButtons = []
+        Properties.DateOnError = deNull
+        TabOrder = 2
+        Width = 96
+      end
+    end
+  end
+end
